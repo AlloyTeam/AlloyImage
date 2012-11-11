@@ -1,0 +1,118 @@
+<!DOCTYPE HTML>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title></title>
+  <script type="text/javascript" src="js/psLib.js"></script>
+  <script type="text/javascript" src="js/module/config.js"></script>
+  <script type="text/javascript" src="js/module/toGray.js"></script>
+  <script type="text/javascript" src="js/module/toReverse.js"></script>
+  <script type="text/javascript" src="js/module/toThresh.js"></script>
+  <script type="text/javascript" src="js/module/alterRGB.js"></script>
+  <script type="text/javascript" src="js/module/dorsyMath.js"></script>
+  <script type="text/javascript" src="js/module/gaussBlur.js"></script>
+  <script type="text/javascript" src="js/module/addLayer.js"></script>
+  <script type="text/javascript" src="js/module/sharp.js"></script>
+  <script type="text/javascript" src="js/module/embossment.js"></script>
+  <script type="text/javascript" src="js/module/lapOfGauss.js"></script>
+  <script type="text/javascript" src="js/module/setHSI.js"></script>
+  <script type="text/javascript" src="js/module/mosaic.js"></script>
+  <script type="text/javascript" src="js/module/oilPainting.js"></script>
+</head>
+<body>
+<img src="img/3.jpg" alt="" id='test' />
+<div class="p"></div>
+<script type="text/javascript">
+var img = document.getElementById("test");
+img.onload = function(){
+  //psLib(img).act("反色").show(".p");
+/*psLib(img).add(
+      psLib(img).act("反色",3,1,2) , "sdf" , 140,50
+  ).show(".p");
+  */
+psLib(img).act("油画",100).show(".p");
+  /*
+  psLib(img).drawRect();
+  psLib(img).act("灰度阈值",200).show();
+  psLib(img).act("灰度处理").show();
+  psLib(img).act("反色").show();
+  psLib(img).act("锐化").show();
+  psLib(img).act("亮度",-40).show();
+  psLib(img).act("浮雕效果",-40).show();
+  psLib(img).act("查找边缘",0.3).show();
+  psLib(img).act("灰度处理").add(
+      psLib(img).act("灰度处理").act("反色").act("高斯模糊",5) , "颜色减淡"  
+  ).act("锐化").show();
+  psLib(img).add(
+      psLib(img) , "变暗" , -40,50
+  ).show();
+
+  psLib(img).add(
+      psLib(img) , "变亮" , -40,50
+  ).show();
+
+  psLib(img).add(
+      psLib(img) , "正片叠底" , -40,50
+  ).show();
+
+  psLib(img).add(
+      psLib(img) , "滤色" , -40,50
+  ).show();
+
+  psLib(img).add(
+      psLib(img) , "叠加" , -40,50
+  ).show();
+
+  psLib(img).add(
+      psLib(img) , "强光" , -40,50
+  ).show();
+
+  psLib(img).add(
+      psLib(img) , "差值" , -40,50
+  ).show();
+
+  psLib(img).add(
+      psLib(img) , "排除" , -40,50
+  ).show();
+
+  psLib(img).add(
+      psLib(img) , "点光" , -30,50
+  ).show();
+
+  psLib(img).add(
+      psLib(img) , "颜色减淡" , -30,50
+  ).show();
+  
+    psLib(img).add(
+      psLib(img) , "线性减淡" , -30,50
+  ).show();
+
+  psLib(img).add(
+      psLib(img) , "颜色加深" , -30,50
+  ).show();
+
+    psLib(img).add(
+      psLib(img) , "线性加深" , -30,50
+  ).show();
+
+      psLib(img).add(
+      psLib(img) , "柔光" , -30,50
+  ).show();
+    psLib(img).add(
+      psLib(img) , "亮光" , -30,50
+  ).show();
+          psLib(img).add(
+      psLib(img) , "线性光" , -30,50
+  ).show();
+
+        psLib(img).add(
+      psLib(img) , "实色混合" , -30,50
+  ).show();
+
+        psLib(180,180).add(psLib(img)).show();
+
+  */
+};
+</script>
+</body>
+</html>
