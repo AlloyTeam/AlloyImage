@@ -1,42 +1,37 @@
-<!doctype html>
-<!-- The Time Machine GitHub pages theme was designed and developed by Jon Rohan, on Feb 7, 2012. -->
-<!-- Follow him for fun. http://twitter.com/jonrohan. Tail his code on http://github.com/jonrohan -->
+<!DOCTYPE html>
 <html>
-<head>
-  <meta charset="utf-8">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
 
-  <link rel="stylesheet" href="stylesheets/stylesheet.css" media="screen"/>
-  <link rel="stylesheet" href="stylesheets/pygment_trac.css"/>
-  <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
-  <script type="text/javascript" src="javascripts/script.js"></script>
+  <head>
+    <meta charset='utf-8' />
+    <meta http-equiv="X-UA-Compatible" content="chrome=1" />
+    <meta name="description" content="Alloyphoto : an image processing lib based on html5" />
 
-  <title>Alloyphoto</title>
-  <meta name="description" content="an image processing lib based on html5">
+    <link rel="stylesheet" type="text/css" media="screen" href="stylesheets/stylesheet.css">
 
-  <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>Alloyphoto</title>
+  </head>
 
-</head>
+  <body>
 
-<body>
+    <!-- HEADER -->
+    <div id="header_wrap" class="outer">
+        <header class="inner">
+          <a id="forkme_banner" href="https://github.com/honghu91/alloyPhoto">View on GitHub</a>
 
-  <div class="wrapper">
-    <header>
-      <h1 class="title">Alloyphoto</h1>
-    </header>
-    <div id="container">
-      <p class="tagline">an image processing lib based on html5</p>
-      <div id="main" role="main">
-        <div class="download-bar">
-        <div class="inner">
-          <a href="https://github.com/honghu91/alloyPhoto/tarball/master" class="download-button tar"><span>Download</span></a>
-          <a href="https://github.com/honghu91/alloyPhoto/zipball/master" class="download-button zip"><span>Download</span></a>
-          <a href="https://github.com/honghu91/alloyPhoto" class="code">View Alloyphoto on GitHub</a>
-        </div>
-        <span class="blc"></span><span class="trc"></span>
-        </div>
-        <article class="markdown-body">
-          <h3>Welcome to AlloyPhoto.</h3>
+          <h1 id="project_title">Alloyphoto</h1>
+          <h2 id="project_tagline">an image processing lib based on html5</h2>
+
+            <section id="downloads">
+              <a class="zip_download_link" href="https://github.com/honghu91/alloyPhoto/zipball/master">Download this project as a .zip file</a>
+              <a class="tar_download_link" href="https://github.com/honghu91/alloyPhoto/tarball/master">Download this project as a tar.gz file</a>
+            </section>
+        </header>
+    </div>
+
+    <!-- MAIN CONTENT -->
+    <div id="main_content_wrap" class="outer">
+      <section id="main_content" class="inner">
+        <h3>Welcome to AlloyPhoto.</h3>
 
 <p>AlloyPhoto是一个基于html5技术的JS库，集成了一些方便快捷的图像处理API，您可以将它引用到您的网页中，结合css3等技术，做出一些之前无法做到的优美效果，或者，提供一个用JS编写的在线图像处理工具等。</p>
 
@@ -45,40 +40,123 @@
 <p>1.图层功能，提供图层的添加，删除，交换图层顺序等功能，且包含与PS相对应的17种图层混合模式<br>
 2.图像的基本调节功能，包括亮度、对比度，色相、饱和度、明度调节<br>
 3.多种滤镜功能，去色、反相、高斯模糊、锐化、浮雕效果、查找边缘、马赛克、腐蚀等<br>
-4.处理后文件的保存，处理完成之后，可以将文件输出为base64形式间接让使用和保存<br>
-5.高级组合效果，如素描，lomo，hrd，复古，素描，油画(功能尚未添加）</p>
+4.处理后文件的保存，处理完成之后，可以将文件输出为base64形式间接使用和保存<br>
+5.高级组合效果，如素描，lomo，hrd，复古，素描，油画(功能尚未添加）
+如一个素描效果的实现</p>
 
 <pre><code>var img = new Image();
 img.src = "pic.jpg";
 img.onload = function(){
       //素描效果
-      psLib(img).act("灰度处理").add(//添加一个图层上去
-            psLib(img).act("灰度处理").act("反色").act("高斯模糊",5) , "颜色减淡"  
+      psLib(this).act("灰度处理").add(//添加一个图层上去
+            psLib(this).act("灰度处理").act("反色").act("高斯模糊",5) , "颜色减淡"  
       ).act("锐化").show();
-}
+};
 </code></pre>
 
+<h3>API参考</h3>
+
+<h4>初始化一个psLib对象<br>
+</h4>
+
+<p>psLib(img) 或  new psLib(img)<br>
+img可以是new Image()创建的对象，也可以是DOM树中的image元素，但在创建psLib对象前确保 img已经被onload成功，否则可能导致抛出异常</p>
+
+<pre><code>var img = document.getElementsByTagName("img")[0];
+img.onload = function(){
+     var psLibObj = psLib(this);
+};
+</code></pre>
+
+<p>一个psLib对象可以看做是一个图层，也可以看做是一个工作文件<br></p>
+
+<h4>act</h4>
+
+<p>说明：对单个图层进行效果处理<br>
+语法：psLibObj act(String method,Args arg,...)<br>
+其中 method有以下可选参数<br></p>
+
+<table>
+<tr>
+<td>参数</td>
+<td>     功能</td>
+<td>附加参数</td>
+<td>用法示例</td>
+    </tr>
+<tr>
+<td>亮度</td> <td>调节亮度与对比度 </td>
+<td>亮度，对比度</td>
+<td>act("亮度",10,20)</td>
+    </tr>
+<tr>
+<td>色相/饱和度调节 </td> <td> 调节图像色相与饱和度  </td> <td>  色相，饱和度，明度 </td> <td>   act("色相/饱和度调节",10,0,10)</td>
+   </tr>
+<tr>
+<td>灰度处理</td> <td>将图像处理为灰度图像 </td>
+<td>无</td>
+<td>act("灰度处理")</td>
+    </tr>
+<tr>
+<td>灰度阈值</td> <td>将图像二值化 </td>
+<td>阈值</td>
+<td>act("灰度阈值",128)</td>
+    </tr>
+<tr>
+<td>反色</td> <td>将图像进行反相操作 </td>
+<td>无</td>
+<td>act("反色")</td>
+    </tr>
+<tr>
+<td>高斯模糊</td> <td>将图像进行高斯模糊 </td>
+<td>模糊大小</td>
+<td>act("高斯模糊",10)</td>
+    </tr>
+<tr>
+<td>锐化</td> <td>将图像进行锐化 </td>
+<td>锐化大小</td>
+<td>act("锐化",10)</td>
+    </tr>
+<tr>
+<td>马赛克</td> <td>将图像进行马赛克处理 </td>
+<td>马赛克大小</td>
+<td>act("马赛克",10)</td>
+    </tr>
+<tr>
+<td>浮雕效果</td> <td>将图像进行浮雕效果处理 </td>
+<td>无</td>
+<td>act("浮雕效果")</td>
+    </tr>
+<tr>
+<td>腐蚀</td> <td>将图像进行腐蚀效果处理 </td>
+<td>无</td>
+<td>act("腐蚀")</td>
+    </tr>
+</table><h4>add</h4>
+
+<p>说明：合并一个图层到本图层上去<br>
+语法：psLibObj add(psLibObj new[,String model [,Number dx,Number dy]])<br>
+本方法将会进行图层合并操作，会将新图层new以高于本图层的顺序，以model的混合模式，以相对本图层左上角为坐标原点的dx,dy偏移量合并到本图层，并返回合并后的图层对象<br>
+model的模式有17种，其效果和Photoshop中效果对应<br>
+"正常","颜色减淡","变暗","变亮","正片叠底","滤色","叠加","强光","差值","排除","点光","颜色加深","线性加深","线性减淡","柔光","亮光","线性光","实色混合" <br>
+用例：</p>
+
+<h4>addLayer</h4>
+
+<p>说明：添加一个图层到本图层上去，不进行合并操作，不会对本图层产生影响<br></p>
+
 <p>更多效果及API后续添加，敬请期待</p>
-        </article>
-      </div>
+      </section>
     </div>
-    <footer>
-      <div class="owner">
-      <p><a href="https://github.com/honghu91" class="avatar"><img src="https://secure.gravatar.com/avatar/cd34781a233445cc1daf3f870cb6b1be?s=30&amp;d=https://a248.e.akamai.net/assets.github.com%2Fimages%2Fgravatars%2Fgravatar-user-420.png" width="48" height="48"/></a> <a href="https://github.com/honghu91">honghu91</a> maintains <a href="https://github.com/honghu91/alloyPhoto">Alloyphoto</a></p>
 
+    <!-- FOOTER  -->
+    <div id="footer_wrap" class="outer">
+      <footer class="inner">
+        <p class="copyright">Alloyphoto maintained by <a href="https://github.com/honghu91">honghu91</a></p>
+        <p>Published with <a href="http://pages.github.com">GitHub Pages</a></p>
+      </footer>
+    </div>
 
-      </div>
-      <div class="creds">
-        <small>This page generated using <a href="https://pages.github.com/">GitHub Pages</a><br/>theme by <a href="http://twitter.com/jonrohan/">Jon Rohan</a></small>
-      </div>
-    </footer>
-  </div>
-  <div class="current-section">
-    <a href="#top">Scroll to top</a>
-    <a href="https://github.com/honghu91/alloyPhoto/tarball/master" class="tar">tar</a><a href="https://github.com/honghu91/alloyPhoto/zipball/master" class="zip">zip</a><a href="" class="code">source code</a>
-    <p class="name"></p>
-  </div>
+    
 
-  
-</body>
+  </body>
 </html>
