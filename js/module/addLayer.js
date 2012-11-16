@@ -8,16 +8,29 @@
     window[Ps].module("addLayer",function(P){
 
         var Add = {
-            add: function(lowerData,upperData,method,dx,dy,isFast){//isFast用于快速，适用于中间处理
+            add: function(lowerData,upperData,method,alpha,dx,dy,isFast,channel){//isFast用于快速，适用于中间处理
                 var l = lowerData.data;
                 var u = upperData.data;
                 dx = dx || 0;
                 dy = dy || 0;
+                alpha = alpha || 1;//alpha 范围为0 - 100
+                isFast = isFast || false;
+
+                channel = channel || "RGB";
+                if(!(/[RGB]+/.test(channel))){
+                    channel = "RGB";
+                }
+                //console.log(channel + "|" + alpha + "|" + dx + " " + dy + "|" + isFast);
+                var channelString = channel.replace("R","0").replace("G","1").replace("B","2");
+                //console.log(channelString);
+
 
                 var jump = 1;
                 if(isFast){
                    jump = 20; 
                 }
+
+                var result;
 
                 for(var i = 0,n = l.length;i < n;i += 4 * jump){
 
@@ -38,101 +51,158 @@
                         for(var j = 0;j < 3;j ++){
                             switch(method){
                                 case "颜色减淡" :
-                                    l[i + j] = l[i + j] + (l[i + j] * u[uI + j]) / (255 - u[uI + j]);
+                                    if(channelString.indexOf(j) > -1){
+                                       result = l[i + j] + (l[i + j] * u[uI + j]) / (255 - u[uI + j]);
+                                       l[i + j] = (1 - alpha) * l[i + j] + (alpha) * result;
+                                    }
                                     break;
 
                                 case "变暗":
-                                    l[i + j] = l[i + j] < u[uI + j] ? l[i + j] : u[uI + j];
+                                    if(channelString.indexOf(j) > -1){
+                                        result = l[i + j] < u[uI + j] ? l[i + j] : u[uI + j];
+                                        l[i + j] = (1 - alpha) * l[i + j] + (alpha) * result;
+                                    }
                                     break;
 
                                 case "变亮":
-                                    l[i + j] = l[i + j] > u[uI + j] ? l[i + j] : u[uI + j];
+                                    if(channelString.indexOf(j) > -1){
+                                        result = l[i + j] > u[uI + j] ? l[i + j] : u[uI + j];
+                                        l[i + j] = (1 - alpha) * l[i + j] + (alpha) * result;
+                                    }
                                     break;
 
                                 case "正片叠底":
-                                    l[i + j] = parseInt((l[i + j] * u[uI + j]) / 255);
+                                    if(channelString.indexOf(j) > -1){
+                                        result = parseInt((l[i + j] * u[uI + j]) / 255);
+                                        l[i + j] = (1 - alpha) * l[i + j] + (alpha) * result;
+                                    }
                                     break;
 
                                 case "滤色" :
-                                    l[i + j] = parseInt(255 - (255 - l[i + j]) * (255 - u[uI + j]) / 255);
+                                    if(channelString.indexOf(j) > -1){
+                                        result = parseInt(255 - (255 - l[i + j]) * (255 - u[uI + j]) / 255);
+                                        l[i + j] = (1 - alpha) * l[i + j] + (alpha) * result;
+                                    }
                                     break;
 
                                 case "叠加":
-                                    if(l[i + j] <= 127.5){
-                                        l[i + j] = l[i + j] * u[uI + j] / 127.5;
-                                    }else{
-                                        l[i + j] = 255 - (255 - l[i + j]) * (255 - u[uI + j]) / 127.5;
+                                    if(channelString.indexOf(j) > -1){
+                                        if(l[i + j] <= 127.5){
+                                            result = l[i + j] * u[uI + j] / 127.5;
+                                        }else{
+                                            result = 255 - (255 - l[i + j]) * (255 - u[uI + j]) / 127.5;
+                                        }
+                                        l[i + j] = (1 - alpha) * l[i + j] + (alpha) * result;
                                     }
                                     break;
+
                                 case "强光":
-                                    if(u[uI + j] <= 127.5){
-                                        l[i + j] = l[i + j] * u[uI + j] / 127.5;
-                                    }else{
-                                        l[i + j] = l[i + j] + (255 - l[i + j]) * (u[uI + j] - 127.5) / 127.5;
+                                    if(channelString.indexOf(j) > -1){
+                                        if(u[uI + j] <= 127.5){
+                                            result = l[i + j] * u[uI + j] / 127.5;
+                                        }else{
+                                            result = l[i + j] + (255 - l[i + j]) * (u[uI + j] - 127.5) / 127.5;
+                                        }
+                                        l[i + j] = (1 - alpha) * l[i + j] + (alpha) * result;
                                     }
                                     break;
+
                                 case "差值":
-                                    l[i + j] = l[i + j] > u[uI + j] ? l[i + j] - u[uI + j] : u[uI + j] - l[i + j];
+                                    if(channelString.indexOf(j) > -1){
+                                        result = l[i + j] > u[uI + j] ? l[i + j] - u[uI + j] : u[uI + j] - l[i + j];
+                                        l[i + j] = (1 - alpha) * l[i + j] + (alpha) * result;
+                                    }
                                     break;
 
                                 case "排除":
-                                    l[i + j] = l[i + j] + u[uI + j] - (l[i + j] * u[uI + j]) / 127.5;
+                                    if(channelString.indexOf(j) > -1){
+                                        result = l[i + j] + u[uI + j] - (l[i + j] * u[uI + j]) / 127.5;
+                                        l[i + j] = (1 - alpha) * l[i + j] + (alpha) * result;
+                                    }
                                     break;
 
                                 case "点光":
-                                    if(l[i + j] < (2 * u[uI + j] - 255)){
-                                        l[i + j] = 2 * u[uI + j] - 255;
-                                    }else if(l[i + j] < 2 * u[uI + j]){
-                                    }else{
-                                        l[i + j] = 2 * u[uI + j];    
+                                    if(channelString.indexOf(j) > -1){
+                                        if(l[i + j] < (2 * u[uI + j] - 255)){
+                                            result = 2 * u[uI + j] - 255;
+                                        }else if(l[i + j] < 2 * u[uI + j]){
+                                            result = l[i + j];
+                                        }else{
+                                            result = 2 * u[uI + j];    
+                                        }
+                                        l[i + j] = (1 - alpha) * l[i + j] + (alpha) * result;
                                     }
                                     break;
 
                                 case "颜色加深":
-                                    l[i + j] = 255 - 255 * (255 - l[i + j]) / u[uI + j];
+                                    if(channelString.indexOf(j) > -1){
+                                        result = 255 - 255 * (255 - l[i + j]) / u[uI + j];
+                                        l[i + j] = (1 - alpha) * l[i + j] + (alpha) * result;
+                                    }
                                     break;
 
                                 case "线性加深":
-                                    var tempR = l[i + j] + u[uI + j];
-                                    l[i + j] = tempR > 255 ? tempR - 255 : 0;
+                                    if(channelString.indexOf(j) > -1){
+                                        var tempR = l[i + j] + u[uI + j];
+                                        result = tempR > 255 ? tempR - 255 : 0;
+                                        l[i + j] = (1 - alpha) * l[i + j] + (alpha) * result;
+                                    }
                                     break;
 
                                 case "线性减淡":
-                                    var tempR = l[i + j] + u[uI + j];
-                                    l[i + j] = tempR > 255 ? 255 : tempR;
+                                    if(channelString.indexOf(j) > -1){
+                                        var tempR = l[i + j] + u[uI + j];
+                                        result = tempR > 255 ? 255 : tempR;
+                                        l[i + j] = (1 - alpha) * l[i + j] + (alpha) * result;
+                                    }
                                     break;
 
                                 case "柔光":
-                                    if(u[uI + j] < 127.5){
-                                        l[i + j] = ((2 * u[uI + j] - 255) * (255 - l[i + j]) / (255 * 255) + 1) * l[i + j];
-                                    }else{
-                                        l[i + j] = (2 * u[uI + j] - 255) * (Math.sqrt(l[i + j] / 255) - l[i + j] / 255) + l[i + j];
+                                    if(channelString.indexOf(j) > -1){
+                                        if(u[uI + j] < 127.5){
+                                            result = ((2 * u[uI + j] - 255) * (255 - l[i + j]) / (255 * 255) + 1) * l[i + j];
+                                        }else{
+                                            result = (2 * u[uI + j] - 255) * (Math.sqrt(l[i + j] / 255) - l[i + j] / 255) + l[i + j];
+                                        }
+                                        l[i + j] = (1 - alpha) * l[i + j] + (alpha) * result;
                                     }
                                     break;
 
                                 case "亮光":
-                                    if(u[uI + j] < 127.5){
-                                        l[i + j] = (1 - (255 - l[i + j]) / (2 * u[uI + j])) * 255;
-                                    }else{
-                                        l[i + j] = l[i + j] / (2 * (1 - u[uI + j] / 255));
+                                    if(channelString.indexOf(j) > -1){
+                                        if(u[uI + j] < 127.5){
+                                            result = (1 - (255 - l[i + j]) / (2 * u[uI + j])) * 255;
+                                        }else{
+                                            result = l[i + j] / (2 * (1 - u[uI + j] / 255));
+                                        }
+                                        l[i + j] = (1 - alpha) * l[i + j] + (alpha) * result;
                                     }
                                     break;
 
                                 case "线性光":
-                                    var tempR = l[i + j] + 2 * u[uI + j] - 255;
-                                    l[i + j] = tempR > 255 ? 255 : tempR;
+                                    if(channelString.indexOf(j) > -1){
+                                        var tempR = l[i + j] + 2 * u[uI + j] - 255;
+                                        result = tempR > 255 ? 255 : tempR;
+                                        l[i + j] = (1 - alpha) * l[i + j] + (alpha) * result;
+                                    }
                                     break;
 
                                 case "实色混合":
-                                    if(u[uI + j] < (255 - l[i + j])){
-                                        l[i + j] = 0;
-                                    }else{
-                                        l[i + j] = 255;
+                                    if(channelString.indexOf(j) > -1){
+                                        if(u[uI + j] < (255 - l[i + j])){
+                                            result = 0;
+                                        }else{
+                                            result = 255;
+                                        }
+                                        l[i + j] = (1 - alpha) * l[i + j] + (alpha) * result;
                                     }
                                     break;
 
                                 default: 
-                                    l[i + j] = u[uI + j];
+                                    if(channelString.indexOf(j) > -1){
+                                        result = u[uI + j];
+                                        l[i + j] = (1 - alpha) * l[i + j] + (alpha) * result;
+                                    }
                             }
                         }
                     }

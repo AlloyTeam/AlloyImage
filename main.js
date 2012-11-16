@@ -184,16 +184,16 @@
 
             $("#saveFile").click(function(){
                 var data = _this.ps.save();
-                /*
                 var img = new Image();
                 img.src = data;
                 $(".painting").html(img);
-                */
+                /*
                 try{
                     _this.notifer.notice({"msg": data});
                 }catch(e){
                     alert(e.message);
                 }
+                */
             });
 
             $(".ljItem").click(function(){
@@ -230,7 +230,6 @@
                     for(var i = 0;i < _this.currLayer.length;i ++){
                         _this.layers[_this.currLayer[i]].view("亮度",value1,value);
                     }
-                    _this.draw();
                 });
         });
             $("#modi_HSI").click(function(){
@@ -391,7 +390,7 @@
                             _this.ps.layers[_this.currLayer[i]][2] = offsetX - dx[i];
                             _this.ps.layers[_this.currLayer[i]][3] = offsetY - dy[i];
                         }
-                        _this.draw(1);
+                        _this.draw(true);
                         flagD = 1;//标记拖拽发生
                     }
             };

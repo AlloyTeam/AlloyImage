@@ -22,15 +22,30 @@
 <body>
 <img src="img/3.jpg" alt="" id='test' />
 <div class="p"></div>
+<a href="demo1.html">demo1</a>
 <script type="text/javascript">
 var img = document.getElementById("test");
+var m = new Image();
+alert(m.loadOnce);
+
 img.onload = function(){
   //psLib(img).act("反色").show(".p");
 /*psLib(img).add(
-      psLib(img).act("反色",3,1,2) , "sdf" , 140,50
+      psLib(img).act("反色",3,1,2) , "sdf" , 140,50,"40%","R"
   ).show(".p");
   */
-psLib(img).act("油画",100).show(".p");
+//psLib(img).act("油画",100).show(".p");
+
+  psLib(img).add(
+      psLib(img) , "颜色减淡" , "100%",0,0,false
+  ).show();
+  psLib(img).act("灰度阈值",70).show();
+  /*
+   psLib(img).act("灰度处理").add(
+      psLib(img).act("灰度处理").act("反色").act("高斯模糊",5) , "颜色减淡"  
+  ).act("锐化").show();
+  */
+ 
   /*
   psLib(img).drawRect();
   psLib(img).act("灰度阈值",200).show();
@@ -43,75 +58,77 @@ psLib(img).act("油画",100).show(".p");
   psLib(img).act("灰度处理").add(
       psLib(img).act("灰度处理").act("反色").act("高斯模糊",5) , "颜色减淡"  
   ).act("锐化").show();
+  */
+  /*
   psLib(img).add(
-      psLib(img) , "变暗" , -40,50
+      psLib(img) , "变暗" , -40,50,"40%","R"
   ).show();
 
   psLib(img).add(
-      psLib(img) , "变亮" , -40,50
+      psLib(img) , "变亮" , -40,50,"40%","R"
   ).show();
 
   psLib(img).add(
-      psLib(img) , "正片叠底" , -40,50
+      psLib(img) , "正片叠底" , -40,50,"40%","R"
   ).show();
 
   psLib(img).add(
-      psLib(img) , "滤色" , -40,50
+      psLib(img) , "滤色" , -40,50,"40%","R"
   ).show();
 
   psLib(img).add(
-      psLib(img) , "叠加" , -40,50
+      psLib(img) , "叠加" , -40,50,"40%","R"
   ).show();
 
   psLib(img).add(
-      psLib(img) , "强光" , -40,50
+      psLib(img) , "强光" , -40,50,"40%","R"
   ).show();
 
   psLib(img).add(
-      psLib(img) , "差值" , -40,50
+      psLib(img) , "差值" , -40,50,"40%","R"
   ).show();
 
   psLib(img).add(
-      psLib(img) , "排除" , -40,50
+      psLib(img) , "排除" , -40,50,"40%","R"
   ).show();
 
   psLib(img).add(
-      psLib(img) , "点光" , -30,50
+      psLib(img) , "点光" , -30,50,"40%","R"
   ).show();
 
   psLib(img).add(
-      psLib(img) , "颜色减淡" , -30,50
+      psLib(img) , "颜色减淡" , -30,50,"40%","R"
   ).show();
   
     psLib(img).add(
-      psLib(img) , "线性减淡" , -30,50
+      psLib(img) , "线性减淡" , -30,50,"40%","R"
   ).show();
 
   psLib(img).add(
-      psLib(img) , "颜色加深" , -30,50
+      psLib(img) , "颜色加深" , -30,50,"40%","R"
   ).show();
 
     psLib(img).add(
-      psLib(img) , "线性加深" , -30,50
+      psLib(img) , "线性加深" , -30,50,"40%","R"
   ).show();
 
       psLib(img).add(
-      psLib(img) , "柔光" , -30,50
+      psLib(img) , "柔光" , -30,50,"40%","R"
   ).show();
     psLib(img).add(
-      psLib(img) , "亮光" , -30,50
+      psLib(img) , "亮光" , -30,50,"40%","R"
   ).show();
           psLib(img).add(
-      psLib(img) , "线性光" , -30,50
+      psLib(img) , "线性光" , -30,50,"40%","R"
   ).show();
 
         psLib(img).add(
-      psLib(img) , "实色混合" , -30,50
+      psLib(img) , "实色混合" , -30,50,"40%","R"
   ).show();
 
         psLib(180,180).add(psLib(img)).show();
+        */
 
-  */
 };
 </script>
 </body>

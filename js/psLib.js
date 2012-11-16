@@ -13,7 +13,15 @@ Array.prototype.del = function(arr){
         b = b.slice(0,arr[i]).concat(b.slice(arr[i] + 1));
     }
     return b;
-}
+};
+
+HTMLImageElement.prototype.loadOnce = function(func){//图片的初次加载才触发事件，后续不触发
+   var i = 0;
+   this.onload = function(){
+        if(!i) func.call(this,null);
+        i ++;
+   };
+};
 
 ;(function(Ps){
 
@@ -55,8 +63,8 @@ Array.prototype.del = function(arr){
             return this.lib[moduleName].process(imgData,args);//交由实际处理数据单元处理
         },
 
-        add: function(lowerData,upperData,method,dx,dy,isFast){
-            return this.lib.addLayer.add(lowerData,upperData,method,dx,dy,isFast);
+        add: function(lowerData,upperData,method,alpha,dx,dy,isFast,channel){
+            return this.lib.addLayer.add(lowerData,upperData,method,alpha,dx,dy,isFast,channel);
         },
 
         applyMatrix: function(imgData,matrixArr){//对图像进行掩模算子变换
@@ -95,7 +103,13 @@ Array.prototype.del = function(arr){
 
                 canvas.width = parseInt(img.width);
                 canvas.height = parseInt(img.height);
-                context.drawImage(img,0,0);
+
+                var computedStyle = getComputedStyle(img);
+                imgWidth = parseInt(computedStyle.getPropertyValue("width"));
+                imgHeight = parseInt(computedStyle.getPropertyValue("height"));
+
+                if(!isNaN(imgWidth)) context.drawImage(img,0,0,imgWidth,imgHeight);
+                else context.drawImage(img,0,0);
 
             }
             //canvas.draggable = "draggable";
@@ -169,6 +183,7 @@ Array.prototype.del = function(arr){
             tempPsLib.add(this,"正常",0,0,isFast);
             this.tempPsLib = tempPsLib;
 
+            //将挂接到本对象上的图层对象 一起合并到临时的psLib对象上去 用于显示合并的结果，不会影响每个图层，包括本图层
             for(var i = 0;i < this.layers.length;i ++){
                 var tA = this.layers[i];
                 var layers = tA[0].layers;
@@ -188,9 +203,55 @@ Array.prototype.del = function(arr){
 
             return this;
         },
-        add: function(psLibObj,method,dx,dy,isFast){//合并一个psLibObj图层上去
 
-            this.imgData = P.add(this.imgData,psLibObj.imgData,method,dx,dy,isFast);
+        replace: function(img){//替换原来的图片
+            if(img){
+                img.onload = function(){};
+                img.src = this.save();
+            }
+
+            return this;
+        },
+
+        add: function(){//psLibObj,method,alpha,dx,dy,isFast,channel){合并一个psLibObj图层上去
+            
+            var numberArr = [],psLibObj,method,alpha,dx,dy,isFast,channel;
+            for(var i = 0;i < arguments.length;i ++){
+                if(!i) continue;
+
+                switch(typeof(arguments[i])){
+                    case "string":
+                        if(/\d+%/.test(arguments[i])){//alpha
+                            alpha = arguments[i].replace("%","");
+                        }else if(/[RGB]+/.test(arguments[i])){//channel
+                            channel = arguments[i];
+                        }else{//method
+                            method = arguments[i];
+                        }
+                    break;
+
+                    case "number":
+                        numberArr.push(arguments[i]);
+                    break;
+
+                    case "boolean":
+                       isFast = arguments[i];
+                    break;
+
+                        
+                }
+            }
+
+            dx = numberArr[0] || 0;
+            dy = numberArr[1] || 0;
+            method = method || "正常";
+            alpha = alpha / 100 || 1;
+            isFast = isFast || false;
+            channel = channel || "RGB";
+
+            psLibObj = arguments[0];
+
+            this.imgData = P.add(this.imgData,psLibObj.imgData,method,alpha,dx,dy,isFast,channel);
 
             return this;
         },
@@ -220,7 +281,24 @@ Array.prototype.del = function(arr){
             this.layers = this.layers.del(arr);
         },
 
-        save: function(){//返回一个合成后的图像 png base64
+        save: function(isFast){//返回一个合成后的图像 png base64
+            //创建一个临时的psLib对象，防止因为合并显示对本身imgData影响
+            var tempPsLib = new window[Ps](this.canvas.width,this.canvas.height);
+            tempPsLib.add(this,"正常",0,0,isFast);
+            this.tempPsLib = tempPsLib;
+
+            //将挂接到本对象上的图层对象 一起合并到临时的psLib对象上去 用于显示合并的结果，不会影响每个图层，包括本图层
+            for(var i = 0;i < this.layers.length;i ++){
+                var tA = this.layers[i];
+                var layers = tA[0].layers;
+                var currLayer = tA[0];
+                if(layers[layers.length - 1] && layers[layers.length - 1][0].type == 1) currLayer = layers[layers.length - 1][0];
+                tempPsLib.add(currLayer,tA[1],tA[2],tA[3],isFast);
+            }
+
+            this.context.clearRect(0,0,this.canvas.width,this.canvas.height);
+            this.context.putImageData(tempPsLib.imgData,0,0);//以临时对象data显示
+
             return this.canvas.toDataURL(); 
         },
 
