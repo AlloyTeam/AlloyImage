@@ -59,6 +59,9 @@ img.onload = function(){
 <h4>初始化一个psLib对象<br>
 </h4>
 
+<h5>用img创建一个对象（图层）<br>
+</h5>
+
 <p>psLib(img) 或  new psLib(img)<br>
 img可以是new Image()创建的对象，也可以是DOM树中的image元素，但在创建psLib对象前确保 img已经被onload成功，否则可能导致抛出异常</p>
 
@@ -67,6 +70,12 @@ img.onload = function(){
      var psLibObj = psLib(this);
 };
 </code></pre>
+
+<h5>创建一个纯色或透明的对象（图层）<br>
+</h5>
+
+<p>psLibObj psLib(Number width,Number height,String fillStyle)<br>
+其中，width是图层宽度，height是图层高度，fillStyle是填涂的颜色，可以是#233322型，也可以是rgb(23,23,23)，甚至可以是rgba(23,23,23,0),或"red"这样的字符串<br></p>
 
 <p>一个psLib对象可以看做是一个图层，也可以看做是一个工作文件<br></p>
 
@@ -134,7 +143,7 @@ img.onload = function(){
 </table><h4>add</h4>
 
 <p>说明：合并一个图层到本图层上去<br>
-语法：psLibObj add(psLibObj new[,String model [,Number dx,Number dy]])<br>
+语法：psLibObj add(psLibObj new[,String model [,Number dx,Number dy,String alpha,String channel]])<br>
 本方法将会进行图层合并操作，会将新图层new以高于本图层的顺序，以model的混合模式，以相对本图层左上角为坐标原点的dx,dy偏移量合并到本图层，并返回合并后的图层对象<br>
 model的模式有17种，其效果和Photoshop中效果对应<br>
 "正常","颜色减淡","变暗","变亮","正片叠底","滤色","叠加","强光","差值","排除","点光","颜色加深","线性加深","线性减淡","柔光","亮光","线性光","实色混合" <br>
