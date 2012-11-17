@@ -98,7 +98,7 @@ img.onload = function(){
 <td>act("亮度",10,20)</td>
     </tr>
 <tr>
-<td>色相/饱和度调节 </td> <td> 调节图像色相与饱和度  </td> <td>  色相，饱和度，明度 </td> <td>   act("色相/饱和度调节",10,0,10)</td>
+<td>色相/饱和度调节 </td> <td> 调节图像色相与饱和度  </td> <td>  色相，饱和度，明度，是否着色模式(可选) </td> <td>   act("色相/饱和度调节",10,0,10,true)</td>
    </tr>
 <tr>
 <td>灰度处理</td> <td>将图像处理为灰度图像 </td>
@@ -140,6 +140,11 @@ img.onload = function(){
 <td>无</td>
 <td>act("腐蚀")</td>
     </tr>
+<tr>
+<td>添加杂色</td> <td>在图像上添加杂色 </td>
+<td>杂色数量</td>
+<td>act("添加杂色",10)</td>
+    </tr>
 </table><h4>add</h4>
 
 <p>说明：合并一个图层到本图层上去<br>
@@ -147,6 +152,7 @@ img.onload = function(){
 本方法将会进行图层合并操作，会将新图层new以高于本图层的顺序，以model的混合模式，以相对本图层左上角为坐标原点的dx,dy偏移量合并到本图层，并返回合并后的图层对象<br>
 model的模式有17种，其效果和Photoshop中效果对应<br>
 "正常","颜色减淡","变暗","变亮","正片叠底","滤色","叠加","强光","差值","排除","点光","颜色加深","线性加深","线性减淡","柔光","亮光","线性光","实色混合" <br>
+参数说明：第一个参数为必须参数，其他全部为可选参数，并且除了第一个必须要是图层对象外，其他参数位置全部可以随意调（alloyPhoto很多api参数很灵活)<br>
 用例：</p>
 
 <h4>show</h4>
@@ -265,6 +271,25 @@ for(var i = 0;i &lt; pics.length;i ++){
       m.add(
         m2.act("反色") , "测试"
       ).replace(this);
+
+
+
+  });
+}
+</code></pre>
+
+<p>3.复古风格</p>
+
+<pre><code>var pics = document.getElementsByTagName("img");
+
+for(var i = 0;i &lt; pics.length;i ++){
+  pics[i].loadOnce(function(){
+      /*
+         防止用onload事件注册后  replace会改变img的src导致onload事件再次触发形成循环
+      */
+      var m = psLib(this).act("灰度处理").add(
+        psLib(this.width,this.height,"#808080").act("添加杂色").act("高斯模糊",4).act("色相/饱和度调节",32,19,0,true),"叠加"
+      ).show();
 
 
 
