@@ -88,7 +88,8 @@ HTMLImageElement.prototype.loadOnce = function(func){//图片的初次加载才�
             if(!isNaN(img)){//var l = psLib(20,30);构造适配
                 canvas.width = img;
                 canvas.height = width;
-                context.fillStyle = "rgba(255,1,1,0)";
+                height = height || "rgba(255,1,1,0)";
+                context.fillStyle = height;
                 context.fillRect(0,0,img,width);
             }else{
 
@@ -726,7 +727,8 @@ HTMLImageElement.prototype.loadOnce = function(func){//图片的初次加载才�
             "马赛克": "mosaic",
             "油画": "oilPainting",
             "腐蚀": "corrode",
-            "锐化" : "sharp"
+            "锐化" : "sharp",
+            "添加杂色" : "noise"
         };
 
         var Config = {
@@ -1457,6 +1459,48 @@ HTMLImageElement.prototype.loadOnce = function(func){//图片的初次加载才�
 })("psLib");
 /*
  * @author: Bin Wang
+ * @description:   添加杂色 
+ *
+ * */
+;(function(Ps){
+
+    window[Ps].module("noise",function(P){
+
+        var M = {
+            process: function(imgData,arg){
+                var R = parseInt(arg[0]) || 100;
+                var data = imgData.data;
+                var width = imgData.width;
+                var height = imgData.height;
+                var xLength = R * 2 + 1;
+
+                //区块
+                for(var x = 0;x < width;x ++){
+
+                    for(var y = 0;y < height;y ++){
+                        
+                        var realI = y * width + x;
+                        for(var j = 0;j < 3;j ++){
+                            var rand = parseInt(Math.random() * R * 2) - R;
+                            data[realI * 4 + j] += rand;
+                        }
+
+                    }
+
+                }
+
+
+                return imgData;
+            }
+        };
+
+        return M;
+
+    });
+
+})("psLib");
+/*
+ * @author: Bin Wang
  * @description: 油画 
  *
  * */
@@ -1498,7 +1542,8 @@ HTMLImageElement.prototype.loadOnce = function(func){//图片的初次加载才�
 /*
  * @author: Bin Wang
  * @description: 调整RGB 饱和和度  
- *
+ *H (-2*Math.PI , 2 * Math.PI)  S (-100,100) I (-100,100)
+ * 着色原理  勾选着色后，所有的像素不管之前是什么色相，都变成当前设置的色相，然后饱和度变成现在设置的饱和度，但保持明度为原来的基础上加上设置的明度
  * */
 ;(function(Ps){
 
@@ -1509,12 +1554,19 @@ HTMLImageElement.prototype.loadOnce = function(func){//图片的初次加载才�
                 arg[0] = arg[0] / 180 * Math.PI;
                 arg[1] = arg[1] / 100 || 0;
                 arg[2] = arg[2] / 100 * 255 || 0;
+                arg[3] = arg[3] || false;//着色
 
                 P.lib.dorsyMath.applyInHSI(imgData,function(i){
 
-                    i.H += arg[0];
-                    i.S += arg[1];
-                    i.I += arg[2];
+                    if(arg[3]){
+                        i.H = arg[0];
+                        i.S = arg[1];
+                        i.I += arg[2];
+                    }else{
+                        i.H += arg[0];
+                        i.S += arg[1];
+                        i.I += arg[2];
+                    }
 
                 });
 

@@ -19,7 +19,8 @@
             "马赛克": "mosaic",
             "油画": "oilPainting",
             "腐蚀": "corrode",
-            "锐化" : "sharp"
+            "锐化" : "sharp",
+            "添加杂色" : "noise"
         };
 
         var Config = {

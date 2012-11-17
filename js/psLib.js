@@ -88,7 +88,8 @@ HTMLImageElement.prototype.loadOnce = function(func){//图片的初次加载才�
             if(!isNaN(img)){//var l = psLib(20,30);构造适配
                 canvas.width = img;
                 canvas.height = width;
-                context.fillStyle = "rgba(255,1,1,0)";
+                height = height || "rgba(255,1,1,0)";
+                context.fillStyle = height;
                 context.fillRect(0,0,img,width);
             }else{
 
