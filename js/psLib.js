@@ -152,11 +152,11 @@ HTMLImageElement.prototype.loadOnce = function(func){//图片的初次加载才�
 
             return this;
         },
-        view: function(method,arg1,arg2,arg3){//预览模式 ，所有的再操作全部基于原点，不会改变本图层的效果，直到act会去除这部分图层
+        view: function(method,arg1,arg2,arg3,arg4){//预览模式 ，所有的再操作全部基于原点，不会改变本图层的效果，直到act会去除这部分图层
             var newLayer = this.clone();
             newLayer.type = 1;
             this.addLayer(newLayer,"正常",0,0);
-            newLayer.act(method,arg1,arg2,arg3);
+            newLayer.act(method,arg1,arg2,arg3,arg4);
 
             return this;
         },

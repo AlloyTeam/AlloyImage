@@ -35,12 +35,15 @@ img.onload = function(){
   ).show(".p");
   */
 //psLib(img).act("油画",100).show(".p");
-  psLib(this).act("添加杂色").show();
+  //psLib(this).act("添加杂色").show();
 
+  psLib(this).view("色相/饱和度调节",0,-100).show();
+  /*
   psLib(img).add(
       psLib(img) , "颜色减淡" , "100%",0,0,false
   ).show();
   psLib(img).act("灰度阈值",70).show();
+  */
   /*
    psLib(img).act("灰度处理").add(
       psLib(img).act("灰度处理").act("反色").act("高斯模糊",5) , "颜色减淡"  

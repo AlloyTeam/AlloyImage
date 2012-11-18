@@ -65,7 +65,7 @@
     var layerCount = 0;//图层的命名计数
     var Main = {
         layers: [],
-        ps: psLib(570,430),//主画布
+        ps: null,//主画布
         layers:[],
         currLayer:[],
         openFile: function(fileUrl){//打开文件
@@ -85,6 +85,12 @@
         },
         addImage: function(img){
             var psObj = psLib(img);
+            if(!(this.ps)){
+                this.ps = psLib(parseInt(img.width),parseInt(img.height),"rgba(255,255,255,0)");
+                $(".left").css({width:img.width,height:img.height});
+                $(".openFile").html("画布区");
+            }
+
             this.layers.push(psObj);
             this.ps.addLayer(psObj);//添加一个图层
             this.currLayer = [this.layers.length - 1];//设置当前图层
@@ -164,14 +170,45 @@
                 _this.openFile(e.target.files[0]);
             });
 
-            $(".pItem:eq(1)").click(function(){
+            $("#new").click(function(){
+                msg.title = "新建";
+                msg.msg = "新建立一个图层";
+                msg.inhtml = "宽度：<input type='number' id='newWidth' value='800' />px 高度：<input type='number' id='newHeight' value='600'/>px<br />填充颜色<input type='text' id='newColor' value='rgba(255,255,255,0)' /><input type='button' id='confirmNew' value='确定' />";
+                msg.init();
+                msg.show();
+            });
+
+            $("#confirmNew").live("click",function(){
+                msg.hide();
+
+                var width = $("#newWidth").val();
+                var height = $("#newHeight").val();
+                var color = $("#newColor").val();
+
+                var psObj = psLib(width,height,color);
+                if(!(_this.ps)){
+                    _this.ps = psLib(width,height,"rgba(255,255,255,0)");
+                    $(".left").css({width:width + "px", height:height + "px"});
+                    $(".openFile").html("画布区");
+                }
+
+                _this.layers.push(psObj);
+                _this.ps.addLayer(psObj);//添加一个图层
+                _this.currLayer = [_this.layers.length - 1];//设置当前图层
+
+                _this.addLayer();//向面板添加一个图层
+                _this.draw();
+
+            });
+
+            $("#modify").click(function(){
                 $(".pItem").hide("fast");
                 $("#upFile").hide();
                 $(".modifyItem").css("display","block");
                 $(".back").show();
             });
 
-            $(".pItem:eq(2)").click(function(){
+            $("#lj").click(function(){
                 $(".pItem").each(function(i){
                     if(i == 3) $(this).hide("fast",function(){
                         $(".ljItem").css("display","block");
@@ -187,6 +224,7 @@
                 var img = new Image();
                 img.src = data;
                 $(".painting").html(img);
+                alert("图片已经输出成功，请右键点击图片，另存为图片即可保存");
                 /*
                 try{
                     _this.notifer.notice({"msg": data});
@@ -230,6 +268,7 @@
                     for(var i = 0;i < _this.currLayer.length;i ++){
                         _this.layers[_this.currLayer[i]].view("亮度",value1,value);
                     }
+                    _this.draw();
                 });
         });
             $("#modi_HSI").click(function(){
@@ -237,31 +276,35 @@
                 msg.msg = "请滑动调节";
                 msg.inhtml = "色　相:<div id='dBar1' class='dBar' rangeMin='-180' rangeMax='180'><a draggable='false' href='#'></a><div class='dMsg'>0</div></div><br />";
                 msg.inhtml += "饱和度:<div id='dBar2' class='dBar' rangeMin='-50' rangeMax='50'><a draggable='false' href='#'></a><div class='dMsg'>0</div></div><br />";
-                msg.inhtml += "明　度:<div id='dBar3' class='dBar' rangeMin='-50' rangeMax='50'><a draggable='false' href='#'></a><div class='dMsg'>0</div></div>";
+                msg.inhtml += "明　度:<div id='dBar3' class='dBar' rangeMin='-50' rangeMax='50'><a draggable='false' href='#'></a><div class='dMsg'>0</div></div><br /><input type='checkbox' value='true' id='isColored' />着色";
                 msg.inhtml += "<div class='dView'><button id='excute'>确定</button><button id='cancel'>取消</button></div>";
                 msg.init();
                 msg.show();
+
                 Bar.addObserver("dBar1",function(value){
                     var value2 = parseInt($("#dBar2 .dMsg").text());
                     var value3 = parseInt($("#dBar3 .dMsg").text());
+                    var isChecked = $("#isColored").attr("checked");
                     for(var i = 0;i < _this.currLayer.length;i ++){
-                        _this.layers[_this.currLayer[i]].view("色相/饱和度调节",value,value2,value3);
+                        _this.layers[_this.currLayer[i]].view("色相/饱和度调节",value,value2,value3,isChecked);
                     }
                     _this.draw();
                 });
                 Bar.addObserver("dBar2",function(value){
                     var value1 = parseInt($("#dBar1 .dMsg").text());
                     var value3 = parseInt($("#dBar3 .dMsg").text());
+                    var isChecked = $("#isColored").attr("checked");
                     for(var i = 0;i < _this.currLayer.length;i ++){
-                        _this.layers[_this.currLayer[i]].view("色相/饱和度调节",value1,value,value3);
+                        _this.layers[_this.currLayer[i]].view("色相/饱和度调节",value1,value,value3,isChecked);
                     }
                     _this.draw();
                 });
                 Bar.addObserver("dBar3",function(value){
                     var value1 = parseInt($("#dBar1 .dMsg").text());
                     var value2 = parseInt($("#dBar2 .dMsg").text());
+                    var isChecked = $("#isColored").attr("checked");
                     for(var i = 0;i < _this.currLayer.length;i ++){
-                        _this.layers[_this.currLayer[i]].view("色相/饱和度调节",value1,value2,value);
+                        _this.layers[_this.currLayer[i]].view("色相/饱和度调节",value1,value2,value,isChecked);
                     }
                     _this.draw();
                 });

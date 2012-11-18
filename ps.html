@@ -22,14 +22,16 @@
   <script type="text/javascript" src="js/module/mosaic.js"></script>
   <script type="text/javascript" src="js/module/oilPainting.js"></script>
   <script type="text/javascript" src="js/module/corrode.js"></script>
+  <script type="text/javascript" src="js/module/noise.js"></script>
 </head>
 <body>
 <div class="wrapper">
   <div class="title">AlloyPhoto 1.0 Beta</div>
   <div class="panel">
-    <div class="pItem"><img src='images/open.png' /><br />打开图片</div>
-    <div class="pItem"><img src='images/modify.png' /><br />调整</div>
-    <div class="pItem"><img src='images/lvjing.png' /><br />滤镜</div>
+    <div class="pItem" id="new"><img src='images/open.png' /><br />新建</div>
+    <div class="pItem" id="open"><img src='images/open.png' /><br />打开图片</div>
+    <div class="pItem" id="modify"><img src='images/modify.png' /><br />调整</div>
+    <div class="pItem" id="lj"><img src='images/lvjing.png' /><br />滤镜</div>
     <div class="pItem" id="saveFile"><img src='images/save.png' /><br />保存图片</div>
     <div class="modifyItem subItem" id="modi_b">亮度/对比度调节</div>
     <div class="modifyItem subItem" id="modi_HSI">饱和度调节</div>
@@ -41,6 +43,7 @@
     <div class="ljItem subItem">查找边缘</div>
     <div class="ljItem subItem">马赛克</div>
     <div class="ljItem subItem">腐蚀</div>
+    <div class="ljItem subItem">添加杂色</div>
     <img src="images/back.png" alt="" class="back" />
   </div>
   <div class="left">
