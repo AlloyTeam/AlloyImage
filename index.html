@@ -150,10 +150,22 @@ img.onload = function(){
 <p>说明：合并一个图层到本图层上去<br>
 语法：psLibObj add(psLibObj new[,String model [,Number dx,Number dy,String alpha,String channel]])<br>
 本方法将会进行图层合并操作，会将新图层new以高于本图层的顺序，以model的混合模式，以相对本图层左上角为坐标原点的dx,dy偏移量合并到本图层，并返回合并后的图层对象<br>
+参数说明：第一个参数为必须参数，其他全部为可选参数，并且除了第一个必须要是图层对象外，其他参数位置全部可以随意调（alloyPhoto很多api参数很灵活)<br>
 model的模式有17种，其效果和Photoshop中效果对应<br>
 "正常","颜色减淡","变暗","变亮","正片叠底","滤色","叠加","强光","差值","排除","点光","颜色加深","线性加深","线性减淡","柔光","亮光","线性光","实色混合" <br>
-参数说明：第一个参数为必须参数，其他全部为可选参数，并且除了第一个必须要是图层对象外，其他参数位置全部可以随意调（alloyPhoto很多api参数很灵活)<br>
-用例：</p>
+alpha代表透明度，要求为Sring类型，并且需要带%号，比如"20%","0%","100%"（可以不写，默认值)<br>
+dx,dy分别为Number类型<br>
+channel为混合通道，表示以哪些通道混合，比如"RB"，代表混合R、B通道<br></p>
+
+<p>用例：</p>
+
+<p>下面的例子表示m2图层反色处理后，和m图层以正常（可以不写）的混合模式，20%的透明度，只混合B通道的选项进行合并操作</p>
+
+<pre><code>//...some code here
+m.add(
+   m2.act("反色") , "正常","20%","B"
+).replace(this);
+</code></pre>
 
 <h4>show</h4>
 
@@ -181,7 +193,8 @@ img.loadOnce(function(){//loadOnce添加为alloyPhoto添加
 
 <p>说明：复制图层对象<br>
 语法：psLibObj clone()<br>
-使用该方法后，将会返回一个图层副本。我们都知道，基于js对象都是引用传递，所以，此方法构造一个与原图层无关的图层副本</p>
+使用该方法后，将会返回一个图层副本。我们都知道，基于js对象都是引用传递，所以，此方法构造一个与原图层无关的图层副本<br>
+如 var layer2 = layer.clone();</p>
 
 <h4>view</h4>
 
@@ -269,7 +282,7 @@ for(var i = 0;i &lt; pics.length;i ++){
       var m2 = m.clone();
 
       m.add(
-        m2.act("反色") , "测试"
+        m2.act("反色") , "正常","20%","B"
       ).replace(this);
 
 
