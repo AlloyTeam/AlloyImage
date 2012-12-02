@@ -145,8 +145,8 @@
                 "灰色" : "e11",
                 "暖秋" : "e12"
             };
-            var effectModel = '<li class="e_item"><div class="imgWrapper"><img src="images/demo/{pic}.png" alt="" />{effect}</div></li>';
-            var html = '<li class="e_item"><div class="imgWrapper"><img src="images/demo/e1.jpg" alt="" />原图</div></li>';
+            var effectModel = '<li class="e_item"><div class="imgWrapper"><img src="style/image/demo/{pic}.png" alt="" />{effect}</div></li>';
+            var html = '<li class="e_item"><div class="imgWrapper"><img src="style/image/demo/e1.jpg" alt="" />原图</div></li>';
             for(var i in EasyReflection){
                html += effectModel.replace("{effect}",i.length < 3 ? i + "效果" : i).replace("{pic}", EasyReflection[i]); 
             }

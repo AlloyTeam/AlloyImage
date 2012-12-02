@@ -164,7 +164,7 @@
             $("#upFile").change(function(e){//上传文件处理
                 msg.title = "读取文件";
                 msg.msg = "正在读取文件...";
-                msg.inhtml = "<img src='images/03.gif' />";
+                msg.inhtml = "<img src='style/image/03.gif' />";
                 msg.init();
                 msg.show();
                 _this.openFile(e.target.files[0]);
