@@ -144,6 +144,10 @@ HTMLImageElement.prototype.loadOnce = function(func){//图片的初次加载才�
         P.module(name,func);
     };
 
+    window[Ps].dorsyMath = function(){
+        return P.lib.dorsyMath;
+    };
+
     window[Ps].prototype = {//原型对象
 
         act: function(method,arg){

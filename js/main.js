@@ -31,11 +31,132 @@
         $(".commonmsgbox").slideDown("fast");
       };
       this.hide = function(){
+        this.inhtml = "";
+        $(".commonmsgbox").html("");
         $(".commonmsgbox").slideUp("fast");
       };
       this.close = this.hide;
     }
     var msg = new MsgBox("AlloyPhoto","","");
+
+    var Curve = {
+        dotX: [],
+        dotY: [],
+        canvas: null,
+        f: null,
+        init: function(wrapper){
+            this.dorsyMath = psLib.dorsyMath();
+            var canvas = document.createElement("canvas");
+            canvas.width = "400";
+            canvas.height = "200";
+            wrapper.append(canvas);
+
+            this.canvas = canvas;
+            this.eventAtt();
+        },
+        draw: function(){
+            var f = this.dorsyMath.lagrange(this.dotX, this.dotY);
+            var ctx = this.canvas.getContext("2d");
+
+            var width = this.canvas.width;
+            var height = this.canvas.height;
+            ctx.clearRect(0, 0, width, height);
+
+            for(var i = 0;i <this.dotX.length;i ++){
+                var dx = this.dotX[i] / 255 * width;
+                var dy = (1 - this.dotY[i] / 255) * height;
+                ctx.beginPath();
+                ctx.arc(dx, dy,5,0, 2 * Math.PI);
+                ctx.closePath();
+                ctx.fill();
+            }
+            ctx.beginPath();
+
+            for(var i = 0;i < 256;i ++){
+                var x = i / 255 * width;
+                var y = height - f(i) / 255 * height;
+                y = y > height ? height : y;
+                y = y < 0 ? 0 : y;
+                ctx.lineTo(x,y);
+            }
+            ctx.stroke();
+            ctx.closePath();
+            
+            this.f = f;
+            var func = this.func ? this.func : function(){};
+            func(this.dotX, this.dotY);
+        },
+        setPoint: function(dotX, dotY){
+            this.dotX = dotX;
+            this.dotY = dotY;
+            this.draw();
+        },
+        setObserver: function(func){
+            this.func = func;
+        },
+        eventAtt: function(){
+            var _this = this;
+            var lineOnFlag = 0,relate = null;//标记在曲线上
+            this.canvas.onmousemove = function(e){
+                var relate2 = null
+                var dx = e.offsetX ? e.offsetX : e.pageX;
+                var dy = e.offsetY ? e.offsetY : e.pageY;
+                var x = dx / _this.canvas.width * 255;
+                var y = (1 - dy / _this.canvas.height) * 255;
+                var delta = _this.f(x) - y;
+                if(Math.abs(delta) < 9){
+                    for(var i = 0;i < _this.dotX.length;i ++){
+                        var delta = x - _this.dotX[i];
+                        this.style.cursor = "pointer";
+                        if(Math.abs(delta) < 9){
+                            relate2 = true;
+                            break;
+                        }
+                    }
+                }else{
+                    this.style.cursor = "auto";
+                }
+            };
+            this.canvas.onmousedown = function(e){
+                var dx = e.offsetX ? e.offsetX : e.pageX;
+                var dy = e.offsetY ? e.offsetY : e.pageY;
+                var x = dx / _this.canvas.width * 255;
+                var y = (1 - dy / _this.canvas.height) * 255;
+                var delta = _this.f(x) - y;
+                if(Math.abs(delta) < 9){
+                    lineOnFlag = 1;
+
+                    for(var i = 0;i < _this.dotX.length;i ++){
+                        var delta = x - _this.dotX[i];
+                        if(Math.abs(delta) < 9){
+                            relate = i;
+                            break;
+                        }
+                    }
+                }
+            };
+            this.canvas.onmouseup = function(e){
+                if(lineOnFlag){
+                    lineOnFlag = 0;
+                    var dx = e.offsetX ? e.offsetX : e.pageX;
+                    var dy = e.offsetY ? e.offsetY : e.pageY;
+                    var x = dx / _this.canvas.width * 255;
+                    var y = (1 - dy / _this.canvas.height) * 255;   
+
+                    if(relate){
+                        _this.dotX[relate] = x;
+                        _this.dotY[relate] = y;
+                    }else{
+                        _this.dotX.push(x);
+                        _this.dotY.push(y);
+                    }
+                    _this.draw();
+                    
+                    relate = null;
+                }
+            };
+        }
+    };
 
     var Bar = {//对滑动bar的事件处理对象
         observer: [],
@@ -309,6 +430,24 @@
                     _this.draw();
                 });
             });
+        $("#curve").live("click", function(){
+           msg.title = "曲线";
+           msg.msg = "请点击或调节节点";
+           msg.height = "400px";
+           msg.inhtml = "<div id='curveAlter' style=''></div><div class='dView'><button id='excute'>确定</button><button id='cancel'>取消</button></div>";
+           msg.init();
+           msg.show();
+           
+           Curve.init($("#curveAlter"));
+           Curve.setPoint([0,255],[0,255]);
+           Curve.setObserver(function(dotX,dotY){
+                for(var i = 0;i < _this.currLayer.length;i ++){
+                        _this.layers[_this.currLayer[i]].view("曲线",dotX,dotY);
+                }
+                _this.draw();
+           });
+        });
+
         $("#excute").live("click",function(){
             for(var i = 0;i < _this.currLayer.length;i ++){
                 _this.layers[_this.currLayer[i]].excute();

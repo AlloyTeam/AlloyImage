@@ -29,6 +29,7 @@ h3{
 }
 .wrapper{
     border-top:1px solid #282B2F;
+    display:box;
     display:-webkit-box;
     box-orient:horizontal;
     -webkit-box-orient:horizontal;
@@ -64,6 +65,7 @@ h3{
     border-top-left-radius:10px;
     border-bottom-left-radius:10px;
     width:100px;
+    transition:all ease-in .2s;
     -webkit-transition:all ease-in .2s;
     content:"sss";
     position:relative;
@@ -89,6 +91,7 @@ h3{
     padding-left:110px;
 }
 .imgWrapper img:hover{
+    box-shadow:0 0 10px #52cca0;
     -webkit-box-shadow:0 0 10px #52cca0;
 }
 .picWrapper{
@@ -100,7 +103,9 @@ h3{
     position:absolute;
     left:0;
     top:0;
+    box-shadow:6px 6px 3px #333;
     -webkit-box-shadow:6px 6px 3px #333;
+    transition:all ease-in-out .4s;
     -webkit-transition:all ease-in-out .4s;
 }
 .command{
