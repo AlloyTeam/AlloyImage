@@ -63,6 +63,11 @@ HTMLImageElement.prototype.loadOnce = function(func){//图片的初次加载才�
             return this.lib[moduleName].process(imgData,args);//交由实际处理数据单元处理
         },
 
+        reflectEasy: function(effect){
+            var fun = this.lib.config.getEasyFun(effect);
+            return this.lib.easy.getFun(fun);
+        },
+
         add: function(lowerData,upperData,method,alpha,dx,dy,isFast,channel){
             return this.lib.addLayer.add(lowerData,upperData,method,alpha,dx,dy,isFast,channel);
         },
@@ -152,11 +157,11 @@ HTMLImageElement.prototype.loadOnce = function(func){//图片的初次加载才�
 
             return this;
         },
-        view: function(method,arg1,arg2,arg3){//预览模式 ，所有的再操作全部基于原点，不会改变本图层的效果，直到act会去除这部分图层
+        view: function(method,arg1,arg2,arg3,arg4){//预览模式 ，所有的再操作全部基于原点，不会改变本图层的效果，直到act会去除这部分图层
             var newLayer = this.clone();
             newLayer.type = 1;
             this.addLayer(newLayer,"正常",0,0);
-            newLayer.act(method,arg1,arg2,arg3);
+            newLayer.act(method,arg1,arg2,arg3,arg4);
 
             return this;
         },
@@ -340,6 +345,13 @@ HTMLImageElement.prototype.loadOnce = function(func){//图片的初次加载才�
             }
             context.lineTo(canvas.width + 10,height);
             context.fill();
+        },
+
+        easy: function(effect){
+            var fun = P.reflectEasy(effect);
+            var _this = this;
+            _this = fun.call(_this);
+            return _this;
         }
 
     };
@@ -410,7 +422,7 @@ HTMLImageElement.prototype.loadOnce = function(func){//图片的初次加载才�
 
                 var jump = 1;
                 if(isFast){
-                   jump = 20; 
+                   jump = 1; 
                 }
 
                 var result;
@@ -430,8 +442,10 @@ HTMLImageElement.prototype.loadOnce = function(func){//图片的初次加载才�
                     var uI = uIi * 4;
 
                     if(uI >= 0 && uI < (upperData.data.length - 4) && uCol < upperData.width && uCol >= 0){
-                        l[i + 3] = u[uI + 3];//透明度
+                        //l[i + 3] = u[uI + 3];//透明度
                         for(var j = 0;j < 3;j ++){
+                            if(u[uI + 3] == 0) break;//若此点透明则不计算
+                            else l[i + 3] = u[uI + 3];
                             switch(method){
                                 case "颜色减淡" :
                                     if(channelString.indexOf(j) > -1){
@@ -728,12 +742,31 @@ HTMLImageElement.prototype.loadOnce = function(func){//图片的初次加载才�
             "油画": "oilPainting",
             "腐蚀": "corrode",
             "锐化" : "sharp",
-            "添加杂色" : "noise"
+            "添加杂色" : "noise",
+            "曲线" : "curve"
+        };
+
+        var EasyReflection = {
+            "美肤" : "e1",
+            "素描" : "e2",
+            "自然增强" : "e3",
+            "紫调" : "e4",
+            "柔焦" : "e5",
+            "复古" : "e6",
+            "黑白" : "e7",
+            "仿lomo" : "e8",
+            "亮白增强" : "e9",
+            "灰白" : "e10",
+            "灰色" : "e11",
+            "暖秋" : "e12",
         };
 
         var Config = {
             getModuleName: function(method){
-                return Reflection[method];
+                return Reflection[method] || method;
+            },
+            getEasyFun: function(effect){
+                return EasyReflection[effect] || effect;
             }
         };
 
@@ -770,6 +803,49 @@ HTMLImageElement.prototype.loadOnce = function(func){//图片的初次加载才�
                         var realJ = (y + randomI) * width + x + randomJ;
                         for(var j = 0;j < 3;j ++){
                             data[realI * 4 + j] = data[realJ * 4 + j];
+                        }
+
+                    }
+
+                }
+
+
+                return imgData;
+            }
+        };
+
+        return M;
+
+    });
+
+})("psLib");
+/*
+ * @author: Bin Wang
+ * @description:    曲线 
+ *
+ * */
+;(function(Ps){
+
+    window[Ps].module("curve",function(P){
+
+        var M = {
+            process: function(imgData,arg){
+                /*
+                 * arg   arg[0] = [3,3] ,arg[1]  = [2,2]
+                 * */
+
+                var f = P.lib.dorsyMath.lagrange(arg[0], arg[1]);
+                var data = imgData.data;
+                var width = imgData.width;
+                var height = imgData.height;
+                //区块
+                for(var x = 0;x < width;x ++){
+
+                    for(var y = 0;y < height;y ++){
+                        
+                        var realI = y * width + x;
+                        for(var j = 0;j < 3;j ++){
+                            data[realI * 4 + j] = f(data[realI * 4 + j]);
                         }
 
                     }
@@ -1210,6 +1286,95 @@ HTMLImageElement.prototype.loadOnce = function(func){//图片的初次加载才�
 })("psLib");
 /*
  * @author: Bin Wang
+ * @description:    腐蚀 
+ *
+ * */
+;(function(Ps){
+
+    window[Ps].module("easy",function(P){
+
+        var M = {
+            getFun: function(fun){
+                var Effects = {
+                    e1: function(){//美肤
+                        var _this = this.clone();
+                        return  _this.add(
+                            this.act("高斯模糊",10),"滤色"
+                        ).act("亮度",-10,5);
+                    },
+                    e2: function(){//素描
+                        var _this = this.act("灰度处理").clone();
+                        return this.add(
+                            _this.act("反色").act("高斯模糊",8), "颜色减淡"
+                        ).act("锐化",1);
+                    },
+                    e3: function(){//自然增强
+                      return this.act("曲线",[0,190,255],[0,229,255]);
+                    },
+                    e4: function(){
+                        var _this = this.clone();
+                        return this.add(
+                            _this.act("高斯模糊",3), "正片叠底" ,"RG"
+                        );
+                        
+                    },
+                    e5: function(){
+                        var _this = this.clone();
+                        return this.add(
+                            _this.act("高斯模糊",6), "变暗"
+                        );
+                    },
+                    e6: function(){//复古
+                        var _this = this.clone();
+                        return this.act("灰度处理").add(
+                            window[Ps](this.canvas.width,this.canvas.height,"#808080").act("添加杂色").act("高斯模糊",4).act("色相/饱和度调节",32,19,0,true),"叠加"
+                        );
+                    },
+                    e7: function(){//黑白
+                        return this.act("灰度处理");
+                    },
+                    e8: function(){//仿lomo
+                        var m = this.clone().add(
+                            this.clone() , "滤色"
+                        ).add(
+                            this.clone() , "柔光"
+                        );
+
+                        return m.add(
+                            this.clone().act("反色") , "正常","20%","B"
+                        );
+                        
+                    },
+                    e9: function(){
+                        return this.clone().add(
+                            this.clone().act("曲线",[0,50,255],[0,234,255]), "柔光"
+                        );
+                    },
+                    e10: function(){//高对比 灰白
+                        return this.act("灰度处理").act("曲线",[0,61,69,212,255],[0,111,176,237,255]);
+                    },
+                    e11: function(){
+                            return this.act("灰度处理").act("曲线",[0,60,142,194,255],[0,194,240,247,255])
+                    },
+                    e12: function(){
+                        var m = this.clone().act("色相/饱和度调节",36,47,8,true);
+                        return this.add(
+                            m, "叠加"
+                        );
+                    }
+                };
+
+                return Effects[fun];
+            }
+        };
+
+        return M;
+
+    });
+
+})("psLib");
+/*
+ * @author: Bin Wang
  * @description:  浮雕效果
  *
  * */
@@ -1510,7 +1675,7 @@ HTMLImageElement.prototype.loadOnce = function(func){//图片的初次加载才�
 
         var M = {
             process: function(imgData,arg){
-                var R = parseInt(arg[0]) || 128;
+                var R = parseInt(arg[0]) || 16;
                 var data = imgData.data;
                 var width = imgData.width;
                 var height = imgData.height;
@@ -1522,8 +1687,14 @@ HTMLImageElement.prototype.loadOnce = function(func){//图片的初次加载才�
                     for(var y = 0;y < height;y ++){
                         
                         var realI = y * width + x;
+                        var gray = 0;
                         for(var j = 0;j < 3;j ++){
-                            data[realI * 4 + j] = parseInt(data[realI * 4 + j] / R) * R;
+                            gray += data[realI * 4 + j];
+                        }
+                        gray = gray / 3;
+                        var every = parseInt(gray / R) * R;
+                        for(var j = 0;j < 3;j ++){
+                            data[realI * 4 + j] = every;
                         }
                     }
 
@@ -1693,7 +1864,7 @@ HTMLImageElement.prototype.loadOnce = function(func){//图片的初次加载才�
                 imgData = P.lib.toGray.process(imgData);
                 var data = imgData.data;
 
-                if(!arg) arg = 125;
+                var arg = arg[0] || 128;
                 for(var i = 0,n = data.length;i < n;i ++){
                     if((i + 1) % 4){
                         data[i] = data[i] > arg ? 255 : 0;

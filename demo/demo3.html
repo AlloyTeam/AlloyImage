@@ -1,0 +1,32 @@
+<!DOCTYPE HTML>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>AlloyPhoto Demo1</title>
+  <style type="text/css">
+img{
+}
+  </style>
+  <script type="text/javascript" src="../js/combined/psLib_com.js"></script>
+</head>
+<body>
+<img id="pic" src="../img/7.jpg" alt="" />	
+<script type="text/javascript">
+var pics = document.getElementsByTagName("img");
+
+for(var i = 0;i < pics.length;i ++){
+  pics[i].loadOnce(function(){
+      /*
+         防止用onload事件注册后  replace会改变img的src导致onload事件再次触发形成循环
+      */
+      var m = psLib(this).act("灰度处理").add(
+        psLib(this.width,this.height,"#808080").act("添加杂色").act("高斯模糊",4).act("色相/饱和度调节",32,19,0,true),"叠加"
+      ).show();
+
+
+
+  });
+}
+</script>
+</body>
+</html>

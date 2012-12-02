@@ -27,7 +27,7 @@
 
                 var jump = 1;
                 if(isFast){
-                   jump = 20; 
+                   jump = 1; 
                 }
 
                 var result;
@@ -47,8 +47,10 @@
                     var uI = uIi * 4;
 
                     if(uI >= 0 && uI < (upperData.data.length - 4) && uCol < upperData.width && uCol >= 0){
-                        l[i + 3] = u[uI + 3];//透明度
+                        //l[i + 3] = u[uI + 3];//透明度
                         for(var j = 0;j < 3;j ++){
+                            if(u[uI + 3] == 0) break;//若此点透明则不计算
+                            else l[i + 3] = u[uI + 3];
                             switch(method){
                                 case "颜色减淡" :
                                     if(channelString.indexOf(j) > -1){

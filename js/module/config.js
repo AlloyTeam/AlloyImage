@@ -20,12 +20,31 @@
             "油画": "oilPainting",
             "腐蚀": "corrode",
             "锐化" : "sharp",
-            "添加杂色" : "noise"
+            "添加杂色" : "noise",
+            "曲线" : "curve"
+        };
+
+        var EasyReflection = {
+            "美肤" : "e1",
+            "素描" : "e2",
+            "自然增强" : "e3",
+            "紫调" : "e4",
+            "柔焦" : "e5",
+            "复古" : "e6",
+            "黑白" : "e7",
+            "仿lomo" : "e8",
+            "亮白增强" : "e9",
+            "灰白" : "e10",
+            "灰色" : "e11",
+            "暖秋" : "e12",
         };
 
         var Config = {
             getModuleName: function(method){
-                return Reflection[method];
+                return Reflection[method] || method;
+            },
+            getEasyFun: function(effect){
+                return EasyReflection[effect] || effect;
             }
         };
 

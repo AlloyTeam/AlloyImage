@@ -63,6 +63,11 @@ HTMLImageElement.prototype.loadOnce = function(func){//图片的初次加载才�
             return this.lib[moduleName].process(imgData,args);//交由实际处理数据单元处理
         },
 
+        reflectEasy: function(effect){
+            var fun = this.lib.config.getEasyFun(effect);
+            return this.lib.easy.getFun(fun);
+        },
+
         add: function(lowerData,upperData,method,alpha,dx,dy,isFast,channel){
             return this.lib.addLayer.add(lowerData,upperData,method,alpha,dx,dy,isFast,channel);
         },
@@ -340,6 +345,13 @@ HTMLImageElement.prototype.loadOnce = function(func){//图片的初次加载才�
             }
             context.lineTo(canvas.width + 10,height);
             context.fill();
+        },
+
+        easy: function(effect){
+            var fun = P.reflectEasy(effect);
+            var _this = this;
+            _this = fun.call(_this);
+            return _this;
         }
 
     };

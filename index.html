@@ -19,11 +19,12 @@
   <script type="text/javascript" src="js/module/mosaic.js"></script>
   <script type="text/javascript" src="js/module/noise.js"></script>
   <script type="text/javascript" src="js/module/oilPainting.js"></script>
+  <script type="text/javascript" src="js/module/easy.js"></script>
+  <script type="text/javascript" src="js/module/curve.js"></script>
 </head>
 <body>
-<img src="img/3.jpg" alt="" id='test' />
+<img src="img/11.jpg" width="300" alt="" id='test' />
 <div class="p"></div>
-<a href="demo1.html">demo1</a>
 <script type="text/javascript">
 var img = document.getElementById("test");
 var m = new Image();
@@ -37,7 +38,16 @@ img.onload = function(){
 //psLib(img).act("油画",100).show(".p");
   //psLib(this).act("添加杂色").show();
 
-  psLib(this).view("色相/饱和度调节",0,-100).show();
+  var p = psLib(this);
+  p.easy("美肤").show();
+  psLib(this).easy("素描").show();
+  psLib(this).easy("自然增强").show();
+  psLib(this).easy("e4").show();
+  psLib(this).easy("柔焦").show();
+  psLib(this).easy("e6").show();
+  psLib(this).easy("e7").show();
+  psLib(this).easy("e8").show();
+  psLib(this).easy("e9").show();
   /*
   psLib(img).add(
       psLib(img) , "颜色减淡" , "100%",0,0,false

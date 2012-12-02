@@ -12,7 +12,7 @@
                 imgData = P.lib.toGray.process(imgData);
                 var data = imgData.data;
 
-                if(!arg) arg = 125;
+                var arg = arg[0] || 128;
                 for(var i = 0,n = data.length;i < n;i ++){
                     if((i + 1) % 4){
                         data[i] = data[i] > arg ? 255 : 0;
