@@ -16,14 +16,14 @@
     <!-- HEADER -->
     <div id="header_wrap" class="outer">
         <header class="inner">
-          <a id="forkme_banner" href="https://github.com/honghu91/alloyPhoto">View on GitHub</a>
+          <a id="forkme_banner" href="https://github.com/AlloyTeam/AlloyPhoto">View on GitHub</a>
 
           <h1 id="project_title">Alloyphoto</h1>
           <h2 id="project_tagline">an image processing lib based on html5</h2>
 
             <section id="downloads">
-              <a class="zip_download_link" href="https://github.com/honghu91/alloyPhoto/zipball/master">Download this project as a .zip file</a>
-              <a class="tar_download_link" href="https://github.com/honghu91/alloyPhoto/tarball/master">Download this project as a tar.gz file</a>
+              <a class="zip_download_link" href="https://github.com/AlloyTeam/AlloyPhoto/zipball/master">Download this project as a .zip file</a>
+              <a class="tar_download_link" href="https://github.com/AlloyTeam/AlloyPhoto/tarball/master">Download this project as a tar.gz file</a>
             </section>
         </header>
     </div>
@@ -99,6 +99,9 @@ img.onload = function(){
     </tr>
 <tr>
 <td>色相/饱和度调节 </td> <td> 调节图像色相与饱和度  </td> <td>  色相，饱和度，明度，是否着色模式(可选) </td> <td>   act("色相/饱和度调节",10,0,10,true)</td>
+   </tr>
+<tr>
+<td>曲线</td> <td> 调节灰度曲线  </td> <td>  节点x的坐标数组，节点y的坐标数组 </td> <td>   act("曲线",[0,65,128,255], [0,120,220,255])</td>
    </tr>
 <tr>
 <td>灰度处理</td> <td>将图像处理为灰度图像 </td>
@@ -317,7 +320,7 @@ for(var i = 0;i &lt; pics.length;i ++){
     <!-- FOOTER  -->
     <div id="footer_wrap" class="outer">
       <footer class="inner">
-        <p class="copyright">Alloyphoto maintained by <a href="https://github.com/honghu91">honghu91</a></p>
+        <p class="copyright">Alloyphoto maintained by <a href="https://github.com/AlloyTeam">AlloyTeam</a></p>
         <p>Published with <a href="http://pages.github.com">GitHub Pages</a></p>
       </footer>
     </div>
