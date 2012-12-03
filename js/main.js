@@ -300,11 +300,11 @@
             });
 
             $("#confirmNew").live("click",function(){
-                msg.hide();
 
                 var width = $("#newWidth").val();
                 var height = $("#newHeight").val();
                 var color = $("#newColor").val();
+                msg.hide();
 
                 var psObj = psLib(width,height,color);
                 if(!(_this.ps)){

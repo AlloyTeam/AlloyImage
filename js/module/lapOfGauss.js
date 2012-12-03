@@ -23,7 +23,7 @@
                 ];
                 var template3 = [
                 ];
-                return P.lib.dorsyMath.applyMatrix(imgData,template1,250);
+                return P.lib.dorsyMath.applyMatrix(imgData,template2,250);
             }
         };
 
