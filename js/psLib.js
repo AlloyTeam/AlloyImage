@@ -351,7 +351,7 @@ HTMLImageElement.prototype.loadOnce = function(func){//图片的初次加载才�
             context.fill();
         },
 
-        easy: function(effect){
+        ps: function(effect){
             var fun = P.reflectEasy(effect);
             var _this = this;
             _this = fun.call(_this);

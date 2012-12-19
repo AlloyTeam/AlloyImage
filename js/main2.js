@@ -32,6 +32,7 @@
         eventAtt: function(){
             var _this = this;
 
+            /*
             this.addEvent(".pic","dragstart",function(e){
                 var dx = e.offsetX ? e.offsetX : e.layerX;
                 var dy = e.offsetY ? e.offsetY : e.layerY;
@@ -58,6 +59,40 @@
 
                 
             });
+            */
+
+            var clickFlag = 0, dx, dy;
+            this.addEvent(".pic", "mousedown", function(e){
+                dx = e.offsetX ? e.offsetX : e.layerX;
+                dy = e.offsetY ? e.offsetY : e.layerY;
+                console.log("d: " + dx + "," + dy);
+                clickFlag = 1;
+            });
+            this.addEvent(".picWrapper", "mouseup", function(e){
+                clickFlag = 0;
+            });
+            document.getElementById("picWrapper").onmousemove = function(e){
+                    var x = e.offsetX ? e.offsetX : e.layerX;
+                    var y = e.offsetY ? e.offsetY : e.layerY;
+
+                    console.log(x + "," + y);
+                if(clickFlag){
+                    var pic = document.getElementById("pic");
+
+                    var x = e.offsetX ? e.offsetX : e.layerX;
+                    var y = e.offsetY ? e.offsetY : e.layerY;
+                    var left = parseInt(pic.style.left);
+                    var top = parseInt(pic.style.top);
+
+                    var rLeft = left + (x - dx);
+                    var rTop = top + (y - dy);
+                    if(rLeft < 0) rLeft = 0;
+                    if(rTop < 0) rTop = 0;
+
+                    pic.style.left = rLeft + "px";
+                    pic.style.top = rTop + "px";
+                }
+            };
 
             this.addEvent(".d_item", "click", function(e){
                 var img = this.getElementsByTagName("img")[0];
@@ -82,8 +117,14 @@
                 var img = document.getElementById("pic");
                 var AP = _this.img.clone();
                 if(text == "原图") AP.replace(img);
-                else AP.easy(text).replace(img);
+                else AP.ps(text).replace(img);
             });
+
+            document.body.addEventListener("drop", function(e){
+                e.preventDefault();
+                var fileList = e.dataTransfer.files;
+                _this.openFile(fileList[0]);
+            },false);
 
         },
 
@@ -112,6 +153,10 @@
                     this.style.top = top + "px";
                 };
                 func.call(document.getElementById("pic"));
+
+                var height = document.body.clientHeight;
+                var left = document.querySelector(".left");
+                left.style.height = (height + 30) + "px";
         },
 
         openFile: function(fileUrl){//打开文件
@@ -155,6 +200,8 @@
         }
     };
     
-    Main.init();
+    window.addEventListener("DOMContentLoaded", function(){
+        Main.init();
+    }, false);
 
 })();

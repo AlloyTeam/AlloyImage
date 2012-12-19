@@ -1,13 +1,13 @@
-body{
+html,body{
     background:url(image/cardboard.png);
     height:100%;
     padding:0;
     margin:0;
-    min-height:600px;
     min-width:1003px;
     text-shadow:0 1px 3px rgba(0, 0, 0, 0.75);
     color:#fff;
     font-family:Microsoft Yahei,"宋体";
+    overflow:hidden;
 }
 li{
     list-style:none;
@@ -30,6 +30,7 @@ h3{
 .wrapper{
     border-top:1px solid #282B2F;
     display:box;
+    height:100%;
     display:-webkit-box;
     box-orient:horizontal;
     -webkit-box-orient:horizontal;
@@ -37,7 +38,7 @@ h3{
 .left{
     width:250px;
     border-right:1px solid #575C62;
-    height:580px;
+    height:100%;
     overflow-y:auto;
 }
 .right{
@@ -85,7 +86,7 @@ h3{
     z-index:3;
     cursor:pointer;
 }
-.imgWrapper:hover{
+.imgWrapper{
     width:90px;
     background:#5344c3;
     padding-left:110px;
@@ -106,7 +107,6 @@ h3{
     box-shadow:6px 6px 3px #333;
     -webkit-box-shadow:6px 6px 3px #333;
     transition:all ease-in-out .4s;
-    -webkit-transition:all ease-in-out .4s;
 }
 .command{
     background:-webkit-gradient(linear,left top,left bottom,from(#26292d),color-stop(50%,#27282b),to(#26292d));
@@ -129,9 +129,14 @@ h3{
     vertical-align:middle;
     text-align:center;
 }
-.demoImg img{
+.d_item{
     width:80px;
     height:60px;
+    overflow:hidden;
+}
+.d_item img{
+    width:80px;
+    height:auto;
     border:3px solid rgb(45,45,45);
 }
 .footer{

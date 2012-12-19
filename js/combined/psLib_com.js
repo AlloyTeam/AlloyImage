@@ -144,6 +144,10 @@ HTMLImageElement.prototype.loadOnce = function(func){//图片的初次加载才�
         P.module(name,func);
     };
 
+    window[Ps].dorsyMath = function(){
+        return P.lib.dorsyMath;
+    };
+
     window[Ps].prototype = {//原型对象
 
         act: function(method,arg){
@@ -347,7 +351,7 @@ HTMLImageElement.prototype.loadOnce = function(func){//图片的初次加载才�
             context.fill();
         },
 
-        easy: function(effect){
+        ps: function(effect){
             var fun = P.reflectEasy(effect);
             var _this = this;
             _this = fun.call(_this);
@@ -1553,7 +1557,7 @@ HTMLImageElement.prototype.loadOnce = function(func){//图片的初次加载才�
                 ];
                 var template3 = [
                 ];
-                return P.lib.dorsyMath.applyMatrix(imgData,template1,250);
+                return P.lib.dorsyMath.applyMatrix(imgData,template2,250);
             }
         };
 
