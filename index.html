@@ -31,9 +31,17 @@
     <!-- MAIN CONTENT -->
     <div id="main_content_wrap" class="outer">
       <section id="main_content" class="inner">
-        <h3>Welcome to AlloyPhoto.</h3>
+        <h3>Welcome to AlloyImage.</h3>
 
-<p>AlloyPhoto是一个基于html5技术的JS库，集成了一些方便快捷的图像处理API，您可以将它引用到您的网页中，结合css3等技术，做出一些之前无法做到的优美效果，或者，提供一个用JS编写的在线图像处理工具等。</p>
+<p>AlloyImage（AI)是一个基于html5技术的JS图像处理库，集成了一些方便快捷的图像处理API，您可以将它引用到您的网页中，结合css3等技术，做出一些之前无法做到的优美效果，或者，提供一个用JS编写的在线图像处理工具等。</p>
+
+<h3>设计理念</h3>
+
+<h4>简单代码做复杂事情----It seems like so simple!</h4>
+
+<p>1.接口调用简单<br>
+2.提供进一步封装的组合效果方便调用<br>
+3.基于AI编写的alloyPhoto，完整展示AI的能力与接口，以及调用方法Demo展示，更易于学习<br></p>
 
 <h3>特点</h3>
 
@@ -41,48 +49,48 @@
 2.图像的基本调节功能，包括亮度、对比度，色相、饱和度、明度调节<br>
 3.多种滤镜功能，去色、反相、高斯模糊、锐化、浮雕效果、查找边缘、马赛克、腐蚀等<br>
 4.处理后文件的保存，处理完成之后，可以将文件输出为base64形式间接使用和保存<br>
-5.高级组合效果，如素描，lomo，hrd，复古，素描，油画(功能尚未添加）
+5.高级组合效果，如素描，lomo，复古，素描等复合效果
 如一个素描效果的实现</p>
 
 <pre><code>var img = new Image();
 img.src = "pic.jpg";
 img.onload = function(){
       //素描效果
-      psLib(this).act("灰度处理").add(//添加一个图层上去
-            psLib(this).act("灰度处理").act("反色").act("高斯模糊",5) , "颜色减淡"  
+      AlloyImage(this).act("灰度处理").add(//添加一个图层上去
+            AlloyImage(this).act("灰度处理").act("反色").act("高斯模糊",5) , "颜色减淡"  
       ).act("锐化").show();
 };
 </code></pre>
 
 <h3>API参考</h3>
 
-<h4>初始化一个psLib对象<br>
+<h4>初始化一个AlloyImage对象<br>
 </h4>
 
 <h5>用img创建一个对象（图层）<br>
 </h5>
 
-<p>psLib(img) 或  new psLib(img)<br>
-img可以是new Image()创建的对象，也可以是DOM树中的image元素，但在创建psLib对象前确保 img已经被onload成功，否则可能导致抛出异常</p>
+<p>AlloyImage(img) 或  new AlloyImage(img)<br>
+img可以是new Image()创建的对象，也可以是DOM树中的image元素，但在创建AlloyImage对象前确保 img已经被onload成功，否则可能导致抛出异常</p>
 
 <pre><code>var img = document.getElementsByTagName("img")[0];
 img.onload = function(){
-     var psLibObj = psLib(this);
+     var AlloyImageObj = AlloyImage(this);
 };
 </code></pre>
 
 <h5>创建一个纯色或透明的对象（图层）<br>
 </h5>
 
-<p>psLibObj psLib(Number width,Number height,String fillStyle)<br>
+<p>AlloyImageObj AlloyImage(Number width,Number height,String fillStyle)<br>
 其中，width是图层宽度，height是图层高度，fillStyle是填涂的颜色，可以是#233322型，也可以是rgb(23,23,23)，甚至可以是rgba(23,23,23,0),或"red"这样的字符串<br></p>
 
-<p>一个psLib对象可以看做是一个图层，也可以看做是一个工作文件<br></p>
+<p>一个AlloyImage对象可以看做是一个图层，也可以看做是一个工作文件<br></p>
 
 <h4>act</h4>
 
 <p>说明：对单个图层进行效果处理<br>
-语法：psLibObj act(String method,Args arg,...)<br>
+语法：AlloyImageObj act(String method,Args arg,...)<br>
 其中 method有以下可选参数<br></p>
 
 <table>
@@ -151,7 +159,7 @@ img.onload = function(){
 </table><h4>add</h4>
 
 <p>说明：合并一个图层到本图层上去<br>
-语法：psLibObj add(psLibObj new[,String model [,Number dx,Number dy,String alpha,String channel]])<br>
+语法：AlloyImageObj add(AlloyImageObj new[,String model [,Number dx,Number dy,String alpha,String channel]])<br>
 本方法将会进行图层合并操作，会将新图层new以高于本图层的顺序，以model的混合模式，以相对本图层左上角为坐标原点的dx,dy偏移量合并到本图层，并返回合并后的图层对象<br>
 参数说明：第一个参数为必须参数，其他全部为可选参数，并且除了第一个必须要是图层对象外，其他参数位置全部可以随意调（alloyPhoto很多api参数很灵活)<br>
 model的模式有17种，其效果和Photoshop中效果对应<br>
@@ -173,13 +181,13 @@ m.add(
 <h4>show</h4>
 
 <p>说明：将当前图层以canvas元素显示出来
-语法：psLibObj show([String cssSelector[,Boolean isFast]])<br>
+语法：AlloyImageObj show([String cssSelector[,Boolean isFast]])<br>
 设定了cssSelector之后，将会在cssSelector元素内追加canvas元素显示图层，如果没有cssSelector，将会在文档后追加canvas元素显示图层，isFast是快速显示标记，如果设定isFast为true，则图像将会以快速模式显示出来，可用于中间处理过程（图像品质降低)<br></p>
 
 <h4>replace</h4>
 
 <p>说明：将本图像替换image显示
-语法：psLibObj replace(Image img)<br>
+语法：AlloyImageObj replace(Image img)<br>
 使用该方法后，img将会被本图像代替<br></p>
 
 <pre><code>var img = document.getElementsByTagName("img")[0];
@@ -187,7 +195,7 @@ img.loadOnce(function(){//loadOnce添加为alloyPhoto添加
       /*
          防止用onload事件注册后  replace会改变img的src导致onload事件再次触发形成循环
       */
-      var ps = psLib(this);
+      var ps = AlloyImage(this);
       ps.act("反色").replace(this);
 });
 </code></pre>
@@ -195,45 +203,116 @@ img.loadOnce(function(){//loadOnce添加为alloyPhoto添加
 <h4>clone</h4>
 
 <p>说明：复制图层对象<br>
-语法：psLibObj clone()<br>
+语法：AlloyImageObj clone()<br>
 使用该方法后，将会返回一个图层副本。我们都知道，基于js对象都是引用传递，所以，此方法构造一个与原图层无关的图层副本<br>
 如 var layer2 = layer.clone();</p>
 
 <h4>view</h4>
 
 <p>说明：预览模式下处理<br>
-语法：psLibObj view(String method,Args arg,...)<br>
+语法：AlloyImageObj view(String method,Args arg,...)<br>
 此方法和act很相似，但此方法可以记录view之前的状态，配合excute和cancel使用来执行或取消处理</p>
 
 <h4>excute</h4>
 
 <p>说明：执行预览模式下的操作<br>
-语法：psLibObj excute()</p>
+语法：AlloyImageObj excute()</p>
 
 <h4>cancel</h4>
 
 <p>说明：取消预览模式下所做的处理<br>
-语法：psLibObj cancel()</p>
+语法：AlloyImageObj cancel()</p>
 
 <h3>多图层操作</h3>
 
 <h4>addLayer</h4>
 
 <p>说明：添加一个图层到本图层上去，不进行合并操作，不会对本图层产生影响<br>
-语法：psLibObj addLayer(psLibObj new[,String model [,Number dx,Number dy]])<br>
+语法：AlloyImageObj addLayer(AlloyImageObj new[,String model [,Number dx,Number dy]])<br>
 addLayer方法与add的方法不同出在于，add方法会将new图层合并到本图层去，返回一个合并后的图层，addLayer方法会将一个图层挂载到本图层，返回的对象为一个复合的图层，不会本图层和new图层，但对new 图层的后续处理会影响复合图层的显示，add方法则不会<br></p>
 
 <h4>swap</h4>
 
 <p>说明：交换两个图层的顺序<br>
-语法：psLibObj swap(Number indexA,Number indexB)<br>
+语法：AlloyImageObj swap(Number indexA,Number indexB)<br>
 indexA、indexB分别表示图层顺序所代表的图层，使用该方法后，将会改变两图层的顺序</p>
 
 <h4>deleteLayers</h4>
 
 <p>说明：删除一个或多个图层<br>
-语法：psLibObj deleteLayers(Array indexArr)<br>
+语法：AlloyImageObj deleteLayers(Array indexArr)<br>
 删除图层顺序为indexArr数组中的图层</p>
+
+<h3>复合效果</h3>
+
+<h4>ps</h4>
+
+<p>说明：调用一个组合动作构成的复合效果<br>
+语法：AlloyImageObj ps(String effect)<br>
+effect具体可选值如下</p>
+
+<table>
+<tr>
+<td>method值</td>
+<td>备注</td>
+    </tr>
+<tr>
+<td>美肤</td>
+<td>美化肤色</td>
+</tr>
+<tr>
+<td>素描</td>
+<td>无</td>
+</tr>
+<tr>
+<td>自然增强</td>
+<td>使图片效果增强</td>
+</tr>
+<tr>
+<td>紫调</td>
+<td>无</td>
+</tr>
+<tr>
+<td>柔焦</td>
+<td>无</td>
+</tr>
+<tr>
+<td>复古</td>
+<td>无</td>
+</tr>
+<tr>
+<td>黑白</td>
+<td>无</td>
+</tr>
+<tr>
+<td>仿lomo</td>
+<td>无</td>
+</tr>
+<tr>
+<td>亮白增强</td>
+<td>无</td>
+</tr>
+<tr>
+<td>灰白</td>
+<td>无</td>
+</tr>
+<tr>
+<td>灰色</td>
+<td>无</td>
+</tr>
+<tr>
+<td>暖秋</td>
+<td>无</td>
+</tr>
+</table><pre><code>var img = document.getElementsByTagName("img")[0];
+img.loadOnce(function(){//loadOnce添加为alloyPhoto添加
+      /*
+         防止用onload事件注册后  replace会改变img的src导致onload事件再次触发形成循环
+      */
+      var ai = AlloyImage(this);
+      ai.ps("自然增强").replace(this);
+});
+</code></pre>
 
 <h3>demo</h3>
 
@@ -247,7 +326,7 @@ for(var i = 0;i &lt; pics.length;i ++){
          防止用onload事件注册后  replace会改变img的src导致onload事件再次触发形成循环
       */
 
-      var picTranseObj = psLib(this);//创建一个psLib对象
+      var picTranseObj = AlloyImage(this);//创建一个AlloyImage对象
       var origin = picTranseObj.clone();//克隆原始对象做为副本
 
       var grayPic = picTranseObj.act("灰度处理");//灰度后的图像
@@ -276,10 +355,10 @@ for(var i = 0;i &lt; pics.length;i ++){
       */
 
 
-      var m = psLib(this).add(
-        psLib(this) , "滤色"
+      var m = AlloyImage(this).add(
+        AlloyImage(this) , "滤色"
       ).add(
-        psLib(this) , "柔光"
+        AlloyImage(this) , "柔光"
       );
 
       var m2 = m.clone();
@@ -303,8 +382,8 @@ for(var i = 0;i &lt; pics.length;i ++){
       /*
          防止用onload事件注册后  replace会改变img的src导致onload事件再次触发形成循环
       */
-      var m = psLib(this).act("灰度处理").add(
-        psLib(this.width,this.height,"#808080").act("添加杂色").act("高斯模糊",4).act("色相/饱和度调节",32,19,0,true),"叠加"
+      var m = AlloyImage(this).act("灰度处理").add(
+        AlloyImage(this.width,this.height,"#808080").act("添加杂色").act("高斯模糊",4).act("色相/饱和度调节",32,19,0,true),"叠加"
       ).show();
 
 
