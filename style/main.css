@@ -143,8 +143,9 @@ h3{
 .footer{
     float:right;
     margin-right:20px;
-    margin-top:60px;
+    margin-top:50px;
     font-size:12px;
+    text-align:right;
 }
 .footer a{
     text-decoration:none;
