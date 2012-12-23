@@ -1,0 +1,11 @@
+!_TAG_FILE_FORMAT	2	/extended format; --format=1 will not append ;" to lines/
+!_TAG_FILE_SORTED	1	/0=unsorted, 1=sorted, 2=foldcase/
+!_TAG_PROGRAM_AUTHOR	Darren Hiebert	/dhiebert@users.sourceforge.net/
+!_TAG_PROGRAM_NAME	Exuberant Ctags	//
+!_TAG_PROGRAM_URL	http://ctags.sourceforge.net	/official site/
+!_TAG_PROGRAM_VERSION	5.8	//
+lib	.\psLib.js	/^        lib: [],\/\/模块池$/;"	p
+scriptLoader	.\psLib.js	/^            var scriptLoader = document.createElement("script");$/;"	v
+window	.\psLib.js	/^    window[Ps] = function(img){$/;"	f
+window.act	.\psLib.js	/^        act: function(method,arg){$/;"	m
+window.show	.\psLib.js	/^        show: function(method){$/;"	m
