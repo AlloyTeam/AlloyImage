@@ -361,3 +361,5 @@ HTMLImageElement.prototype.loadOnce = function(func){//图片的初次加载才�
     };
 
 })("psLib");
+
+window.AlloyImage = $AP = window.psLib;

@@ -65,7 +65,6 @@
             this.addEvent(".pic", "mousedown", function(e){
                 dx = e.offsetX ? e.offsetX : e.layerX;
                 dy = e.offsetY ? e.offsetY : e.layerY;
-                console.log("d: " + dx + "," + dy);
                 clickFlag = 1;
             });
             this.addEvent(".picWrapper", "mouseup", function(e){
@@ -75,7 +74,6 @@
                     var x = e.offsetX ? e.offsetX : e.layerX;
                     var y = e.offsetY ? e.offsetY : e.layerY;
 
-                    console.log(x + "," + y);
                 if(clickFlag){
                     var pic = document.getElementById("pic");
 
@@ -100,7 +98,7 @@
                 pic.src = img.src;
                 pic.onload = function(){
                     _this.initView();
-                    _this.img = psLib(this);
+                    _this.img = AlloyImage(this);
                 };
             });
 
@@ -126,6 +124,10 @@
                 _this.openFile(fileList[0]);
             },false);
 
+            window.onresize = function(){
+                _this.initView();
+            };
+
         },
 
         init: function(){
@@ -133,8 +135,9 @@
             this.showModel();
             this.eventAtt();
             var _this = this;
-            document.getElementById("pic").onload = function(){
-               _this.img = psLib(this); 
+            var pic = document.getElementById("pic");
+            pic.onload = function(){
+               _this.img = AlloyImage(this); 
             }
         },
 
@@ -156,7 +159,8 @@
 
                 var height = document.body.clientHeight;
                 var left = document.querySelector(".left");
-                left.style.height = (height + 30) + "px";
+                var leftHeight = height - 143;
+                left.style.height = leftHeight + "px";
         },
 
         openFile: function(fileUrl){//打开文件
@@ -169,7 +173,7 @@
                 pic.src = this.result;
                 pic.onload = function(){
                     _this.initView();
-                    _this.img = psLib(this);
+                    _this.img = AlloyImage(this);
                 };
             };
         

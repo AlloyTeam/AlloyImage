@@ -45,7 +45,7 @@
         canvas: null,
         f: null,
         init: function(wrapper){
-            this.dorsyMath = psLib.dorsyMath();
+            this.dorsyMath = AlloyImage.dorsyMath();
             var canvas = document.createElement("canvas");
             canvas.width = "400";
             canvas.height = "200";
@@ -205,9 +205,9 @@
         
         },
         addImage: function(img){
-            var psObj = psLib(img);
+            var psObj = AlloyImage(img);
             if(!(this.ps)){
-                this.ps = psLib(parseInt(img.width),parseInt(img.height),"rgba(255,255,255,0)");
+                this.ps = AlloyImage(parseInt(img.width),parseInt(img.height),"rgba(255,255,255,0)");
                 $(".left").css({width:img.width,height:img.height});
                 $(".openFile").html("画布区");
             }
@@ -306,9 +306,9 @@
                 var color = $("#newColor").val();
                 msg.hide();
 
-                var psObj = psLib(width,height,color);
+                var psObj = AlloyImage(width,height,color);
                 if(!(_this.ps)){
-                    _this.ps = psLib(width,height,"rgba(255,255,255,0)");
+                    _this.ps = AlloyImage(width,height,"rgba(255,255,255,0)");
                     $(".left").css({width:width + "px", height:height + "px"});
                     $(".openFile").html("画布区");
                 }

@@ -72,6 +72,7 @@ h3{
     position:relative;
     width:100px;
     height:64px;
+    cursor:pointer;
 }
 .imgWrapper img{
     margin:0;

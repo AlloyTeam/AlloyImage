@@ -1,11 +1,11 @@
 {
-"name": "PsLib",
-  "description": "PsLib",
+"name": "alloyPhoto",
+  "description": "alloyPhoto",
   "manifest_version" : 2,
   "version": "0.1",
   "app": {
     "launch": {
-      "local_path": "index.html"
+      "local_path": "alloyphoto.html"
     }
   },
   "permissions": [
