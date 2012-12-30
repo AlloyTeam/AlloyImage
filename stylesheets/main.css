@@ -90,6 +90,7 @@ section.demoPics{
     margin:0;
     padding:0;
     margin-top:16px;
+    overflow:hidden;
 }
 aside.links{
     height:475px;
@@ -149,4 +150,54 @@ footer{
     text-align:center;
     height:80px;
     color:#572d2d;
+}
+/*
+ * start flash css
+ */
+.flashWrapper{
+    width:559px;
+    height:432px;
+    overflow:hidden;
+    margin:10px auto;
+    padding:0;
+    -webkit-transition:all ease-in .2s;
+    position:relative;
+}
+.flash{
+    width:2795px;
+    height:432px;
+    position:absolute;
+    top:0;
+    left:0;
+    -webkit-transition:all ease-in-out .5s;
+}
+.flashWrapper img{
+    padding:0;
+    margin:0;
+    display:block;
+    width:559px;
+    height:432px;
+    float:left;
+}
+.demo .title{
+    float:left;
+    color:#4e90b9;
+    font-size:14px;
+    margin:-2px 0 0 12px;
+}
+.demo .picNav{
+    float:right;
+    margin:-40px 9px 0 0px;
+    font-size:48px;
+    vertical-align:bottom;
+    text-align:right;
+    height:5px;
+}
+.demo .picNav a{
+    text-decoration:none;
+    margin:0;
+    margin-left:-10px;
+}
+.demo .picNav a.curr{
+    color:#bd1313;
 }

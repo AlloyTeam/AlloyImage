@@ -34,14 +34,32 @@
     <article class="demo">
       <h1>Demos</h1>
       <section class="demoPics">
+        <div class="flashWrapper">
+          <div class="flash" id="flash">
+            <img src="img/2.jpg" id="pic0" alt="" />
+            <img src="img/4.jpg" id="pic1" alt="" />
+            <img src="img/3.jpg" id="pic2" alt="" />
+            <img src="img/5.jpg" id="pic3" alt="" />
+            <img src="img/7.jpg" id="pic4" alt="" />
+          </div>
+        </div>
+        <div class="title" id="demoTitle">美白效果</div>
+        <div class="picNav" id="picNav">
+          <a href="javascript:;">.</a>
+          <a href="javascript:;">.</a>
+          <a href="javascript:;">.</a>
+          <a href="javascript:;">.</a>
+          <a href="javascript:;">.</a>
+        </div>
+
       </section>
     </article>
     <aside class="links">
       <h1>Links</h1>
       <div class="linksWrapper">
-        <a href="#" id="linkSimple"></a>
-        <a href="#" id="linkPro"></a>
-        <a href="#" id="linkGit"></a>
+        <a href="alloyphoto.html" id="linkSimple"></a>
+        <a href="alloyphotopro.html" id="linkPro"></a>
+        <a href="https://github.com/AlloyTeam/AlloyPhoto" target="_blank" id="linkGit"></a>
       </div>
     </aside>
   </section>
@@ -53,6 +71,141 @@
     Copyright ©  2013 Tencent AlloyTeam. All Rights Reserved. <br /><span style="font-size:12px;color:#b7b4b4;">codeIn HTML5</span>
     </section>
   </footer>
+  <script type="text/javascript" src="js/combined/psLib_com.js"></script>
+  <script type="text/javascript">
+(function(){
+    var WIDTH = 559,
+    HEIGHT = 432;
+    var TITLE = [
+      "美肤",
+      "美肤",
+      "美肤",
+      "美肤",
+      "美肤"
+    ];
+
+    var Tools = {
+      each: function(els, func){
+        for(var i = 0,n = els.length;i < n;i ++){
+          func.call(els[i], i);
+        }
+      },
+
+      addClass: function(el, className){
+        if(el.className.match(className)){
+        }else{
+          el.className += " " + className;
+        }
+      },
+
+      removeClass: function(el, className){
+        el.className = el.className.replace(new RegExp(" ?" + className), "");
+      }
+    };
+
+    var Flash = {
+      el: null,//元素
+      curr: 0,
+
+      init: function(){
+        this.el = document.getElementById("flash");
+        this.curr = 0;
+        this.doCache();
+        this.start();
+        this.eventAtt();
+      },
+
+      start: function(){
+        var _this = this;
+        this.timer = setInterval(move,3000);
+
+        function move(){
+            _this.curr ++;
+            _this.curr %= 5;
+
+            _this.moveTo(_this.curr);
+        }
+
+        move();
+      },
+
+      moveTo: function(i){
+        this.el.style.left = -(i * WIDTH) + "px";
+        this.showInfo(i);
+      },
+
+      showInfo: function(i){
+          var as = document.getElementById("picNav").getElementsByTagName("a");
+          Tools.each(as, function(){
+              Tools.removeClass(this, "curr");
+          });
+
+          Tools.addClass(as[i], "curr");
+          var demoTitle = document.getElementById("demoTitle");
+          demoTitle.innerHTML = TITLE[i] + "效果";
+      },
+
+      stop: function(){
+        clearInterval(this.timer);
+      },
+
+      eventAtt: function(){
+          var as = document.getElementById("picNav").getElementsByTagName("a");
+          var _this = this, timer;
+          Tools.each(as, function(i){
+              this.onclick = function(){
+                return function(){
+                  _this.stop();
+                  _this.moveTo(i);
+                  _this.curr = i;
+
+                  clearTimeout(timer);
+                  timer = setTimeout(function(){
+                      _this.start();
+                  }, 2000);
+                };
+              }();
+          });
+
+          Tools.each(document.getElementById("flash").getElementsByTagName("img"), function(i){
+              this.onmouseover = function(){
+                return function(){
+
+                  _this.stop();
+                   _this.cache[i].new.replace(this);
+
+                };
+              }();
+
+              this.onmouseout = function(){
+                return function(){
+
+                   _this.cache[i].old.replace(this);
+                   _this.start();
+
+                };
+              }();
+          });
+      },
+
+      doCache: function(){//预处理
+         var _this = this,
+         img = document.getElementById("flash").getElementsByTagName("img");
+         _this.cache =[];
+
+          Tools.each(TITLE, function(i){
+              _this.cache[i] = {
+                old: AlloyImage(img[i]),
+                new: AlloyImage(img[i]).ps(this)
+              };
+          });
+     }
+    };
+    window.onload = function(){
+      Flash.init();
+    };
+ })();
+  </script>
 </div>
 </body>
 </html>
