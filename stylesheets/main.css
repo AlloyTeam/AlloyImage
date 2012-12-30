@@ -1,0 +1,152 @@
+html,body{
+    margin:0 auto;
+    padding:0;
+    background:#bfbfbf;
+    font-family:Microsoft Yahei;
+}
+.wrapper{
+    width:1003px;
+    margin:0 auto;
+    padding:0;
+    background:#fff;
+    overflow:auto;
+}
+header{
+    height:347px;
+    background:url(../images/headerbg.png) 81px 85px no-repeat;
+    overflow:hidden;
+}
+nav{
+    height:64px;
+    background:#7f41f2;
+    margin-top:283px;
+}
+nav a{
+    display:block;
+    float:left;
+    height:32px;
+    width:58px;
+    background:url(../images/nav.png) no-repeat;
+    margin-top:18px;
+}
+nav a:hover{
+    background:url(../images/nav.png) no-repeat;
+}
+#home{
+    background-position:0 0;
+    margin-left:106px;
+}
+#docs{
+    background-position:-123px 0;
+    margin-left:61px;
+}
+#home:hover{
+    background-position:-59px 0;
+}
+#docs:hover{
+    background-position:-182px -1px;
+}
+section{
+    width:870px;
+}
+.main{
+    margin:0 auto;
+    margin-top:40px;
+}
+article.intro{
+    height:311px;
+    background:#d6d5d5;
+    overflow:hidden;
+}
+.intro h1{
+    font-size:30px;
+    font-weight:normal;
+    margin:25px 0 0 21px;
+}
+.intro p{
+    font-size:18px;
+    color:#696968;
+    line-height:31px;
+    margin:10px 0 0 21px;
+}
+section.content{
+    margin:0 auto;
+    margin-top:32px;
+}
+section h1{
+    font-size:30px;
+    font-weight:normal;
+    margin:0;
+    padding:0;
+    margin-left:16px;
+}
+article.demo{
+    float:left;
+}
+section.demoPics{
+    width:583px;
+    height:475px;
+    background:#ccc;
+    margin:0;
+    padding:0;
+    margin-top:16px;
+}
+aside.links{
+    height:475px;
+    float:left;
+    width:250px;
+    margin:0;
+    margin-left:33px;
+    padding:0;
+}
+aside.links .linksWrapper{
+    margin:0;
+    padding:0;
+    margin-top:16px;
+}
+aside.links a{
+    display:block;
+    width:250px;
+    height:141px;
+    margin:0;
+}
+#linkSimple{
+    background:url(../images/links_simple.png) 74px 53px no-repeat,url(../images/go.png) 190px 89px no-repeat;
+    background-color:#3cb1bb;
+}
+#linkPro{
+    margin-top:25px;
+    background:url(../images/links_pro.png) 74px 53px no-repeat,url(../images/go.png) 190px 89px no-repeat;
+    background-color:#c9c845;
+}
+#linkGit{
+    margin-top:25px;
+    background:url(../images/links_git.png) 74px 53px no-repeat,url(../images/go.png) 190px 89px no-repeat;
+    background-color:#c58043;
+}
+footer{
+    float:left;
+    width:100%;
+    margin:0;
+    margin-top:46px;
+}
+.footerNav{
+    height:73px;
+    width:100%;
+    background:#d6d5d5;
+    text-align:center;
+    line-height:73px;
+    color:#fff;
+    font-size:14px;
+}
+.footerNav a{
+    color:#fff;
+    text-decoration:none;
+}
+.copyright{
+    margin-top:33px;
+    width:100%;
+    text-align:center;
+    height:80px;
+    color:#572d2d;
+}
