@@ -40,11 +40,14 @@ h3{
     border-right:1px solid #575C62;
     height:100%;
     overflow-y:auto;
+    float:left\9;
 }
 .right{
     box-flex:1;
     -webkit-box-flex:1;
     border-left:1px solid #282B2F;
+    width:600px\9;
+    float:left\9;
 }
 .effects{
     border-top:1px solid #575C62;

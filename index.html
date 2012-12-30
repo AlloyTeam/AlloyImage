@@ -9,6 +9,37 @@
   
 	<title>AlloyImage</title>
   <link media="all" rel="stylesheet" href="stylesheets/main.css" type="text/css" />
+  <script type="text/javascript">
+(function(){
+  var donotShow = function(){
+    alert("建议使用IE10或者chrome浏览器");
+    window.onload = function(){
+    };
+  };
+  var ieFlag = 0, chromeFlag = 0;
+  var sUserAgent = navigator.userAgent;  
+  var fAppVersion = parseFloat(navigator.appVersion);  
+  var isIE = sUserAgent.indexOf("compatible") > -1 && sUserAgent.indexOf("MSIE") > -1; 
+  
+  if(isIE){
+    var result = /MSIE (\d+\.\d+)/.exec(sUserAgent);
+    if(parseFloat(result[1]) >= 9){
+      ieFlag = 1;
+    }else{
+    }
+  }
+
+  var chromeFlag = sUserAgent.indexOf("Chrome") > -1 ;  
+  if(ieFlag || chromeFlag){
+    
+  }else{
+    donotShow();
+  }
+
+  
+  })();
+
+  </script>
 </head>
 <body>
 <div class="wrapper">
