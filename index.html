@@ -2,6 +2,11 @@
 <html lang="en">
 <head>
 	<meta charset="UTF-8">
+  <meta name="author" content="Tencent.AlloyTeam.Dorsywang" />
+  <meta name="copyright" content="Tencent.AlloyTeam" />
+  <meta name="keywords" content="alloyPhoto 简约版,alloyImage,alloyPhoto,html5 canvas,alloyTeam" />
+  <meta name="description" content="alloyPhoto，一款基于alloyImage库的图像处理应用,alloyImage是基于html5的图像处理js代码库。" />
+  
 	<title>AlloyImage</title>
   <link media="all" rel="stylesheet" href="stylesheets/main.css" type="text/css" />
 </head>
@@ -36,16 +41,16 @@
       <section class="demoPics">
         <div class="flashWrapper">
           <div class="flash" id="flash">
-            <img src="img/2.jpg" id="pic0" alt="" />
-            <img src="img/4.jpg" id="pic1" alt="" />
+            <img src="img/4.jpg" id="pic0" alt="" />
+            <img src="img/12.jpg" id="pic1" alt="" />
             <img src="img/3.jpg" id="pic2" alt="" />
-            <img src="img/5.jpg" id="pic3" alt="" />
-            <img src="img/7.jpg" id="pic4" alt="" />
+            <img src="img/2.jpg" id="pic3" alt="" />
+            <img src="img/10.jpg" id="pic4" alt="" />
           </div>
         </div>
-        <div class="title" id="demoTitle">美白效果</div>
+        <div class="title" id="demoTitle">暖秋效果</div>
         <div class="picNav" id="picNav">
-          <a href="javascript:;">.</a>
+          <a href="javascript:;" class="curr">.</a>
           <a href="javascript:;">.</a>
           <a href="javascript:;">.</a>
           <a href="javascript:;">.</a>
@@ -68,7 +73,7 @@
     <a href="http://www.alloyteam.com" target="_blank">AlloyTeam</a> | <a href="http://www.dorsywang.com" target="_blank">Blog</a>
     </section>
     <section class="copyright">
-    Copyright ©  2013 Tencent AlloyTeam. All Rights Reserved. <br /><span style="font-size:12px;color:#b7b4b4;">codeIn HTML5</span>
+    Copyright ©  2013 Tencent AlloyTeam. All Rights Reserved. <br /><a target="_blank" style="text-decoration:none;" href="view-source:http://alloyteam.github.com/AlloyPhoto/"><span style="font-size:12px;color:#b7b4b4;">codeIn HTML5</span></a>
     </section>
   </footer>
   <script type="text/javascript" src="js/combined/psLib_com.js"></script>
@@ -77,11 +82,11 @@
     var WIDTH = 559,
     HEIGHT = 432;
     var TITLE = [
-      "美肤",
-      "美肤",
-      "美肤",
-      "美肤",
-      "美肤"
+      "暖秋",
+      "柔焦",
+      "素描",
+      "紫调",
+      "复古"
     ];
 
     var Tools = {
@@ -117,6 +122,7 @@
 
       start: function(){
         var _this = this;
+        clearInterval(this.timer);
         this.timer = setInterval(move,3000);
 
         function move(){
@@ -126,7 +132,6 @@
             _this.moveTo(_this.curr);
         }
 
-        move();
       },
 
       moveTo: function(i){
