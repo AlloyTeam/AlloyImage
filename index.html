@@ -49,28 +49,11 @@
       <a href="docs.html" target="_blank" id="docs"></a>
     </nav>
   </header>
-  <section class="main">
-    <article class="intro">
-      <h1>
-        AlloyImage 是什么
-      </h1>
-      <p>
-        AlloyImage是基于html5技术的JS图像处理库，它集成了一些方便快捷的图像处理API。<br />
-        它支持多图层操作，包括与PS对应的17种图层混合模式、多种基本滤镜处理效果、以及包括曲线命令在内的基本图像调节功能。除此之外，它还有多达十几种的组合效果用来更便捷地做图像效果处理。
-      </p>
-      <h1>
-        AlloyPhoto 是什么
-      </h1>
-      <p>
-       AlloyPhoto是基于AlloyImage库的Web图像处理应用，它分为简约版和专业版。它一方面是AlloyImage能力的展示，另一方面是AlloyImage不错的Demo示例。
-      </p>
-    </article>
-  </section>
-  <section class="content">
-    <article class="demo">
-      <h1>Demos</h1>
-      <section class="demoPics">
-        <div class="flashWrapper">
+
+  <section class="content" style="margin-top:0;">
+    <article class="demo" style="width:100%;margin-bottom:30px;">
+      <section class="demoPics" style="width:100%;">
+        <div class="flashWrapper" style="width:850px;">
           <div class="flash" id="flash">
             <img src="img/4.jpg" id="pic0" alt="" />
             <img src="img/12.jpg" id="pic1" alt="" />
@@ -90,14 +73,44 @@
 
       </section>
     </article>
-    <aside class="links">
+
+   <aside class="links">
       <h1>Links</h1>
       <div class="linksWrapper">
+        <a href="alloyphoto.html" >AlloyTeam</a>
+        <a href="alloyphotopro.html"></a>
+        <a href="https://github.com/AlloyTeam/AlloyPhoto" target="_blank"></a>
+      </div>
+    </aside>
+
+    <section class="introWrapper">
+      <h1>Demos</h1>
+      <section class="demoPics">
         <a href="alloyphoto.html" id="linkSimple"></a>
         <a href="alloyphotopro.html" id="linkPro"></a>
         <a href="https://github.com/AlloyTeam/AlloyPhoto" target="_blank" id="linkGit"></a>
-      </div>
-    </aside>
+      </section>
+    </section>
+
+ 
+  </section>
+
+  <section class="main">
+    <article class="intro">
+      <h1>
+        AlloyImage 是什么
+      </h1>
+      <p>
+        AlloyImage是基于html5技术的JS图像处理库，它集成了一些方便快捷的图像处理API。<br />
+        它支持多图层操作，包括与PS对应的17种图层混合模式、多种基本滤镜处理效果、以及包括曲线命令在内的基本图像调节功能。除此之外，它还有多达十几种的组合效果用来更便捷地做图像效果处理。
+      </p>
+      <h1>
+        AlloyPhoto 是什么
+      </h1>
+      <p>
+       AlloyPhoto是基于AlloyImage库的Web图像处理应用，它分为简约版和专业版。它一方面是AlloyImage能力的展示，另一方面是AlloyImage不错的Demo示例。
+      </p>
+    </article>
   </section>
   <footer>
     <section class="footerNav">
@@ -110,7 +123,7 @@
   <script type="text/javascript" src="js/combined/psLib_com.js"></script>
   <script type="text/javascript">
 (function(){
-    var WIDTH = 559,
+    var WIDTH = 850,
     HEIGHT = 432;
     var TITLE = [
       "暖秋",
@@ -230,10 +243,12 @@
          _this.cache =[];
 
           Tools.each(TITLE, function(i){
+              /*
               _this.cache[i] = {
                 old: AlloyImage(img[i]),
                 new: AlloyImage(img[i]).ps(this)
               };
+              */
           });
      }
     };

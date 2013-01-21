@@ -1,7 +1,6 @@
 html,body{
     margin:0 auto;
     padding:0;
-    background:#bfbfbf;
     font-family:Microsoft Yahei;
 }
 .wrapper{
@@ -18,7 +17,6 @@ header{
 }
 nav{
     height:64px;
-    background:#7f41f2;
     margin-top:283px;
 }
 nav a{
@@ -72,6 +70,7 @@ article.intro{
 section.content{
     margin:0 auto;
     margin-top:32px;
+    overflow:auto;
 }
 section h1{
     font-size:30px;
@@ -84,20 +83,22 @@ article.demo{
     float:left;
 }
 section.demoPics{
-    width:583px;
+    width:703px;
     height:475px;
-    background:#ccc;
     margin:0;
     padding:0;
     margin-top:16px;
     overflow:hidden;
 }
+section.introWrapper{
+    width:700px;
+    float:left;
+}
 aside.links{
     height:475px;
     float:left;
-    width:250px;
+    width:160px;
     margin:0;
-    margin-left:33px;
     padding:0;
 }
 aside.links .linksWrapper{
@@ -105,23 +106,24 @@ aside.links .linksWrapper{
     padding:0;
     margin-top:16px;
 }
-aside.links a{
+.introWrapper a{
     display:block;
-    width:250px;
+    width:227px;
     height:141px;
     margin:0;
+    float:left;
 }
 #linkSimple{
     background:url(../images/links_simple.png) 74px 53px no-repeat,url(../images/go.png) 190px 89px no-repeat;
     background-color:#3cb1bb;
 }
 #linkPro{
-    margin-top:25px;
+    margin-left:10px;
     background:url(../images/links_pro.png) 74px 53px no-repeat,url(../images/go.png) 190px 89px no-repeat;
     background-color:#c9c845;
 }
 #linkGit{
-    margin-top:25px;
+    margin-left:10px;
     background:url(../images/links_git.png) 74px 53px no-repeat,url(../images/go.png) 190px 89px no-repeat;
     background-color:#c58043;
 }
@@ -164,14 +166,22 @@ footer{
     position:relative;
 }
 .flash{
-    width:2795px;
+    width:4250px;
     height:432px;
     position:absolute;
     top:0;
     left:0;
     -webkit-transition:all ease-in-out .5s;
 }
-.flashWrapper img{
+.flash img{
+    padding:0;
+    margin:0;
+    display:block;
+    width:850px;
+    height:432px;
+    float:left;
+}
+#ct img{
     padding:0;
     margin:0;
     display:block;
