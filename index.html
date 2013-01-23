@@ -52,7 +52,7 @@
 
   <section class="content" style="margin-top:0;">
     <article class="demo" style="width:100%;margin-bottom:30px;">
-      <section class="demoPics" style="width:100%;">
+      <section class="demoPics" style="width:100%;height:480px;">
         <div class="flashWrapper" style="width:850px;">
           <div class="flash" id="flash">
             <img src="img/4.jpg" id="pic0" alt="" />
@@ -89,29 +89,62 @@
         <a href="alloyphoto.html" id="linkSimple"></a>
         <a href="alloyphotopro.html" id="linkPro"></a>
         <a href="https://github.com/AlloyTeam/AlloyPhoto" target="_blank" id="linkGit"></a>
+        <ul class="apintro">
+          <li style="margin-left:0;">
+            <h2>AlloyImage</h2>
+            <ul>
+              <li>
+                基于html5的JS图片图像处理库
+              </li>
+              <li>
+                简单快捷的API
+              </li>
+              <li>
+                多图层操作
+              </li>
+              <li>
+                与PS对应的17种图层混合模式
+              </li>
+              <li>
+                多种基本滤镜处理效果
+              </li>
+              <li>
+                多种组合风格效果 
+              </li>
+            </ul>
+          </li>
+
+          <li>
+            <h2>AlloyPhoto</h2>
+            <ul>
+              <li>
+                基于AlloyImage的Web应用
+              </li>
+              <li>
+                简约版和专业版
+              </li>
+              <li>
+                展示AlloyImage能力
+              </li>
+              <li>
+                AlloyImage的强势Demo
+              </li>
+              <li>
+                方便快捷图片在线图像处理
+              </li>
+              <li>
+                保存图片到本地
+              </li>
+            </ul>
+          </li>
+
+        </ul>
       </section>
     </section>
 
  
   </section>
 
-  <section class="main">
-    <article class="intro">
-      <h1>
-        AlloyImage 是什么
-      </h1>
-      <p>
-        AlloyImage是基于html5技术的JS图像处理库，它集成了一些方便快捷的图像处理API。<br />
-        它支持多图层操作，包括与PS对应的17种图层混合模式、多种基本滤镜处理效果、以及包括曲线命令在内的基本图像调节功能。除此之外，它还有多达十几种的组合效果用来更便捷地做图像效果处理。
-      </p>
-      <h1>
-        AlloyPhoto 是什么
-      </h1>
-      <p>
-       AlloyPhoto是基于AlloyImage库的Web图像处理应用，它分为简约版和专业版。它一方面是AlloyImage能力的展示，另一方面是AlloyImage不错的Demo示例。
-      </p>
-    </article>
-  </section>
   <footer>
     <section class="footerNav">
     <a href="http://www.alloyteam.com" target="_blank">AlloyTeam</a> | <a href="http://www.dorsywang.com" target="_blank">Blog</a>
@@ -131,6 +164,14 @@
       "素描",
       "紫调",
       "复古"
+    ];
+
+    var COMCODE = [
+    'var m = this.clone().act("色相/饱和度调节",36,47,8,true);<br />return this.add(<br />m, "叠加"<br />);',
+    'var m = this.clone().act("色相/饱和度调节",36,47,8,true);<br />return this.add(<br />m, "叠加"<br />);',
+    'var m = this.clone().act("色相/饱和度调节",36,47,8,true);<br />return this.add(<br />m, "叠加"<br />);',
+    'var m = this.clone().act("色相/饱和度调节",36,47,8,true);<br />return this.add(<br />m, "叠加"<br />);',
+    'var m = this.clone().act("色相/饱和度调节",36,47,8,true);<br />return this.add(<br />m, "叠加"<br />);'
     ];
 
     var Tools = {
@@ -191,7 +232,7 @@
 
           Tools.addClass(as[i], "curr");
           var demoTitle = document.getElementById("demoTitle");
-          demoTitle.innerHTML = TITLE[i] + "效果";
+          demoTitle.innerHTML = "AlloyImage(img).ps(\"" + TITLE[i] + "\").replace(img); 　　<a href='javascript:;' id='runCode'>运行代码</a> <a href='javascript:;' id='undo'>撤回原图</a>";
       },
 
       stop: function(){
@@ -216,7 +257,8 @@
               }();
           });
 
-          Tools.each(document.getElementById("flash").getElementsByTagName("img"), function(i){
+          var imgs = document.getElementById("flash").getElementsByTagName("img");
+          Tools.each(imgs, function(i){
               this.onmouseover = function(){
                 return function(){
 
@@ -235,6 +277,25 @@
                 };
               }();
           });
+
+          var demoTitle = document.getElementById("demoTitle");
+          demoTitle.onmouseover = function(){
+            _this.stop();
+          };
+
+          demoTitle.onmouseout = function(){
+            _this.start();
+          };
+
+          demoTitle.onclick = function(e){
+            if(e.target.id == "runCode"){
+              AlloyImage(imgs[_this.curr]).ps(TITLE[_this.curr]).replace(imgs[_this.curr]);
+            }else if(e.target.id == "undo"){
+              _this.cache[_this.curr].old.replace(imgs[_this.curr]);
+            }else if(e.target.id == "viewRaw"){
+            }
+          };
+
       },
 
       doCache: function(){//预处理
@@ -243,12 +304,9 @@
          _this.cache =[];
 
           Tools.each(TITLE, function(i){
-              /*
               _this.cache[i] = {
                 old: AlloyImage(img[i]),
-                new: AlloyImage(img[i]).ps(this)
               };
-              */
           });
      }
     };
