@@ -362,7 +362,7 @@ HTMLImageElement.prototype.loadOnce = function(func){//图片的初次加载才�
 
 })("psLib");
 
-window.AlloyImage = $AP = window.psLib;
+window.AlloyImage = $AI = window.psLib;
 /*
  * @author: Bin Wang
  * @description:灰度扩展
@@ -749,7 +749,8 @@ window.AlloyImage = $AP = window.psLib;
             "腐蚀": "corrode",
             "锐化" : "sharp",
             "添加杂色" : "noise",
-            "曲线" : "curve"
+            "曲线" : "curve",
+            "暗角" : "darkCorner"
         };
 
         var EasyReflection = {
@@ -852,6 +853,82 @@ window.AlloyImage = $AP = window.psLib;
                         var realI = y * width + x;
                         for(var j = 0;j < 3;j ++){
                             data[realI * 4 + j] = f(data[realI * 4 + j]);
+                        }
+
+                    }
+
+                }
+
+
+                return imgData;
+            }
+        };
+
+        return M;
+
+    });
+
+})("psLib");
+/*
+ * @author: Bin Wang
+ * @description:     暗角
+ *
+ * */
+;(function(Ps){
+
+    window[Ps].module("darkCorner", function(P){
+
+        var M = {
+            process: function(imgData,arg){
+                //暗角级别 分1-10级吧
+                var R = parseInt(arg[0]) || 3;
+
+                //暗角的形状
+                var type = arg[2] || "round";
+
+                //暗角最终的级别 0 - 255
+                var lastLevel = arg[1] || 30;
+
+                var data = imgData.data;
+                var width = imgData.width;
+                var height = imgData.height;
+                var xLength = R * 2 + 1;
+
+                //计算中心点
+                var middleX = width * 2 / 3;
+                var middleY = height * 1/ 2;
+                
+                //计算距中心点最长距离
+                var maxDistance = P.lib.dorsyMath.distance([middleX ,middleY]);
+                //开始产生暗角的距离
+                var startDistance = maxDistance * (1 - R / 10);
+
+                var f = function(x, p0, p1, p2, p3){
+
+                 //基于三次贝塞尔曲线 
+                     return p0 * Math.pow((1 - x), 3) + 3 * p1 * x * Math.pow((1 - x), 2) + 3 * p2 * x * x * (1 - x) + p3 * Math.pow(x, 3);
+               }
+
+                //计算当前点应增加的暗度
+                function calDark(x, y, p){
+                    //计算距中心点距离
+                    var distance = P.lib.dorsyMath.distance([x, y], [middleX, middleY]);
+                    var currBilv = (distance - startDistance) / (maxDistance - startDistance);
+                    if(currBilv < 0) currBilv = 0;
+
+                    //应该增加暗度
+                    return  f(currBilv, 0, 0.02, 0.3, 1) * p * lastLevel / 255;
+                }
+
+                //区块
+                for(var x = 0; x < width; x ++){
+
+                    for(var y = 0; y < height; y ++){
+                        
+                        var realI = y * width + x;
+                        for(var j = 0;j < 3;j ++){
+                            var dDarkness = calDark(x, y, data[realI * 4 + j]);
+                            data[realI * 4 + j] -= dDarkness;
                         }
 
                     }
@@ -1176,6 +1253,19 @@ window.AlloyImage = $AP = window.psLib;
                  *      
                  * }
                  * */
+            },
+
+            //计算两个点之间的距离
+            //p1   array
+            //p2   array
+            distance: function(p1, p2){
+                p2 = p2 || [0, 0];
+
+                p1 = new M.C(p1[0], p1[1]);
+                p2 = new M.C(p2[0], p2[1]);
+
+                var p3 = p1.minus(p2);
+                return p3.distance();
             }
             
         };
@@ -1278,6 +1368,11 @@ window.AlloyImage = $AP = window.psLib;
             conjugated: function(){//取共轭
                 var tempC = new M.C(this.r,-this.i);
                 return tempC;
+            },
+
+            //取模
+            distance: function(){
+                return Math.sqrt(this.r * this.r + this.i * this.i);
             }
         }
 /*
@@ -1348,7 +1443,7 @@ window.AlloyImage = $AP = window.psLib;
 
                         return m.add(
                             this.clone().act("反色") , "正常","20%","B"
-                        );
+                        ).act("暗角", 6, 200);
                         
                     },
                     e9: function(){
@@ -1363,7 +1458,7 @@ window.AlloyImage = $AP = window.psLib;
                             return this.act("灰度处理").act("曲线",[0,60,142,194,255],[0,194,240,247,255])
                     },
                     e12: function(){
-                        var m = this.clone().act("色相/饱和度调节",36,47,8,true);
+                        var m = this.clone().act("色相/饱和度调节",36,47,8,true).act("暗角", 6, 150);
                         return this.add(
                             m, "叠加"
                         );

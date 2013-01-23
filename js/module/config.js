@@ -21,7 +21,8 @@
             "腐蚀": "corrode",
             "锐化" : "sharp",
             "添加杂色" : "noise",
-            "曲线" : "curve"
+            "曲线" : "curve",
+            "暗角" : "darkCorner"
         };
 
         var EasyReflection = {

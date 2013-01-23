@@ -3,27 +3,28 @@
 <head>
 	<meta charset="UTF-8">
 	<title></title>
-  <script type="text/javascript" src="js/psLib.js"></script>
-  <script type="text/javascript" src="js/module/config.js"></script>
-  <script type="text/javascript" src="js/module/toGray.js"></script>
-  <script type="text/javascript" src="js/module/toReverse.js"></script>
-  <script type="text/javascript" src="js/module/toThresh.js"></script>
-  <script type="text/javascript" src="js/module/alterRGB.js"></script>
-  <script type="text/javascript" src="js/module/dorsyMath.js"></script>
-  <script type="text/javascript" src="js/module/gaussBlur.js"></script>
-  <script type="text/javascript" src="js/module/addLayer.js"></script>
-  <script type="text/javascript" src="js/module/sharp.js"></script>
-  <script type="text/javascript" src="js/module/embossment.js"></script>
-  <script type="text/javascript" src="js/module/lapOfGauss.js"></script>
-  <script type="text/javascript" src="js/module/setHSI.js"></script>
-  <script type="text/javascript" src="js/module/mosaic.js"></script>
-  <script type="text/javascript" src="js/module/noise.js"></script>
-  <script type="text/javascript" src="js/module/oilPainting.js"></script>
-  <script type="text/javascript" src="js/module/easy.js"></script>
-  <script type="text/javascript" src="js/module/curve.js"></script>
+  <script type="text/javascript" src="../js/psLib.js"></script>
+  <script type="text/javascript" src="../js/module/config.js"></script>
+  <script type="text/javascript" src="../js/module/toGray.js"></script>
+  <script type="text/javascript" src="../js/module/toReverse.js"></script>
+  <script type="text/javascript" src="../js/module/toThresh.js"></script>
+  <script type="text/javascript" src="../js/module/alterRGB.js"></script>
+  <script type="text/javascript" src="../js/module/dorsyMath.js"></script>
+  <script type="text/javascript" src="../js/module/gaussBlur.js"></script>
+  <script type="text/javascript" src="../js/module/addLayer.js"></script>
+  <script type="text/javascript" src="../js/module/sharp.js"></script>
+  <script type="text/javascript" src="../js/module/embossment.js"></script>
+  <script type="text/javascript" src="../js/module/lapOfGauss.js"></script>
+  <script type="text/javascript" src="../js/module/setHSI.js"></script>
+  <script type="text/javascript" src="../js/module/mosaic.js"></script>
+  <script type="text/javascript" src="../js/module/noise.js"></script>
+  <script type="text/javascript" src="../js/module/oilPainting.js"></script>
+  <script type="text/javascript" src="../js/module/easy.js"></script>
+  <script type="text/javascript" src="../js/module/curve.js"></script>
+  <script type="text/javascript" src="../js/module/darkCorner.js"></script>
 </head>
 <body>
-<img src="img/11.jpg" width="300" alt="" id='test' />
+<img src="../img/9.jpg" width="300" alt="" id='test' />
 <div class="p"></div>
 <script type="text/javascript">
 var img = document.getElementById("test");
@@ -38,16 +39,22 @@ img.onload = function(){
 //psLib(img).act("油画",100).show(".p");
   //psLib(this).act("添加杂色").show();
 
-  var p = psLib(this);
-  p.easy("美肤").show();
-  psLib(this).easy("素描").show();
-  psLib(this).easy("自然增强").show();
-  psLib(this).easy("e4").show();
-  psLib(this).easy("柔焦").show();
-  psLib(this).easy("e6").show();
-  psLib(this).easy("e7").show();
-  psLib(this).easy("e8").show();
-  psLib(this).easy("e9").show();
+  var p = psLib(200, 300, "red");
+  p.act("暗角", 10, 200).show();
+  //psLib(this).ps("柔焦").show();
+  psLib(this).ps("仿lomo").act("暗角", 3, 200).show();
+  psLib(this).ps("仿lomo").show();
+  /*
+  p.ps("美肤").show();
+  psLib(this).ps("素描").show();
+  psLib(this).ps("自然增强").show();
+  psLib(this).ps("e4").show();
+  psLib(this).ps("柔焦").show();
+  psLib(this).ps("e6").show();
+  psLib(this).ps("e7").show();
+  psLib(this).ps("e8").show();
+  psLib(this).ps("e9").show();
+  */
   /*
   psLib(img).add(
       psLib(img) , "颜色减淡" , "100%",0,0,false

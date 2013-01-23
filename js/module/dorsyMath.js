@@ -306,6 +306,19 @@
                  *      
                  * }
                  * */
+            },
+
+            //计算两个点之间的距离
+            //p1   array
+            //p2   array
+            distance: function(p1, p2){
+                p2 = p2 || [0, 0];
+
+                p1 = new M.C(p1[0], p1[1]);
+                p2 = new M.C(p2[0], p2[1]);
+
+                var p3 = p1.minus(p2);
+                return p3.distance();
             }
             
         };
@@ -408,6 +421,11 @@
             conjugated: function(){//取共轭
                 var tempC = new M.C(this.r,-this.i);
                 return tempC;
+            },
+
+            //取模
+            distance: function(){
+                return Math.sqrt(this.r * this.r + this.i * this.i);
             }
         }
 /*

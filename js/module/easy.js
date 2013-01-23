@@ -56,7 +56,7 @@
 
                         return m.add(
                             this.clone().act("反色") , "正常","20%","B"
-                        );
+                        ).act("暗角", 6, 200);
                         
                     },
                     e9: function(){
@@ -71,7 +71,7 @@
                             return this.act("灰度处理").act("曲线",[0,60,142,194,255],[0,194,240,247,255])
                     },
                     e12: function(){
-                        var m = this.clone().act("色相/饱和度调节",36,47,8,true);
+                        var m = this.clone().act("色相/饱和度调节",36,47,8,true).act("暗角", 6, 150);
                         return this.add(
                             m, "叠加"
                         );
