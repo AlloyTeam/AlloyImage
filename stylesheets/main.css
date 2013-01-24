@@ -13,6 +13,7 @@ html,body{
 header{
     height:247px;
     background:url(../images/headerbg.png) 81px 25px no-repeat;
+    position:relative;
     overflow:hidden;
 }
 nav{
@@ -30,6 +31,17 @@ nav a{
 nav a:hover{
     background:url(../images/nav.png) no-repeat;
 }
+
+.hoverBorder{
+    width:70px;
+    height:4px;
+    background:rgb(70,186,240);
+    position:absolute;
+    top:238px;
+    left:100px;
+    -webkit-transition:all 0.2s ease-in;
+}
+
 #home{
     background-position:0 0;
     margin-left:106px;
