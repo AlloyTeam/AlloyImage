@@ -8,22 +8,22 @@
     window[Ps].module("addLayer",function(P){
 
         var Add = {
-            add: function(lowerData,upperData,method,alpha,dx,dy,isFast,channel){//isFast用于快速，适用于中间处理
+
+            //isFast用于快速，适用于中间处理
+            add: function(lowerData, upperData, method, alpha, dx, dy, isFast, channel){
                 var l = lowerData.data;
                 var u = upperData.data;
                 dx = dx || 0;
                 dy = dy || 0;
                 alpha = alpha || 1;//alpha 范围为0 - 100
                 isFast = isFast || false;
-
                 channel = channel || "RGB";
+
                 if(!(/[RGB]+/.test(channel))){
                     channel = "RGB";
                 }
-                //console.log(channel + "|" + alpha + "|" + dx + " " + dy + "|" + isFast);
-                var channelString = channel.replace("R","0").replace("G","1").replace("B","2");
-                //console.log(channelString);
 
+                var channelString = channel.replace("R","0").replace("G","1").replace("B","2");
 
                 var jump = 1;
                 if(isFast){
@@ -37,7 +37,9 @@
                     var ii = i / 4,
                         width = lowerData.width;
                         height = lowerData.height;
-                    var row = parseInt(ii / width); //得到当前点的坐标 y分量
+
+                    //得到当前点的坐标 y分量
+                    var row = parseInt(ii / width); 
                     var col = ii % width;
 
                     var uRow = row - dy;
@@ -47,10 +49,14 @@
                     var uI = uIi * 4;
 
                     if(uI >= 0 && uI < (upperData.data.length - 4) && uCol < upperData.width && uCol >= 0){
+
                         //l[i + 3] = u[uI + 3];//透明度
                         for(var j = 0;j < 3;j ++){
-                            if(u[uI + 3] == 0) break;//若此点透明则不计算
+
+                            //若此点透明则不计算
+                            if(u[uI + 3] == 0) break;
                             else l[i + 3] = u[uI + 3];
+
                             switch(method){
                                 case "颜色减淡" :
                                     if(channelString.indexOf(j) > -1){

@@ -1,5 +1,5 @@
 /*
- * @author: Bin Wang
+ * @author: az@alloyTeam Bin Wang
  * @description: 高斯模糊
  *
  * */

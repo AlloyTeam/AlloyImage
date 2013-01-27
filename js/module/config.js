@@ -7,7 +7,8 @@
 
     window[Ps].module("config",function(P){
 
-        var Reflection = {//记录映射关系
+        //记录映射关系
+        var Reflection = {
             "灰度处理": "toGray",
             "反色": "toReverse",
             "灰度阈值": "toThresh",
@@ -41,9 +42,11 @@
         };
 
         var Config = {
+
             getModuleName: function(method){
                 return Reflection[method] || method;
             },
+
             getEasyFun: function(effect){
                 return EasyReflection[effect] || effect;
             }

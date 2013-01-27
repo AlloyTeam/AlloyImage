@@ -8,12 +8,13 @@
     window[Ps].module("alterRGB",function(P){
 
         var M = {
-            process: function(imgData,args){//调节亮度对比度
+            //调节亮度对比度
+            process: function(imgData, args){
                 var data = imgData.data;
                 var brightness = args[0] / 50;// -1,1
                 var arg2 = args[1] || 0;
                 var c = arg2 / 50;// -1,1
-                var k = Math.tan((45 + 44 * c) * Math.PI / 180);//
+                var k = Math.tan((45 + 44 * c) * Math.PI / 180);
 
                 for(var i = 0,n = data.length;i < n;i += 4){
                     for(var j = 0;j < 3;j ++){

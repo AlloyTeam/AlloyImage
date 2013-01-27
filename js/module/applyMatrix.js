@@ -8,7 +8,7 @@
     window[Ps].module("applyMatrix",function(P){
 
         var M = {
-            process: function(imgData,arg){
+            process: function(imgData, arg){
                 var lamta = arg || 0.6;
                 var data = imgData.data;
                 var width = imgData.width;
@@ -22,22 +22,23 @@
                     ],25,1);                    
                 var tempData = [];
 
-                for(var i = 0,n = data.length;i < n;i += 4){
+                for(var i = 0, n = data.length; i < n; i += 4){
                     var ii = i / 4;
                     var row = parseInt(ii / width);
                     var col = ii % width;
                     if(row == 0 || col == 0) continue;
 
                     var pixelArr = [[],[],[]];
-                    for(var k = -2;k < 3;k ++){
+
+                    for(var k = -2; k < 3; k ++){
                         var currRow = row + k;
 
-                        for(var kk = -2;kk < 3;kk ++){
+                        for(var kk = -2; kk < 3; kk ++){
 
                             var currCol = col + kk;
                             var currI = (currRow * width + currCol) * 4;
 
-                            for(var j = 0;j < 3;j ++){
+                            for(var j = 0; j < 3; j ++){
                                 var tempI = currI + j; 
                                 pixelArr[j].push(data[tempI]);
                             }
@@ -46,15 +47,17 @@
 
                     }
 
-                    var pixelMatrix = new P.lib.dorsyMath.Matrix(pixelArr,3,matrixSize);
+                    var pixelMatrix = new P.lib.dorsyMath.Matrix(pixelArr, 3, matrixSize);
                     var resultMatrix = pixelMatrix.mutiply(template);
 
-                    for(var j = 0;j < 3;j ++){
+                    for(var j = 0; j < 3; j ++){
                        tempData[i + j] = resultMatrix.data[j]; 
                     }
+
                     tempData[i + 4] = data[i + 4];
                 }
-                for(var i = 0,n = data.length;i < n;i ++){
+
+                for(var i = 0, n = data.length; i < n; i ++){
                     data[i] = tempData[i] || data[i];
                 }
 

@@ -6,8 +6,7 @@
  * */
 ;(function(Ps){
 
-    window[Ps].module("dorsyMath",function(P){
-
+    window[Ps].module("dorsyMath", function(P){
         
         var M = {
             FFT1: function(dataArr){
@@ -20,7 +19,7 @@
 
                 //------计算权重W------------
                 var W = [];
-                for(var i = 0;i < size;i ++){
+                for(var i = 0; i < size; i ++){
                     W[i] = this.exp(-2 * Math.PI * i / size);
                 }
                 
@@ -28,35 +27,53 @@
                 butterflyCal();
                 return dataArr;
 
-                function butterflyCal(){//蝶形运算单元
+                //蝶形运算单元
+                function butterflyCal(){
                     count ++;
-                    var singleLength = size / Math.pow(2,count);//蝶形单元个数
+
+                    //蝶形单元个数
+                    var singleLength = size / Math.pow(2,count);
                     var everyLength = size / singleLength;
 
-                    for(var i = 0;i < singleLength;i ++){
-                        singleButterflyCal(i * everyLength,(i + 1) * everyLength - 1,count);//逐次计算蝶形单元
+                    for(var i = 0; i < singleLength; i ++){
+
+                        //逐次计算蝶形单元
+                        singleButterflyCal(i * everyLength, (i + 1) * everyLength - 1, count);
                     }
 
-                    if(singleLength > 1){//如果单元个数大于1继续运算
-                        butterflyCal();//递归
+                    //如果单元个数大于1继续运算
+                    if(singleLength > 1){
+
+                        //递归
+                        butterflyCal();
                     }else{
                     }
                     
                 }
 
-                function singleButterflyCal(start,end,n){//一个蝶形单元 n运算次数 蝶形单元的成对间隔
+                //一个蝶形单元 n运算次数 蝶形单元的成对间隔
+                function singleButterflyCal(start, end, n){
 
                     var delta =  Math.pow(2,n - 1);
-                    for(var i = start,j = 0;i <= (end - delta);i ++){
-                        var pairI = i + delta;//i 的运算对
-                        var currWeightForI = j * size / Math.pow(2,n);//计算i运算时的权重下标
-                        var currWeightForPairI = currWeightForI + size / 4;//计算i的运算对时候的权重
+
+                    for(var i = start, j = 0; i <= (end - delta); i ++){
+
+                        //i 的运算对
+                        var pairI = i + delta;
+
+                        //计算i运算时的权重下标
+                        var currWeightForI = j * size / Math.pow(2,n);
+
+                        //计算i的运算对时候的权重
+                        var currWeightForPairI = currWeightForI + size / 4;
 
                         if(!(dataArr[i] instanceof M.C)) dataArr[i] = new M.C(dataArr[i]);
+
                         if(!(dataArr[pairI] instanceof M.C)) dataArr[pairI] = new M.C(dataArr[pairI]);
 
                         var currResultForI = dataArr[i].plus(dataArr[pairI].mutiply(W[currWeightForI]));
                         var currResultForPairI = dataArr[i].plus(dataArr[pairI].mutiply(W[currWeightForPairI]));
+
                         dataArr[i] = currResultForI;
                         dataArr[pairI] = currResultForPairI;
 
@@ -80,7 +97,9 @@
              * arr参数可以为矩阵,附加字符串参数为构造的行列如 ([0,0],"3*4")    或("构造3*4的1矩阵")  ("构造3*4的0矩阵")
              * */
                 var resultArr = [];
+
                 if(arg){
+
                     if(isNaN(arg)){
                         var m = /(\d+)\*/.exec(arg)[1];
                         var n = /\*(\d+)/.exec(arg)[1];
@@ -88,15 +107,19 @@
                         m = arg;
                         n = arg2;
                     }
-                    
-                    if(arr[0] && arr[0][0]){//本身二维的
+
+                    //本身二维的
+                    if(arr[0] && arr[0][0]){
                         for(var i = 0;i < m;i ++){
                             resultArr[i] = [];
                             for(var j = 0;j < n;j ++){
                                 resultArr[i][j] = arr[i][j] || 0;
                             }
                         }
-                    }else{//一维的
+
+                    //一维的
+                    }else{
+
                         for(var i = 0;i < m;i ++){
                             resultArr[i] = [];
                             for(var j = 0;j < n;j ++){
@@ -104,18 +127,18 @@
                                 resultArr[i][j] = arr[i * n + j] || 0;
                             }
                         }
+
                     }
 
                     this.m = m;
                     this.n = n;
+
                 }else{
                     this.m = arr.length;
                     this.n = arr[0].length;
                 }
 
                 this.data = resultArr;
-
-
             },
 
             C: function(r,i){
