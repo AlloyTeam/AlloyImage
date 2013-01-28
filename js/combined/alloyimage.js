@@ -7,40 +7,50 @@
 //删除几个元素   arr为数组下标 
 Array.prototype.del = function(arr){
 
+    //对数组重新排序
     arr.sort();
+
+    //复制数组，防止污染
     var b = this.concat([]);
-    for(var i = arr.length - 1;i >= 0;i --){
-        b = b.slice(0,arr[i]).concat(b.slice(arr[i] + 1));
+    for(var i = arr.length - 1; i >= 0; i --){
+        b = b.slice(0, arr[i]).concat(b.slice(arr[i] + 1));
     }
+
     return b;
 };
 
-HTMLImageElement.prototype.loadOnce = function(func){//图片的初次加载才触发事件，后续不触发
+//给图像对象添加初次加载才触发事件，后续不触发
+HTMLImageElement.prototype.loadOnce = function(func){
    var i = 0;
    this.onload = function(){
-        if(!i) func.call(this,null);
+        if(!i) func.call(this, null);
         i ++;
    };
 };
 
 ;(function(Ps){
 
+    //被所有对象引用的一个对象,静态对象,主处理模块
+    var P = {
 
-    var P = {//被所有对象引用的一个对象,静态对象,主处理模块
+        //模块池
+        lib: [],
 
-        lib: [],//模块池
-
-        init: function(){//初始化准备
+        //初始化准备
+        init: function(){
             this.require("config");
         },
 
-        module: function(name,func){//模块
+        //模块注册方法
+        module: function(name, func){
             this.lib[name] = func.call(null, this);
         },
 
-        require: function(name){//加载文件
+        //加载文件
+        require: function(name){
             var _this = this;
             var scriptLoader = document.createElement("script");
+
             document.body.appendChild(scriptLoader);
             scriptLoader.src = "./js/module/" + name + ".js";
             scriptLoader.onload = scriptLoader.onerror = function(e){
@@ -48,65 +58,61 @@ HTMLImageElement.prototype.loadOnce = function(func){//图片的初次加载才�
             }
         },
 
-        handlerror: function(e){//错误处理部分
+        //错误处理部分
+        handlerror: function(e){
             //this.destroySelf("程序因未知原因中断");
         },
 
-        destroySelf: function(msg){//程序被迫自杀，杀前请留下遗嘱
+        //程序被迫自杀，杀前请留下遗嘱
+        destroySelf: function(msg){
             delete window[Ps];
             var e = new Error(msg);
             throw(e);
         },
 
-        reflect: function(method,imgData,args){//映射器,将中文方法或...映射为实际方法
-            var moduleName = this.lib.config.getModuleName(method);//得到实际的模块名称
-            return this.lib[moduleName].process(imgData,args);//交由实际处理数据单元处理
+        //映射器,将中文方法或...映射为实际方法
+        reflect: function(method, imgData, args){
+
+            //得到实际的模块名称
+            var moduleName = this.lib.config.getModuleName(method);
+
+            //交由实际处理数据单元处理
+            return this.lib[moduleName].process(imgData, args);
         },
 
+        //组合效果映射器
         reflectEasy: function(effect){
             var fun = this.lib.config.getEasyFun(effect);
             return this.lib.easy.getFun(fun);
         },
 
-        add: function(lowerData,upperData,method,alpha,dx,dy,isFast,channel){
-            return this.lib.addLayer.add(lowerData,upperData,method,alpha,dx,dy,isFast,channel);
+        //合并一个图层到对象
+        add: function(lowerData, upperData, method, alpha, dx, dy, isFast, channel){
+            return this.lib.addLayer.add(lowerData, upperData, method, alpha, dx, dy, isFast, channel);
         },
 
-        applyMatrix: function(imgData,matrixArr){//对图像进行掩模算子变换
+        //对图像进行掩模算子变换
+        applyMatrix: function(imgData, matrixArr){
         }
-
-
-
     };
 
-//返回外部接口
-    window[Ps] = function(img,width,height){
+    //返回外部接口
+    window[Ps] = function(img, width, height){
+
         if(this instanceof window[Ps]){
-        /*
-            var image = new Image();
-            image.src = img;
-            image.onload = function(){
-            */
             var canvas = document.createElement("canvas");
             var context = canvas.getContext("2d");
 
-            if(!isNaN(img)){//var l = psLib(20,30);构造适配
+            //var l = psLib(20,30);构造适配
+            if(!isNaN(img)){
+
                 canvas.width = img;
                 canvas.height = width;
                 height = height || "rgba(255,1,1,0)";
                 context.fillStyle = height;
-                context.fillRect(0,0,img,width);
+                context.fillRect(0, 0, img, width);
+
             }else{
-
-                /*
-                document.body.appendChild(img);
-                var computedStyle = getComputedStyle(img);
-                canvas.width = parseInt(computedStyle.getPropertyValue("width"));
-                canvas.height = parseInt(computedStyle.getPropertyValue("height"));
-                context.drawImage(img,0,0);
-                //img.style.display = "none";
-                */
-
                 canvas.width = parseInt(img.width);
                 canvas.height = parseInt(img.height);
 
@@ -114,63 +120,77 @@ HTMLImageElement.prototype.loadOnce = function(func){//图片的初次加载才�
                 imgWidth = parseInt(computedStyle.getPropertyValue("width"));
                 imgHeight = parseInt(computedStyle.getPropertyValue("height"));
 
-                if(!isNaN(imgWidth)) context.drawImage(img,0,0,imgWidth,imgHeight);
-                else context.drawImage(img,0,0);
+                if(!isNaN(imgWidth)) context.drawImage(img, 0, 0, imgWidth, imgHeight);
+                else context.drawImage(img, 0, 0);
 
             }
-            //canvas.draggable = "draggable";
 
-
-            //document.body.appendChild(canvas);
-
+            //将引用的canvas对象挂接到对象上
             this.canvas = canvas;
             this.context = context;
-            this.imgData = context.getImageData(0,0,canvas.width,canvas.height);
+            this.imgData = context.getImageData(0, 0, canvas.width, canvas.height);
 
+            //赋予对象唯一ID
             this.name = Ps + "_" + Math.random();
             this.canvas.id = this.name;
-            this.layers = [];//记录挂接到图层上的对象的引用
 
-            /*
-            }
-            */
+            //记录挂接到图层上的对象的引用
+            this.layers = [];
             
         }else{
-            return new window[Ps](img,width,height);//返回自身构造对象
+
+            //返回自身构造对象
+            return new window[Ps](img, width, height);
         }
     };
 
+    //模块注册方法
     window[Ps].module = function(name, func){
-        P.module(name,func);
+        P.module(name, func);
     };
 
+    //返回一个外部独立的数学处理模式出去
     window[Ps].dorsyMath = function(){
         return P.lib.dorsyMath;
     };
 
-    window[Ps].prototype = {//原型对象
+    //原型对象
+    window[Ps].prototype = {
 
-        act: function(method,arg){
+        //动作
+        act: function(method, arg){
             var args = [];
-            for(var i = 0;i < arguments.length;i ++){
+
+            //提取参数为数组
+            for(var i = 0; i < arguments.length; i ++){
                 if(i == 0) continue;
                 args.push(arguments[i]);
             }
 
-            P.reflect(method,this.imgData,args);
+            //做一次转发映射
+            P.reflect(method, this.imgData, args);
 
             return this;
         },
-        view: function(method,arg1,arg2,arg3,arg4){//预览模式 ，所有的再操作全部基于原点，不会改变本图层的效果，直到act会去除这部分图层
+
+        //预览模式 ，所有的再操作全部基于原点，不会改变本图层的效果，直到act会去除这部分图层
+        view: function(method, arg1, arg2, arg3, arg4){
+
+            //克隆本图层对象
             var newLayer = this.clone();
+
+            //标记本图层的种类为预览的已合并的图层
             newLayer.type = 1;
-            this.addLayer(newLayer,"正常",0,0);
-            newLayer.act(method,arg1,arg2,arg3,arg4);
+
+            //挂接克隆图层副本到对象
+            this.addLayer(newLayer, "正常", 0, 0);
+            newLayer.act(method, arg1, arg2, arg3, arg4);
 
             return this;
         },
 
-        excute: function(){//将view的结果执行到图层
+        //将view的结果执行到图层
+        excute: function(){
             var layers = this.layers;
             var n = layers.length;
             if(layers[n - 1] && layers[n - 1][0].type == 1){
@@ -179,34 +199,40 @@ HTMLImageElement.prototype.loadOnce = function(func){//图片的初次加载才�
             }
         },
 
-        cancel: function(){//取消view的结果执行
+        //取消view的结果执行
+        cancel: function(){
             var layers = this.layers;
             var n = layers.length;
             if(layers[n - 1] && layers[n - 1][0].type == 1){
                 delete layers[n - 1];
             }
         },
-        show: function(selector,isFast){//isFast用于快速显示
+
+        //显示对象 isFast用于快速显示
+        show: function(selector,isFast){
 
             //创建一个临时的psLib对象，防止因为合并显示对本身imgData影响
-            var tempPsLib = new window[Ps](this.canvas.width,this.canvas.height);
-            tempPsLib.add(this,"正常",0,0,isFast);
+            var tempPsLib = new window[Ps](this.canvas.width, this.canvas.height);
+            tempPsLib.add(this, "正常", 0, 0, isFast);
             this.tempPsLib = tempPsLib;
 
             //将挂接到本对象上的图层对象 一起合并到临时的psLib对象上去 用于显示合并的结果，不会影响每个图层，包括本图层
-            for(var i = 0;i < this.layers.length;i ++){
+            for(var i = 0; i < this.layers.length; i ++){
                 var tA = this.layers[i];
                 var layers = tA[0].layers;
                 var currLayer = tA[0];
+
                 if(layers[layers.length - 1] && layers[layers.length - 1][0].type == 1) currLayer = layers[layers.length - 1][0];
-                tempPsLib.add(currLayer,tA[1],tA[2],tA[3],isFast);
+                tempPsLib.add(currLayer, tA[1], tA[2], tA[3], isFast);
             }
 
-            this.context.clearRect(0,0,this.canvas.width,this.canvas.height);
-            this.context.putImageData(tempPsLib.imgData,0,0);//以临时对象data显示
+            this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
+
+            //以临时对象data显示
+            this.context.putImageData(tempPsLib.imgData, 0, 0);
+
             if(selector){
-                //var alreadyCanvas = document.querySelector("#" + this.name);
-                    document.querySelector(selector).appendChild(this.canvas);
+                document.querySelector(selector).appendChild(this.canvas);
             }else{
                 document.body.appendChild(this.canvas);
             }
@@ -214,7 +240,8 @@ HTMLImageElement.prototype.loadOnce = function(func){//图片的初次加载才�
             return this;
         },
 
-        replace: function(img){//替换原来的图片
+        //替换原来的图片
+        replace: function(img){
             if(img){
                 img.onload = function(){};
                 img.src = this.save();
@@ -223,16 +250,19 @@ HTMLImageElement.prototype.loadOnce = function(func){//图片的初次加载才�
             return this;
         },
 
-        add: function(){//psLibObj,method,alpha,dx,dy,isFast,channel){合并一个psLibObj图层上去
+        //合并一个AlloyImage图层上去
+        add: function(){
             
-            var numberArr = [],psLibObj,method,alpha,dx,dy,isFast,channel;
-            for(var i = 0;i < arguments.length;i ++){
+            var numberArr = [], psLibObj, method, alpha, dx, dy, isFast, channel;
+
+            //做重载
+            for(var i = 0; i < arguments.length; i ++){
                 if(!i) continue;
 
                 switch(typeof(arguments[i])){
                     case "string":
                         if(/\d+%/.test(arguments[i])){//alpha
-                            alpha = arguments[i].replace("%","");
+                            alpha = arguments[i].replace("%", "");
                         }else if(/[RGB]+/.test(arguments[i])){//channel
                             channel = arguments[i];
                         }else{//method
@@ -247,11 +277,10 @@ HTMLImageElement.prototype.loadOnce = function(func){//图片的初次加载才�
                     case "boolean":
                        isFast = arguments[i];
                     break;
-
-                        
                 }
             }
 
+            //赋值
             dx = numberArr[0] || 0;
             dy = numberArr[1] || 0;
             method = method || "正常";
@@ -261,25 +290,28 @@ HTMLImageElement.prototype.loadOnce = function(func){//图片的初次加载才�
 
             psLibObj = arguments[0];
 
-            this.imgData = P.add(this.imgData,psLibObj.imgData,method,alpha,dx,dy,isFast,channel);
+            //做映射转发
+            this.imgData = P.add(this.imgData, psLibObj.imgData, method, alpha, dx, dy, isFast, channel);
 
             return this;
         },
 
-        addLayer: function(psLibObj,method,dx,dy){//挂载一个图层上去，不会影响本身，只是显示有变化
-            this.layers.push([psLibObj,method,dx,dy]);
+        //挂载一个图层上去，不会影响本身，只是显示有变化
+        addLayer: function(psLibObj, method, dx, dy){
+            this.layers.push([psLibObj, method, dx, dy]);
 
             return this;
         },
 
         clone: function(){
 
-            var tempPsLib = new window[Ps](this.canvas.width,this.canvas.height);
+            var tempPsLib = new window[Ps](this.canvas.width, this.canvas.height);
             tempPsLib.add(this);
             return tempPsLib;
         },
 
-        swap: function(a,b){//交换a,b图层的顺序,ab代表当前序号
+        //交换a,b图层的顺序,ab代表当前序号
+        swap: function(a, b){
             var temp = this.layers[a];
             this.layers[a] = this.layers[b];
             this.layers[b] = temp;
@@ -287,33 +319,42 @@ HTMLImageElement.prototype.loadOnce = function(func){//图片的初次加载才�
             return this;
         },
 
-        deleteLayers: function(arr){//删除几个图层序号
+        //删除几个图层序号
+        deleteLayers: function(arr){
             this.layers = this.layers.del(arr);
         },
 
-        save: function(isFast){//返回一个合成后的图像 png base64
+        //返回一个合成后的图像 png base64
+        save: function(isFast){
+
             //创建一个临时的psLib对象，防止因为合并显示对本身imgData影响
-            var tempPsLib = new window[Ps](this.canvas.width,this.canvas.height);
-            tempPsLib.add(this,"正常",0,0,isFast);
+            var tempPsLib = new window[Ps](this.canvas.width, this.canvas.height);
+            tempPsLib.add(this, "正常", 0, 0, isFast);
             this.tempPsLib = tempPsLib;
 
             //将挂接到本对象上的图层对象 一起合并到临时的psLib对象上去 用于显示合并的结果，不会影响每个图层，包括本图层
-            for(var i = 0;i < this.layers.length;i ++){
+            for(var i = 0; i < this.layers.length; i ++){
                 var tA = this.layers[i];
                 var layers = tA[0].layers;
                 var currLayer = tA[0];
+
                 if(layers[layers.length - 1] && layers[layers.length - 1][0].type == 1) currLayer = layers[layers.length - 1][0];
-                tempPsLib.add(currLayer,tA[1],tA[2],tA[3],isFast);
+
+                tempPsLib.add(currLayer, tA[1], tA[2], tA[3], isFast);
             }
 
-            this.context.clearRect(0,0,this.canvas.width,this.canvas.height);
-            this.context.putImageData(tempPsLib.imgData,0,0);//以临时对象data显示
+            this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
+
+            //以临时对象data显示
+            this.context.putImageData(tempPsLib.imgData, 0, 0);
 
             return this.canvas.toDataURL(); 
         },
 
-        drawRect: function(selector){//绘制直方图
+        //绘制直方图
+        drawRect: function(selector){
             var canvas;
+
             if(canvas = document.getElementById("imgRect")){
             }else{
                 canvas = document.createElement("canvas");
@@ -322,12 +363,14 @@ HTMLImageElement.prototype.loadOnce = function(func){//图片的初次加载才�
                 canvas.width = parseInt(this.canvas.width);
                 canvas.height = parseInt(this.canvas.height);
             }
+
             var context = canvas.getContext("2d");
-            context.clearRect(0,0,canvas.width,canvas.height);
+            context.clearRect(0, 0, canvas.width, canvas.height);
 
             var result = [];
             var data = this.tempPsLib.imgData.data;
-            for(var i = 0,n = data.length;i < n;i ++){
+
+            for(var i = 0, n = data.length; i < n; i ++){
                if(!result[data[i]]){
                     result[data[i]] = 1;
                }else{
@@ -336,28 +379,32 @@ HTMLImageElement.prototype.loadOnce = function(func){//图片的初次加载才�
             }
 
             context.beginPath();
-            context.moveTo(0,canvas.height);
+            context.moveTo(0, canvas.height);
+
             var max = 0;
-            for(var i = 0;i < 255;i ++){
+
+            for(var i = 0; i < 255; i ++){
                 if(result[i] > max) max = result[i];
             }
 
-            for(var i = 0;i < 255;i ++){
+            for(var i = 0; i < 255; i ++){
                 var currY = result[i] || 0;
                 currY = canvas.height - currY / max * 0.8 * canvas.height;
-                context.lineTo(i / 256 * canvas.width ,currY ,1,1); 
+                context.lineTo(i / 256 * canvas.width, currY, 1, 1); 
             }
-            context.lineTo(canvas.width + 10,height);
+            
+            context.lineTo(canvas.width + 10, height);
             context.fill();
         },
 
+        //组合效果
         ps: function(effect){
             var fun = P.reflectEasy(effect);
             var _this = this;
+
             _this = fun.call(_this);
             return _this;
         }
-
     };
 
 })("psLib");
@@ -409,22 +456,22 @@ window.AlloyImage = $AI = window.psLib;
     window[Ps].module("addLayer",function(P){
 
         var Add = {
-            add: function(lowerData,upperData,method,alpha,dx,dy,isFast,channel){//isFast用于快速，适用于中间处理
+
+            //isFast用于快速，适用于中间处理
+            add: function(lowerData, upperData, method, alpha, dx, dy, isFast, channel){
                 var l = lowerData.data;
                 var u = upperData.data;
                 dx = dx || 0;
                 dy = dy || 0;
                 alpha = alpha || 1;//alpha 范围为0 - 100
                 isFast = isFast || false;
-
                 channel = channel || "RGB";
+
                 if(!(/[RGB]+/.test(channel))){
                     channel = "RGB";
                 }
-                //console.log(channel + "|" + alpha + "|" + dx + " " + dy + "|" + isFast);
-                var channelString = channel.replace("R","0").replace("G","1").replace("B","2");
-                //console.log(channelString);
 
+                var channelString = channel.replace("R","0").replace("G","1").replace("B","2");
 
                 var jump = 1;
                 if(isFast){
@@ -438,7 +485,9 @@ window.AlloyImage = $AI = window.psLib;
                     var ii = i / 4,
                         width = lowerData.width;
                         height = lowerData.height;
-                    var row = parseInt(ii / width); //得到当前点的坐标 y分量
+
+                    //得到当前点的坐标 y分量
+                    var row = parseInt(ii / width); 
                     var col = ii % width;
 
                     var uRow = row - dy;
@@ -448,10 +497,14 @@ window.AlloyImage = $AI = window.psLib;
                     var uI = uIi * 4;
 
                     if(uI >= 0 && uI < (upperData.data.length - 4) && uCol < upperData.width && uCol >= 0){
+
                         //l[i + 3] = u[uI + 3];//透明度
                         for(var j = 0;j < 3;j ++){
-                            if(u[uI + 3] == 0) break;//若此点透明则不计算
+
+                            //若此点透明则不计算
+                            if(u[uI + 3] == 0) break;
                             else l[i + 3] = u[uI + 3];
+
                             switch(method){
                                 case "颜色减淡" :
                                     if(channelString.indexOf(j) > -1){
@@ -633,12 +686,13 @@ window.AlloyImage = $AI = window.psLib;
     window[Ps].module("alterRGB",function(P){
 
         var M = {
-            process: function(imgData,args){//调节亮度对比度
+            //调节亮度对比度
+            process: function(imgData, args){
                 var data = imgData.data;
                 var brightness = args[0] / 50;// -1,1
                 var arg2 = args[1] || 0;
                 var c = arg2 / 50;// -1,1
-                var k = Math.tan((45 + 44 * c) * Math.PI / 180);//
+                var k = Math.tan((45 + 44 * c) * Math.PI / 180);
 
                 for(var i = 0,n = data.length;i < n;i += 4){
                     for(var j = 0;j < 3;j ++){
@@ -667,7 +721,7 @@ window.AlloyImage = $AI = window.psLib;
     window[Ps].module("applyMatrix",function(P){
 
         var M = {
-            process: function(imgData,arg){
+            process: function(imgData, arg){
                 var lamta = arg || 0.6;
                 var data = imgData.data;
                 var width = imgData.width;
@@ -681,22 +735,23 @@ window.AlloyImage = $AI = window.psLib;
                     ],25,1);                    
                 var tempData = [];
 
-                for(var i = 0,n = data.length;i < n;i += 4){
+                for(var i = 0, n = data.length; i < n; i += 4){
                     var ii = i / 4;
                     var row = parseInt(ii / width);
                     var col = ii % width;
                     if(row == 0 || col == 0) continue;
 
                     var pixelArr = [[],[],[]];
-                    for(var k = -2;k < 3;k ++){
+
+                    for(var k = -2; k < 3; k ++){
                         var currRow = row + k;
 
-                        for(var kk = -2;kk < 3;kk ++){
+                        for(var kk = -2; kk < 3; kk ++){
 
                             var currCol = col + kk;
                             var currI = (currRow * width + currCol) * 4;
 
-                            for(var j = 0;j < 3;j ++){
+                            for(var j = 0; j < 3; j ++){
                                 var tempI = currI + j; 
                                 pixelArr[j].push(data[tempI]);
                             }
@@ -705,15 +760,17 @@ window.AlloyImage = $AI = window.psLib;
 
                     }
 
-                    var pixelMatrix = new P.lib.dorsyMath.Matrix(pixelArr,3,matrixSize);
+                    var pixelMatrix = new P.lib.dorsyMath.Matrix(pixelArr, 3, matrixSize);
                     var resultMatrix = pixelMatrix.mutiply(template);
 
-                    for(var j = 0;j < 3;j ++){
+                    for(var j = 0; j < 3; j ++){
                        tempData[i + j] = resultMatrix.data[j]; 
                     }
+
                     tempData[i + 4] = data[i + 4];
                 }
-                for(var i = 0,n = data.length;i < n;i ++){
+
+                for(var i = 0, n = data.length; i < n; i ++){
                     data[i] = tempData[i] || data[i];
                 }
 
@@ -735,7 +792,8 @@ window.AlloyImage = $AI = window.psLib;
 
     window[Ps].module("config",function(P){
 
-        var Reflection = {//记录映射关系
+        //记录映射关系
+        var Reflection = {
             "灰度处理": "toGray",
             "反色": "toReverse",
             "灰度阈值": "toThresh",
@@ -769,9 +827,11 @@ window.AlloyImage = $AI = window.psLib;
         };
 
         var Config = {
+
             getModuleName: function(method){
                 return Reflection[method] || method;
             },
+
             getEasyFun: function(effect){
                 return EasyReflection[effect] || effect;
             }
@@ -789,10 +849,10 @@ window.AlloyImage = $AI = window.psLib;
  * */
 ;(function(Ps){
 
-    window[Ps].module("corrode",function(P){
+    window[Ps].module("corrode", function(P){
 
         var M = {
-            process: function(imgData,arg){
+            process: function(imgData, arg){
                 var R = parseInt(arg[0]) || 3;
                 var data = imgData.data;
                 var width = imgData.width;
@@ -800,22 +860,22 @@ window.AlloyImage = $AI = window.psLib;
                 var xLength = R * 2 + 1;
 
                 //区块
-                for(var x = 0;x < width;x ++){
+                for(var x = 0; x < width; x ++){
 
-                    for(var y = 0;y < height;y ++){
+                    for(var y = 0; y < height; y ++){
                         
                         var randomI = parseInt(Math.random() * R * 2) - R ;//区块随机代表
                         var randomJ = parseInt(Math.random() * R * 2) - R;//区块随机代表
                         var realI = y * width + x;
                         var realJ = (y + randomI) * width + x + randomJ;
-                        for(var j = 0;j < 3;j ++){
+
+                        for(var j = 0; j < 3; j ++){
                             data[realI * 4 + j] = data[realJ * 4 + j];
                         }
 
                     }
 
                 }
-
 
                 return imgData;
             }
@@ -833,32 +893,34 @@ window.AlloyImage = $AI = window.psLib;
  * */
 ;(function(Ps){
 
-    window[Ps].module("curve",function(P){
+    window[Ps].module("curve", function(P){
 
         var M = {
-            process: function(imgData,arg){
+            process: function(imgData, arg){
                 /*
                  * arg   arg[0] = [3,3] ,arg[1]  = [2,2]
                  * */
 
+                //获得插值函数
                 var f = P.lib.dorsyMath.lagrange(arg[0], arg[1]);
                 var data = imgData.data;
                 var width = imgData.width;
                 var height = imgData.height;
-                //区块
-                for(var x = 0;x < width;x ++){
 
-                    for(var y = 0;y < height;y ++){
+                //区块
+                for(var x = 0; x < width; x ++){
+
+                    for(var y = 0; y < height; y ++){
                         
                         var realI = y * width + x;
-                        for(var j = 0;j < 3;j ++){
+
+                        for(var j = 0; j < 3; j ++){
                             data[realI * 4 + j] = f(data[realI * 4 + j]);
                         }
 
                     }
 
                 }
-
 
                 return imgData;
             }
@@ -953,8 +1015,7 @@ window.AlloyImage = $AI = window.psLib;
  * */
 ;(function(Ps){
 
-    window[Ps].module("dorsyMath",function(P){
-
+    window[Ps].module("dorsyMath", function(P){
         
         var M = {
             FFT1: function(dataArr){
@@ -967,7 +1028,7 @@ window.AlloyImage = $AI = window.psLib;
 
                 //------计算权重W------------
                 var W = [];
-                for(var i = 0;i < size;i ++){
+                for(var i = 0; i < size; i ++){
                     W[i] = this.exp(-2 * Math.PI * i / size);
                 }
                 
@@ -975,35 +1036,53 @@ window.AlloyImage = $AI = window.psLib;
                 butterflyCal();
                 return dataArr;
 
-                function butterflyCal(){//蝶形运算单元
+                //蝶形运算单元
+                function butterflyCal(){
                     count ++;
-                    var singleLength = size / Math.pow(2,count);//蝶形单元个数
+
+                    //蝶形单元个数
+                    var singleLength = size / Math.pow(2,count);
                     var everyLength = size / singleLength;
 
-                    for(var i = 0;i < singleLength;i ++){
-                        singleButterflyCal(i * everyLength,(i + 1) * everyLength - 1,count);//逐次计算蝶形单元
+                    for(var i = 0; i < singleLength; i ++){
+
+                        //逐次计算蝶形单元
+                        singleButterflyCal(i * everyLength, (i + 1) * everyLength - 1, count);
                     }
 
-                    if(singleLength > 1){//如果单元个数大于1继续运算
-                        butterflyCal();//递归
+                    //如果单元个数大于1继续运算
+                    if(singleLength > 1){
+
+                        //递归
+                        butterflyCal();
                     }else{
                     }
                     
                 }
 
-                function singleButterflyCal(start,end,n){//一个蝶形单元 n运算次数 蝶形单元的成对间隔
+                //一个蝶形单元 n运算次数 蝶形单元的成对间隔
+                function singleButterflyCal(start, end, n){
 
                     var delta =  Math.pow(2,n - 1);
-                    for(var i = start,j = 0;i <= (end - delta);i ++){
-                        var pairI = i + delta;//i 的运算对
-                        var currWeightForI = j * size / Math.pow(2,n);//计算i运算时的权重下标
-                        var currWeightForPairI = currWeightForI + size / 4;//计算i的运算对时候的权重
+
+                    for(var i = start, j = 0; i <= (end - delta); i ++){
+
+                        //i 的运算对
+                        var pairI = i + delta;
+
+                        //计算i运算时的权重下标
+                        var currWeightForI = j * size / Math.pow(2,n);
+
+                        //计算i的运算对时候的权重
+                        var currWeightForPairI = currWeightForI + size / 4;
 
                         if(!(dataArr[i] instanceof M.C)) dataArr[i] = new M.C(dataArr[i]);
+
                         if(!(dataArr[pairI] instanceof M.C)) dataArr[pairI] = new M.C(dataArr[pairI]);
 
                         var currResultForI = dataArr[i].plus(dataArr[pairI].mutiply(W[currWeightForI]));
                         var currResultForPairI = dataArr[i].plus(dataArr[pairI].mutiply(W[currWeightForPairI]));
+
                         dataArr[i] = currResultForI;
                         dataArr[pairI] = currResultForPairI;
 
@@ -1027,7 +1106,9 @@ window.AlloyImage = $AI = window.psLib;
              * arr参数可以为矩阵,附加字符串参数为构造的行列如 ([0,0],"3*4")    或("构造3*4的1矩阵")  ("构造3*4的0矩阵")
              * */
                 var resultArr = [];
+
                 if(arg){
+
                     if(isNaN(arg)){
                         var m = /(\d+)\*/.exec(arg)[1];
                         var n = /\*(\d+)/.exec(arg)[1];
@@ -1035,15 +1116,19 @@ window.AlloyImage = $AI = window.psLib;
                         m = arg;
                         n = arg2;
                     }
-                    
-                    if(arr[0] && arr[0][0]){//本身二维的
+
+                    //本身二维的
+                    if(arr[0] && arr[0][0]){
                         for(var i = 0;i < m;i ++){
                             resultArr[i] = [];
                             for(var j = 0;j < n;j ++){
                                 resultArr[i][j] = arr[i][j] || 0;
                             }
                         }
-                    }else{//一维的
+
+                    //一维的
+                    }else{
+
                         for(var i = 0;i < m;i ++){
                             resultArr[i] = [];
                             for(var j = 0;j < n;j ++){
@@ -1051,18 +1136,18 @@ window.AlloyImage = $AI = window.psLib;
                                 resultArr[i][j] = arr[i * n + j] || 0;
                             }
                         }
+
                     }
 
                     this.m = m;
                     this.n = n;
+
                 }else{
                     this.m = arr.length;
                     this.n = arr[0].length;
                 }
 
                 this.data = resultArr;
-
-
             },
 
             C: function(r,i){
@@ -1520,7 +1605,7 @@ window.AlloyImage = $AI = window.psLib;
 
 })("psLib");
 /*
- * @author: Bin Wang
+ * @author: az@alloyTeam Bin Wang
  * @description: 高斯模糊
  *
  * */
