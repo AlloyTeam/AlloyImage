@@ -1,0 +1,25 @@
+table{
+    border-left:1px solid #373737;
+    border-top:1px solid #373737;
+    border-collapse:collapse;
+}
+
+td{
+    border-right:1px solid #373737;
+    padding:5px;
+    padding-bottom:20px;
+    padding-top:20px;
+    border-bottom:1px solid #373737;
+}
+p{
+    line-height:2;
+}
+pre, code{
+    background:#ccc;
+    padding:2px;
+}
+pre{
+    padding-top:10px;
+    line-height:1.5;
+    padding-bottom:10px;
+}

@@ -45,8 +45,8 @@
 <div class="wrapper">
   <header>
     <nav>
-      <a href="./" id="home"></a>
-      <a href="docs.html" target="_blank" id="docs"></a>
+      <a href="./" id="home">首页</a>
+      <a href="docs.html" target="_blank" id="docs">文档</a>
     </nav>
     <div class="hoverBorder" id="hoverBorder"></div>
   </header>
@@ -57,15 +57,17 @@
         <div class="flashWrapper" style="width:850px;">
           <div class="flash" id="flash">
             <img src="img/4.jpg" id="pic0" alt="" />
-            <img src="img/12.jpg" id="pic1" alt="" />
-            <img src="img/3.jpg" id="pic2" alt="" />
-            <img src="img/2.jpg" id="pic3" alt="" />
-            <img src="img/10.jpg" id="pic4" alt="" />
+            <img src="img/4.jpg" id="pic1" alt="" />
+            <img src="img/lomo.jpg" id="pic2" alt="" />
+            <img src="img/lomo.jpg" id="pic2" alt="" />
+            <img src="img/7.jpg" id="pic2" alt="" />
+            <img src="img/7.jpg" id="pic4" alt="" />
           </div>
         </div>
         <div class="title" id="demoTitle">暖秋效果</div>
         <div class="picNav" id="picNav">
           <a href="javascript:;" class="curr">.</a>
+          <a href="javascript:;">.</a>
           <a href="javascript:;">.</a>
           <a href="javascript:;">.</a>
           <a href="javascript:;">.</a>
@@ -78,14 +80,13 @@
    <aside class="links">
       <h1>Links</h1>
       <div class="linksWrapper">
-        <a href="alloyphoto.html" >AlloyTeam</a>
-        <a href="alloyphotopro.html"></a>
-        <a href="https://github.com/AlloyTeam/AlloyPhoto" target="_blank"></a>
+        <a href="alloyphoto.html" >AlloyTeam</a><br />
+        <a href="http://www.dorsywang.com" target="_blank">Blog</a>
       </div>
     </aside>
 
     <section class="introWrapper">
-      <h1>Demos</h1>
+      <h1>Start</h1>
       <section class="demoPics">
         <a href="alloyphoto.html" id="linkSimple"></a>
         <a href="alloyphotopro.html" id="linkPro"></a>
@@ -147,7 +148,7 @@
   </section>
 
   <footer>
-    <section class="footerNav">
+    <section class="footerNav" style="display:none;">
     <a href="http://www.alloyteam.com" target="_blank">AlloyTeam</a> | <a href="http://www.dorsywang.com" target="_blank">Blog</a>
     </section>
     <section class="copyright">
@@ -158,12 +159,14 @@
   <script type="text/javascript">
 (function(){
     var WIDTH = 850,
-    HEIGHT = 432;
+    HEIGHT = 432,
+    NUM = 6;
     var TITLE = [
       "暖秋",
       "柔焦",
+      "仿lomo",
       "素描",
-      "紫调",
+      "美肤",
       "复古"
     ];
 
@@ -213,7 +216,7 @@
 
         function move(){
             _this.curr ++;
-            _this.curr %= 5;
+            _this.curr %= NUM;
 
             _this.moveTo(_this.curr);
         }
@@ -264,7 +267,6 @@
                 return function(){
 
                   _this.stop();
-                   _this.cache[i].new.replace(this);
 
                 };
               }();
@@ -272,7 +274,6 @@
               this.onmouseout = function(){
                 return function(){
 
-                   _this.cache[i].old.replace(this);
                    _this.start();
 
                 };

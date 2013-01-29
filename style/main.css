@@ -91,12 +91,15 @@ h3{
 }
 .imgWrapper{
     width:90px;
-    background:#5344c3;
     padding-left:110px;
 }
 .imgWrapper img:hover{
     box-shadow:0 0 10px #52cca0;
     -webkit-box-shadow:0 0 10px #52cca0;
+}
+
+.imgWrapper:hover{
+    background:#5344c3;
 }
 .picWrapper{
     position:relative;

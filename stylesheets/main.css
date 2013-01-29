@@ -25,11 +25,15 @@ nav a{
     float:left;
     height:32px;
     width:58px;
-    background:url(../images/nav.png) no-repeat;
+    font-size:26px;
     margin-top:18px;
+    font-family:Michroma,'Segoe UI Light','Segoe UI','Segoe UI WP','Microsoft Jhenghei','微软雅黑',tahoma,'Hiragino Sans GB W3';
+    text-decoration:none;
+    color:#c58043;
+
 }
 nav a:hover{
-    background:url(../images/nav.png) no-repeat;
+    text-shadow:0 0 2px yellow;
 }
 
 .hoverBorder{
@@ -120,6 +124,10 @@ aside.links .linksWrapper{
     margin:0;
     padding:0;
     margin-top:16px;
+    line-height:28px;
+}
+.links a{
+    color:#555;
 }
 .introWrapper a{
     display:block;
@@ -181,7 +189,7 @@ footer{
     position:relative;
 }
 .flash{
-    width:4250px;
+    width:5100px;
     height:432px;
     position:absolute;
     top:0;
