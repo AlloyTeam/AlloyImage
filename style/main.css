@@ -59,7 +59,9 @@ h3{
     border-top:1px solid #282B2F;
     border-bottom:1px solid #575C62;
     list-style:none;
-    height:80px;
+     transition:all ease-in .2s;
+    -webkit-transition:all ease-in .2s;
+   height:80px;
 }
 .imgWrapper{
     margin-left:20px;
@@ -98,7 +100,7 @@ h3{
     -webkit-box-shadow:0 0 10px #52cca0;
 }
 
-.imgWrapper:hover{
+.effects li:hover{
     background:#5344c3;
 }
 .picWrapper{
