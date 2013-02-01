@@ -64,7 +64,7 @@
             <img src="img/7.jpg" id="pic4" alt="" />
           </div>
         </div>
-        <div class="title" id="demoTitle">暖秋效果</div>
+        <div class="title" id="demoTitle">加载图片中...</div>
         <div class="picNav" id="picNav">
           <a href="javascript:;" class="curr">.</a>
           <a href="javascript:;">.</a>
@@ -236,7 +236,7 @@
 
           Tools.addClass(as[i], "curr");
           var demoTitle = document.getElementById("demoTitle");
-          demoTitle.innerHTML = "AlloyImage(img).ps(\"" + TITLE[i] + "\").replace(img); 　　<a href='javascript:;' id='runCode'>运行代码</a> <a href='javascript:;' id='undo'>撤回原图</a>";
+          demoTitle.innerHTML = "<span class='code'>AlloyImage(img).ps(\"" + TITLE[i] + "\").replace(img);</span> 　　<a href='javascript:;' id='runCode'>运行代码</a> <a href='javascript:;' id='undo'>撤回原图</a>";
       },
 
       stop: function(){

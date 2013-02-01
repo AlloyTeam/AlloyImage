@@ -174,7 +174,7 @@ footer{
     width:100%;
     text-align:center;
     height:80px;
-    color:#572d2d;
+    color:#777;
 }
 /*
  * start flash css
@@ -274,4 +274,7 @@ footer{
     list-style-image:url(../images/listimg.png);
     color:#1570a6;
     font-size:14px;
+}
+.code{
+    font-family:Consolas, Microsoft Yahei;
 }
