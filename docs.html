@@ -413,7 +413,11 @@ for(var i = 0;i &lt; pics.length;i ++){
          防止用onload事件注册后  replace会改变img的src导致onload事件再次触发形成循环
       */
       var m = AlloyImage(this).act("灰度处理").add(
-        AlloyImage(this.width,this.height,"#808080").act("添加杂色").act("高斯模糊",4).act("色相/饱和度调节",32,19,0,true),"叠加"
+        AlloyImage(this.width,this.height,"#808080")
+        .act("添加杂色")
+        .act("高斯模糊",4)
+        .act("色相/饱和度调节",32,19,0,true),
+        "叠加"
       ).show();
 
 
