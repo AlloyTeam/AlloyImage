@@ -1,0 +1,45 @@
+<!DOCTYPE HTML>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>AlloyPhoto Demo1</title>
+  <style type="text/css">
+img{
+  width:200px;
+  height:200px;
+}
+  </style>
+  <script type="text/javascript" src="../js/alloyimage-1.0.js"></script>
+</head>
+<body>
+<img id="pic" src="img/1.jpg" alt="" />	
+<script type="text/javascript">
+/*
+由于安全限制 浏览器可能不允许canvas本地加载图片，请用sever方式浏览本页
+*/
+var pic = document.getElementById("pic");
+
+  pic.loadOnce(function(){
+      /*
+         防止用onload事件注册后  replace会改变img的src导致onload事件再次触发形成循环
+      */
+
+      //$AI 或者 AlloyImage
+      var picTranseObj = $AI(this);//创建一个psLib对象
+      var origin = picTranseObj.clone();//克隆原始对象做为原始副本
+
+      var grayPic = picTranseObj.act("灰度处理");
+      grayPic.replace(this);
+
+      this.onmouseover = function(){
+          origin.replace(this);
+      };
+
+      this.onmouseout = function(){
+          grayPic.replace(this);
+      };
+
+  });
+</script>
+</body>
+</html>

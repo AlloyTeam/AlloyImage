@@ -1,0 +1,33 @@
+<!DOCTYPE HTML>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>AlloyPhoto Demo1 亮白</title>
+  <style type="text/css">
+img{
+}
+  </style>
+  <script type="text/javascript" src="../js/alloyimage-1.0.js"></script>
+</head>
+<body>
+<img id="pic" src="img/1.jpg" width="200" alt="" />	
+<script type="text/javascript">
+var pics = document.getElementsByTagName("img");
+
+for(var i = 0;i < pics.length;i ++){
+  pics[i].loadOnce(function(){
+      /*
+         防止用onload事件注册后  replace会改变img的src导致onload事件再次触发形成循环
+
+      */
+      var aiObj = $AI(this);
+      aiObj.ps("素描").replace(this);
+
+
+
+  });
+}
+</script>
+</body>
+</html>
+
