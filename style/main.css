@@ -62,29 +62,27 @@ h3{
      transition:all ease-in .2s;
     -webkit-transition:all ease-in .2s;
    height:80px;
+   overflow:hidden;
 }
 .imgWrapper{
-    margin-left:20px;
-    margin-top:10px;
+    margin:0px;
     padding:0;
-    line-height:60px;
+    line-height:80px;
     border-top-left-radius:10px;
     border-bottom-left-radius:10px;
-    width:100px;
+    width:250px;
     transition:all ease-in .2s;
     -webkit-transition:all ease-in .2s;
     position:relative;
-    width:100px;
-    height:64px;
+    height:80px;
     cursor:pointer;
 }
 .imgWrapper img{
     margin:0;
     width:100px;
     height:60px;
-    padding:0;
     left:0;
-    top:2px;
+    top:10px;
     position:absolute;
     border:none;
     border-radius:10px;
@@ -92,7 +90,7 @@ h3{
     cursor:pointer;
 }
 .imgWrapper{
-    width:90px;
+    width:250px;
     padding-left:110px;
 }
 .imgWrapper img:hover{

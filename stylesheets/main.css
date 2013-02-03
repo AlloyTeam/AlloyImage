@@ -54,6 +54,9 @@ nav a:hover{
     background-position:-123px 0;
     margin-left:61px;
 }
+#download{
+    margin-left:61px;
+}
 #home:hover{
     background-position:-59px 0;
 }
@@ -168,6 +171,10 @@ footer{
 .footerNav a{
     color:#fff;
     text-decoration:none;
+}
+footer a{
+    text-decoration:none;
+    color:#777;
 }
 .copyright{
     margin-top:33px;

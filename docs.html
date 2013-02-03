@@ -48,6 +48,7 @@
     <nav>
       <a href="./" id="home">首页</a>
       <a href="docs.html" target="_blank" id="docs">文档</a>
+      <a href="download/alloyImage-1.0.zip" target="_blank" id="download">下载</a>
     </nav>
     <div class="hoverBorder" id="hoverBorder" style="left:219px;"></div>
   </header>
@@ -604,6 +605,17 @@ for(var i = 0;i &lt; pics.length;i ++){
       as.onmouseout = function(){
         border.style.left = "219px";
       };
+
+    var download = document.getElementById("download");
+    var border = document.getElementById("hoverBorder");
+      download.onmouseover = function(){
+        border.style.left = "335px";
+      };
+
+      download.onmouseout = function(){
+        border.style.left = "219px";
+      };
+
 
  })();
   </script>

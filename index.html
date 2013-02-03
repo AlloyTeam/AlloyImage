@@ -43,10 +43,12 @@
 </head>
 <body>
 <div class="wrapper">
+
   <header>
     <nav>
       <a href="./" id="home">首页</a>
       <a href="docs.html" target="_blank" id="docs">文档</a>
+      <a href="download/alloyImage-1.0.zip" target="_blank" id="download">下载</a>
     </nav>
     <div class="hoverBorder" id="hoverBorder"></div>
   </header>
@@ -152,7 +154,7 @@
     <a href="http://www.alloyteam.com" target="_blank">AlloyTeam</a> | <a href="http://www.dorsywang.com" target="_blank">Blog</a>
     </section>
     <section class="copyright">
-    Copyright ©  2013 Tencent AlloyTeam. All Rights Reserved. <br /><a target="_blank" style="text-decoration:none;" href="view-source:http://alloyteam.github.com/AlloyPhoto/"><span style="font-size:12px;color:#b7b4b4;">codeIn HTML5</span></a>
+    Copyright ©  2013 <a href="http://www.alloyteam.com" target="_blank">Tencent AlloyTeam.</a> All Rights Reserved. <br /><a target="_blank" style="text-decoration:none;" href="view-source:http://alloyteam.github.com/AlloyPhoto/"><span style="font-size:12px;color:#b7b4b4;">codeIn HTML5</span></a>
     </section>
   </footer>
   <script type="text/javascript" src="js/combined/alloyimage.js"></script>
@@ -323,6 +325,16 @@
       };
 
       as.onmouseout = function(){
+        border.style.left = "100px";
+      };
+
+    var download = document.getElementById("download");
+    var border = document.getElementById("hoverBorder");
+      download.onmouseover = function(){
+        border.style.left = "335px";
+      };
+
+      download.onmouseout = function(){
         border.style.left = "100px";
       };
 
