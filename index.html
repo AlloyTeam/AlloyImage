@@ -23,7 +23,7 @@
   
   if(isIE){
     var result = /MSIE (\d+\.\d+)/.exec(sUserAgent);
-    if(parseFloat(result[1]) >= 9){
+    if(parseFloat(result[1]) > 9){
       ieFlag = 1;
     }else{
     }
@@ -161,16 +161,16 @@
   <script type="text/javascript">
 (function(){
     var WIDTH = 850,
-    HEIGHT = 432,
-    NUM = 6;
-    var TITLE = [
-      "暖秋",
-      "柔焦",
-      "仿lomo",
-      "素描",
-      "美肤",
-      "复古"
-    ];
+        HEIGHT = 432,
+        NUM = 6;
+        TITLE = [
+          "暖秋",
+          "柔焦",
+          "仿lomo",
+          "素描",
+          "美肤",
+          "复古"
+        ];
 
     var COMCODE = [
     'var m = this.clone().act("色相/饱和度调节",36,47,8,true);<br />return this.add(<br />m, "叠加"<br />);',
@@ -182,7 +182,7 @@
 
     var Tools = {
       each: function(els, func){
-        for(var i = 0,n = els.length;i < n;i ++){
+        for(var i = 0, n = els.length; i < n; i ++){
           func.call(els[i], i);
         }
       },
@@ -238,7 +238,7 @@
 
           Tools.addClass(as[i], "curr");
           var demoTitle = document.getElementById("demoTitle");
-          demoTitle.innerHTML = "<span class='code'>AlloyImage(img).ps(\"" + TITLE[i] + "\").replace(img);</span> 　　<a href='javascript:;' id='runCode'>运行代码</a> <a href='javascript:;' id='undo'>撤回原图</a>";
+          demoTitle.innerHTML = "<span class='code'>AlloyImage(img).ps(\"" + TITLE[i] + "\").replace(img);</span> 　　<a href='javascript:;' id='runCode'>运行代码</a> <a href='javascript:;' id='undo'>撤回原图</a> ";
       },
 
       stop: function(){
@@ -267,17 +267,13 @@
           Tools.each(imgs, function(i){
               this.onmouseover = function(){
                 return function(){
-
                   _this.stop();
-
                 };
               }();
 
               this.onmouseout = function(){
                 return function(){
-
                    _this.start();
-
                 };
               }();
           });
@@ -292,8 +288,15 @@
           };
 
           demoTitle.onclick = function(e){
+            var that = this;
             if(e.target.id == "runCode"){
-              AlloyImage(imgs[_this.curr]).ps(TITLE[_this.curr]).replace(imgs[_this.curr]);
+
+              this.innerHTML += " 努力的跑i ++中...";
+              setTimeout(function(){
+                AlloyImage(imgs[_this.curr]).ps(TITLE[_this.curr]).replace(imgs[_this.curr]);
+                that.innerHTML = that.innerHTML.replace(" 努力的跑i ++中...", "");
+              }, 0);
+
             }else if(e.target.id == "undo"){
               _this.cache[_this.curr].old.replace(imgs[_this.curr]);
             }else if(e.target.id == "viewRaw"){
@@ -339,7 +342,22 @@
       };
 
  })();
-  </script>
+</script>
+
+<script type="text/javascript">
+
+	  var _gaq = _gaq || [];
+	  _gaq.push(['_setAccount', 'UA-23019343-11']);
+	  _gaq.push(['_trackPageview']);
+
+	  (function() {
+		var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+		ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+		var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+	  })();
+
+</script>
+
 </div>
 </body>
 </html>

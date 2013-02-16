@@ -115,7 +115,14 @@
                 var img = document.getElementById("pic");
                 var AP = _this.img.clone();
                 if(text == "原图") AP.replace(img);
-                else AP.ps(text).replace(img);
+                else{
+                    msgEle.style.display = "block";
+
+                    setTimeout(function(){
+                        AP.ps(text).replace(img);
+                        msgEle.style.display = "none";
+                    }, 0);
+                }
             });
 
             document.body.addEventListener("drop", function(e){
@@ -204,10 +211,15 @@
 
             document.getElementById("effects").innerHTML = html;
         }
+
     };
     
+    var msgEle;
+
     window.addEventListener("DOMContentLoaded", function(){
         Main.init();
+
+        msgEle = document.getElementById("infoMsg");
     }, false);
 
 })();

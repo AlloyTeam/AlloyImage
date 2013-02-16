@@ -89,6 +89,15 @@ h3{
     z-index:3;
     cursor:pointer;
 }
+#infoMsg{
+    position:absolute;
+    left:0px;
+    top:0px;
+    background:red;
+    padding:2px;
+    font-shadow:none;
+    display:none;
+}
 .imgWrapper{
     width:250px;
     padding-left:110px;
