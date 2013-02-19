@@ -12,7 +12,7 @@
   <script type="text/javascript">
 (function(){
   var donotShow = function(){
-    alert("建议使用IE10或者chrome浏览器");
+    //alert("建议使用IE10或者chrome浏览器");
     window.onload = function(){
     };
   };
@@ -56,7 +56,8 @@
   <section class="content" style="margin-top:0;">
     <article class="demo" style="width:100%;margin-bottom:30px;">
       <section class="demoPics" style="width:100%;height:480px;">
-        <div class="flashWrapper" style="width:850px;">
+        <div class="flashWrapper" style="width:1003px;">
+          <div class="waitMsg" id="waitMsg">处理中</div>
           <div class="flash" id="flash">
             <img src="img/4.jpg" id="pic0" alt="" />
             <img src="img/4.jpg" id="pic1" alt="" />
@@ -160,7 +161,7 @@
   <script type="text/javascript" src="js/combined/alloyimage.js"></script>
   <script type="text/javascript">
 (function(){
-    var WIDTH = 850,
+    var WIDTH = 1003,
         HEIGHT = 432,
         NUM = 6;
         TITLE = [
@@ -287,15 +288,18 @@
             _this.start();
           };
 
+          var waitMsg = document.getElementById("waitMsg");
           demoTitle.onclick = function(e){
             var that = this;
             if(e.target.id == "runCode"){
 
-              this.innerHTML += " 努力的跑i ++中...";
               setTimeout(function(){
                 AlloyImage(imgs[_this.curr]).ps(TITLE[_this.curr]).replace(imgs[_this.curr]);
-                that.innerHTML = that.innerHTML.replace(" 努力的跑i ++中...", "");
-              }, 0);
+                waitMsg.style.display = "none";
+              }, 2);
+
+              waitMsg.style.display = "block";
+              
 
             }else if(e.target.id == "undo"){
               _this.cache[_this.curr].old.replace(imgs[_this.curr]);
@@ -324,21 +328,21 @@
     var as = document.getElementById("docs");
     var border = document.getElementById("hoverBorder");
       as.onmouseover = function(){
-        border.style.left = "219px";
+        border.style.left = "119px";
       };
 
       as.onmouseout = function(){
-        border.style.left = "100px";
+        border.style.left = "0px";
       };
 
     var download = document.getElementById("download");
     var border = document.getElementById("hoverBorder");
       download.onmouseover = function(){
-        border.style.left = "335px";
+        border.style.left = "235px";
       };
 
       download.onmouseout = function(){
-        border.style.left = "100px";
+        border.style.left = "0px";
       };
 
  })();

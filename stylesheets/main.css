@@ -12,7 +12,7 @@ html,body{
 }
 header{
     height:247px;
-    background:url(../images/headerbg.png) 81px 25px no-repeat;
+    background:url(../images/headerbg.png) 0px 25px no-repeat;
     position:relative;
     overflow:hidden;
 }
@@ -42,13 +42,13 @@ nav a:hover{
     background:rgb(70,186,240);
     position:absolute;
     top:238px;
-    left:100px;
+    left:0px;
     -webkit-transition:all 0.2s ease-in;
 }
 
 #home{
     background-position:0 0;
-    margin-left:106px;
+    margin-left:6px;
 }
 #docs{
     background-position:-123px 0;
@@ -64,7 +64,7 @@ nav a:hover{
     background-position:-182px -1px;
 }
 section{
-    width:870px;
+    width:1003px;
 }
 .main{
     margin:0 auto;
@@ -102,7 +102,7 @@ article.demo{
     float:left;
 }
 section.demoPics{
-    width:703px;
+    width:800px;
     height:410px;
     margin:0;
     padding:0;
@@ -110,8 +110,8 @@ section.demoPics{
     overflow:hidden;
 }
 section.introWrapper{
-    width:700px;
-    float:left;
+    width:840px;
+    float:right;
 }
 aside.links{
     height:275px;
@@ -138,18 +138,18 @@ aside.links .linksWrapper{
     height:141px;
     margin:0;
     float:left;
+    margin-left:40px;
 }
 #linkSimple{
+    margin-left:0px;
     background:url(../images/links_simple.png) 74px 53px no-repeat,url(../images/go.png) 170px 83px no-repeat;
     background-color:#3cb1bb;
 }
 #linkPro{
-    margin-left:10px;
     background:url(../images/links_pro.png) 74px 53px no-repeat,url(../images/go.png) 170px 83px no-repeat;
     background-color:#c9c845;
 }
 #linkGit{
-    margin-left:10px;
     background:url(../images/links_git.png) 74px 53px no-repeat,url(../images/go.png) 170px 83px no-repeat;
     background-color:#c58043;
 }
@@ -187,7 +187,7 @@ footer a{
  * start flash css
  */
 .flashWrapper{
-    width:559px;
+    width:1003px;
     height:432px;
     overflow:hidden;
     margin:10px auto;
@@ -196,18 +196,33 @@ footer a{
     position:relative;
 }
 .flash{
-    width:5100px;
+    width:6018px;
     height:432px;
     position:absolute;
     top:0;
     left:0;
     -webkit-transition:all ease-in-out .5s;
 }
+.waitMsg{
+    position:absolute;
+    top:170px;
+    left:450px;
+    z-index:9;
+    width:100px;
+    height:100px;
+    text-align:center;
+    line-height:100px;
+    background:#333;
+    border-radius:4px;
+    opacity:0.7;
+    display:none;
+    color:#ccc;
+}
 .flash img{
     padding:0;
     margin:0;
     display:block;
-    width:850px;
+    width:1003px;
     height:432px;
     float:left;
 }
@@ -223,10 +238,10 @@ footer a{
     float:left;
     color:#fff;
     font-size:14px;
-    margin:-60px 0 0 12px;
+    margin:-60px 0 0 0px;
     background:#333;
     opacity:0.9;
-    width:818px;
+    width:1003px;
     height:50px;
     line-height:50px;
     padding-left:30px;

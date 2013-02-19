@@ -91,12 +91,18 @@ h3{
 }
 #infoMsg{
     position:absolute;
-    left:0px;
-    top:0px;
-    background:red;
-    padding:2px;
-    font-shadow:none;
+    top:170px;
+    left:450px;
+    z-index:9;
+    width:100px;
+    height:100px;
+    text-align:center;
+    line-height:100px;
+    background:#333;
+    border-radius:4px;
+    opacity:0.7;
     display:none;
+    color:#ccc;
 }
 .imgWrapper{
     width:250px;

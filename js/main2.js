@@ -121,7 +121,7 @@
                     setTimeout(function(){
                         AP.ps(text).replace(img);
                         msgEle.style.display = "none";
-                    }, 0);
+                    }, 2);
                 }
             });
 
@@ -163,6 +163,8 @@
                     top = top < 0 ? 0 : top;
                     this.style.left = left + "px";
                     this.style.top = top + "px";
+                    msgEle.style.left = (parseInt(w_width) - 100) / 2 + "px";
+                    msgEle.style.top = (parseInt(w_height) - 100) / 2 + "px";
                 };
                 func.call(document.getElementById("pic"));
 
@@ -217,9 +219,8 @@
     var msgEle;
 
     window.addEventListener("DOMContentLoaded", function(){
-        Main.init();
-
         msgEle = document.getElementById("infoMsg");
+        Main.init();
     }, false);
 
 })();
