@@ -263,8 +263,10 @@ footer a{
 .demo .picNav a{
     text-decoration:none;
     margin:0;
-    margin-left:-10px;
+    margin-left:-20px;
+    padding:0 5px 0 5px;
     color:#151414;
+    font-size:57px;
 }
 .demo .picNav a.curr{
     color:#bd1313;
