@@ -824,6 +824,7 @@ window.AlloyImage = $AI = window.psLib;
             "灰白" : "e10",
             "灰色" : "e11",
             "暖秋" : "e12",
+            "木雕" : "e13"
         };
 
         var Config = {
@@ -1546,6 +1547,14 @@ window.AlloyImage = $AI = window.psLib;
                         var m = this.clone().act("色相/饱和度调节",36,47,8,true).act("暗角", 6, 150);
                         return this.add(
                             m, "叠加"
+                        );
+                    },
+
+                    //木雕的效果
+                    e13: function(){
+                        var layerClone = this.clone().act("马赛克").act("查找边缘").act("浮雕效果");
+                        return this.add(
+                            layerClone, "线性光"
                         );
                     }
                 };
