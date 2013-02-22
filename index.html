@@ -239,7 +239,7 @@
 
           Tools.addClass(as[i], "curr");
           var demoTitle = document.getElementById("demoTitle");
-          demoTitle.innerHTML = "<span class='code'>AlloyImage(img).ps(\"" + TITLE[i] + "\").replace(img);</span> 　　<a href='javascript:;' id='runCode'>运行代码</a> <a href='javascript:;' id='undo'>撤回原图</a> ";
+          demoTitle.innerHTML = "<span class='code'>AlloyImage(img).ps(\"" + TITLE[i] + "\").replace(img);</span> 　　<div class='button'><a href='javascript:;' id='runCode' class='mask'>运行代码</a></div> <div class='button'><a href='javascript:;' class='mask' id='undo'>撤回原图</a></div> ";
       },
 
       stop: function(){
