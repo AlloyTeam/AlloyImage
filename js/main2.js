@@ -203,7 +203,8 @@
                 "亮白增强" : "e9",
                 "灰白" : "e10",
                 "灰色" : "e11",
-                "暖秋" : "e12"
+                "暖秋" : "e12",
+                "木雕" : "e13"
             };
             var effectModel = '<li class="e_item"><div class="imgWrapper"><img src="style/image/demo/{pic}.png" alt="" />{effect}</div></li>';
             var html = '<li class="e_item"><div class="imgWrapper"><img src="style/image/demo/e1.jpg" alt="" />原图</div></li>';
