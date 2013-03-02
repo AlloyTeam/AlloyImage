@@ -43,6 +43,7 @@ nav a:hover{
     position:absolute;
     top:238px;
     left:0px;
+    transition:all 0.2s ease-in;
     -webkit-transition:all 0.2s ease-in;
 }
 
@@ -90,6 +91,7 @@ section.content{
     margin:0 auto;
     margin-top:32px;
     overflow:auto;
+    overflow-x: hidden;
 }
 section h1{
     font-size:30px;
@@ -110,7 +112,7 @@ section.demoPics{
     overflow:hidden;
 }
 section.introWrapper{
-    width:840px;
+    width:760px;
     float:right;
 }
 aside.links{
@@ -192,6 +194,7 @@ footer a{
     overflow:hidden;
     margin:10px auto;
     padding:0;
+    transition:all ease-in .2s;
     -webkit-transition:all ease-in .2s;
     position:relative;
 }
@@ -201,6 +204,7 @@ footer a{
     position:absolute;
     top:0;
     left:0;
+    transition:all ease-in-out .5s;
     -webkit-transition:all ease-in-out .5s;
 }
 .waitMsg{
@@ -283,9 +287,9 @@ footer a{
 .apintro > li{
     list-style:none;
     float:left;
-    margin-left:50px;
+    margin-left:30px;
     padding:0;
-    width:300px;
+    width:240px;
     line-height:24px;
 }
 .apintro > li ul{
@@ -309,7 +313,7 @@ footer a{
     position:relative;
     top:-20px;
     border-radius:4px;
-    background:#444;
+    background:#111;
 }
   .button
         {
@@ -345,7 +349,8 @@ footer a{
             bottom: 1px;
             position: absolute;
             text-align: center;
-            color: #FFF;
+            color: #FFF !important;
+            font-weight: normal !important;
             text-decoration: none;
             -moz-border-radius: 5px;
             -webkit-border-radius: 5px;
@@ -369,6 +374,6 @@ footer a{
         .button
         {
             margin: 8px 4px;
-            background-color:#222;/*这里替换掉颜色*/
+            background-color:rgba(12,122,27,0.99);/*这里替换掉颜色*/
             display:inline-block;
         }

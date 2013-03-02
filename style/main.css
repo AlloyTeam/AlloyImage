@@ -126,9 +126,8 @@ h3{
     position:absolute;
     left:0;
     top:0;
-    box-shadow:6px 6px 3px #333;
-    -webkit-box-shadow:6px 6px 3px #333;
-    transition:all ease-in-out .4s;
+    2box-shadow:6px 6px 3px #333;
+    2-webkit-box-shadow:6px 6px 3px #333;
 }
 .command{
     background:-webkit-gradient(linear,left top,left bottom,from(#26292d),color-stop(50%,#27282b),to(#26292d));

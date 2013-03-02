@@ -61,31 +61,48 @@
             });
             */
 
-            var clickFlag = 0, dx, dy;
+            var clickFlag = 0, dx, dy, left, top;
             this.addEvent(".pic", "mousedown", function(e){
+            /*
                 dx = e.offsetX ? e.offsetX : e.layerX;
                 dy = e.offsetY ? e.offsetY : e.layerY;
+                */
+
+                dx = e.clientX;
+                dy = e.clientY;
+
+                left = parseInt(pic.style.left);
+                top = parseInt(pic.style.top);
+
                 clickFlag = 1;
             });
             this.addEvent(".picWrapper", "mouseup", function(e){
                 clickFlag = 0;
             });
+
             document.getElementById("picWrapper").onmousemove = function(e){
+                /*
                     var x = e.offsetX ? e.offsetX : e.layerX;
                     var y = e.offsetY ? e.offsetY : e.layerY;
+                    */
+                    var x = e.clientX;
+                    var y = e.clientY;
 
                 if(clickFlag){
                     var pic = document.getElementById("pic");
 
+                    /*
                     var x = e.offsetX ? e.offsetX : e.layerX;
                     var y = e.offsetY ? e.offsetY : e.layerY;
-                    var left = parseInt(pic.style.left);
-                    var top = parseInt(pic.style.top);
-
+                    */
+                     var x = e.clientX;
+                    var y = e.clientY;
+  
                     var rLeft = left + (x - dx);
                     var rTop = top + (y - dy);
                     if(rLeft < 0) rLeft = 0;
                     if(rTop < 0) rTop = 0;
+                    console.log("x:" + x + " y:" + y + "| left:" + left + ",top:" + top + "| dx:" + dx + ",dy:" + dy);
 
                     pic.style.left = rLeft + "px";
                     pic.style.top = rTop + "px";
@@ -161,6 +178,7 @@
                     var left = (parseInt(w_width) - parseInt(p_width)) / 2;
                     var top = (parseInt(w_height) - parseInt(p_height)) / 2;
                     top = top < 0 ? 0 : top;
+                    left = left < 0 ? 0 : left;
                     this.style.left = left + "px";
                     this.style.top = top + "px";
                     msgEle.style.left = (parseInt(w_width) - 100) / 2 + "px";
