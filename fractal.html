@@ -1,0 +1,82 @@
+<!DOCTYPE HTML>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Mandelbrot集-h5实现</title>
+  <script type="text/javascript" src="js/combined/alloyimage.js"></script>
+</head>
+<body>
+Mandelbrot集
+<canvas id="mandelbrot" width = "800" height="600">
+</canvas>
+
+<div id="msg"></div>
+<script type="text/javascript">
+//记录我们开始的时刻
+var _startTime = + (new Date());
+
+//取到canvas元素
+var fx = document.getElementById("mandelbrot").getContext("2d");
+
+//取到AI的数学运行库接口
+var dM = $AI.dorsyMath();
+
+var count = 0, c, maxCount = 100, maxDistance = 200000000000;
+
+//迭代fc函数
+function fc(z){
+  count ++;
+
+  //超过最大迭代次数时返回值
+  if(count > maxCount) return z;
+
+  //检查复数模是否超过有界性条件
+  if(z.distance() > maxDistance) return z;
+
+  //计算我们的fc值
+  var returnVal = z.mutiply(z).plus(c);
+
+  return fc(returnVal);
+}
+
+var start = new dM.C(0, 0);
+
+//搜寻参数c
+for(var x = -3; x < 3; x += 0.01){
+  for(var y = -2; y < 2; y += 0.01){
+
+    //初始化参数
+    count = 0;
+    c = new dM.C(x, y);
+
+    //进入迭代
+    var dis = fc(start).distance();
+
+
+    //描点
+    //在Julia集内为黑色
+    if(dis < maxDistance){
+      fx.fillStyle = "#000";
+
+    //根据逃逸速度着色
+    }else{
+      //色相
+      var H = (maxCount - count) / maxCount * Math.PI * 2 - Math.PI;
+
+      var RGB = dM.HSIToRGB(H, 1, 85);
+      var fillStyle = "rgb(" + parseInt(RGB.R) + "," + parseInt(RGB.G) + "," + parseInt(RGB.B) + ")";
+
+      fx.fillStyle = fillStyle;
+    }
+
+    fx.fillRect(x * 100 + 300, y * 100 + 300, 1, 1);
+  }
+}
+
+//打印运行时间
+document.getElementById("msg").innerHTML = "运行时间: " + (+ (new Date()) - _startTime) / 1000 + "s";
+
+</script>
+<a href="http://www.dorsywang.com">Blog</a>
+</body>
+</html>
