@@ -6,73 +6,113 @@
   <script type="text/javascript" src="js/combined/alloyimage.js"></script>
 </head>
 <body>
-Mandelbrot集
-<canvas id="mandelbrot" width = "800" height="600">
-</canvas>
-
+Mandelbrot集、Julia集
 <div id="msg"></div>
 <script type="text/javascript">
 //记录我们开始的时刻
 var _startTime = + (new Date());
 
-//取到canvas元素
-var fx = document.getElementById("mandelbrot").getContext("2d");
+function fractal(cArr){
 
-//取到AI的数学运行库接口
-var dM = $AI.dorsyMath();
+  //取到canvas元素
+  var canvas = document.createElement("canvas");
+  canvas.width = 700;
+  canvas.height = 600;
 
-var count = 0, c, maxCount = 100, maxDistance = 200000000000;
+  var fx = canvas.getContext("2d");
+  document.body.appendChild(canvas);
 
-//迭代fc函数
-function fc(z){
-  count ++;
+  //取到AI的数学运行库接口
+  var dM = $AI.dorsyMath();
 
-  //超过最大迭代次数时返回值
-  if(count > maxCount) return z;
+  var count = 0, c, maxCount = 100, maxDistance = 200000000000;
 
-  //检查复数模是否超过有界性条件
-  if(z.distance() > maxDistance) return z;
+  //迭代fc函数
+  function fc(z){
+    count ++;
 
-  //计算我们的fc值
-  var returnVal = z.mutiply(z).plus(c);
+    //超过最大迭代次数时返回值
+    if(count > maxCount) return z;
 
-  return fc(returnVal);
-}
+    //检查复数模是否超过有界性条件
+    if(z.distance() > maxDistance) return z;
 
-var start = new dM.C(0, 0);
+    //计算我们的fc值
+    var returnVal = z.mutiply(z).plus(c);
 
-//搜寻参数c
-for(var x = -3; x < 3; x += 0.01){
-  for(var y = -2; y < 2; y += 0.01){
+    return fc(returnVal);
+  }
 
-    //初始化参数
-    count = 0;
-    c = new dM.C(x, y);
+  var start;
 
-    //进入迭代
-    var dis = fc(start).distance();
+  if(cArr){
+    c = new dM.C(cArr[0], cArr[1]);
+  }else{
+    start = new dM.C(0, 0);
+  }
+
+  //搜寻参数c
+  for(var x = -3; x < 3; x += 0.01){
+    for(var y = -2; y < 2; y += 0.01){
+
+      //初始化参数
+      count = 0;
+
+      if(cArr){
+        start = new dM.C(x, y);
+      }else{
+        c = new dM.C(x, y);
+      }
+
+      //进入迭代
+      var dis = fc(start).distance();
 
 
-    //描点
-    //在Julia集内为黑色
-    if(dis < maxDistance){
-      fx.fillStyle = "#000";
+      //描点
+      //在Julia集内为黑色
+      if(dis < maxDistance){
+        fx.fillStyle = "#000";
 
-    //根据逃逸速度着色
-    }else{
-      //色相
-      var H = (maxCount - count) / maxCount * Math.PI * 2 - Math.PI;
+      //根据逃逸速度着色
+      }else{
+        //色相
+        var H = (maxCount - count) / maxCount * Math.PI * 2 - Math.PI;
 
-      var RGB = dM.HSIToRGB(H, 1, 85);
-      var fillStyle = "rgb(" + parseInt(RGB.R) + "," + parseInt(RGB.G) + "," + parseInt(RGB.B) + ")";
+        var RGB = dM.HSIToRGB(H, 1, 85);
+        var fillStyle = "rgb(" + parseInt(RGB.R) + "," + parseInt(RGB.G) + "," + parseInt(RGB.B) + ")";
 
-      fx.fillStyle = fillStyle;
+        fx.fillStyle = fillStyle;
+      }
+
+      fx.fillRect(x * 100 + 300, y * 100 + 300, 1, 1);
     }
-
-    fx.fillRect(x * 100 + 300, y * 100 + 300, 1, 1);
   }
 }
 
+//Mandelbrot集
+fractal();
+
+//以下为不同参数的Julia集
+setTimeout(function(){
+  fractal([0.25, 0.52])
+}, 0);
+
+
+setTimeout(function(){
+  fractal([-0.25, 0.52]);
+}, 0);
+
+setTimeout(function(){
+  fractal([-0.25, 0.75]);
+}, 0);
+
+setTimeout(function(){
+  fractal([-0.2, 0.75]);
+}, 0);
+
+setTimeout(function(){
+  fractal([-1, 0.05]);
+}, 0);
 //打印运行时间
 document.getElementById("msg").innerHTML = "运行时间: " + (+ (new Date()) - _startTime) / 1000 + "s";
 
