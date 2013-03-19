@@ -100,6 +100,9 @@ HTMLImageElement.prototype.loadOnce = function(func){
     window[Ps] = function(img, width, height){
 
         if(this instanceof window[Ps]){
+            //记录时间 time trace
+            this.startTime = + new Date();
+
             var canvas = document.createElement("canvas");
             var context = canvas.getContext("2d");
 
@@ -403,7 +406,15 @@ HTMLImageElement.prototype.loadOnce = function(func){
             var _this = this;
 
             _this = fun.call(_this);
+
+            this.logTime("组合效果" + effect);
+
             return _this;
+        },
+
+        //记录运行时间
+        logTime: function(msg){
+            console.log(msg + ": " + (+ new Date() - this.startTime) / 1000 + "s");
         }
     };
 

@@ -100,6 +100,9 @@ HTMLImageElement.prototype.loadOnce = function(func){
     window[Ps] = function(img, width, height){
 
         if(this instanceof window[Ps]){
+            //记录时间 time trace
+            this.startTime = + new Date();
+
             var canvas = document.createElement("canvas");
             var context = canvas.getContext("2d");
 
@@ -403,7 +406,15 @@ HTMLImageElement.prototype.loadOnce = function(func){
             var _this = this;
 
             _this = fun.call(_this);
+
+            this.logTime("组合效果" + effect);
+
             return _this;
+        },
+
+        //记录运行时间
+        logTime: function(msg){
+            console.log(msg + ": " + (+ new Date() - this.startTime) / 1000 + "s");
         }
     };
 
@@ -461,6 +472,8 @@ window.AlloyImage = $AI = window.psLib;
             add: function(lowerData, upperData, method, alpha, dx, dy, isFast, channel){
                 var l = lowerData.data;
                 var u = upperData.data;
+
+
                 dx = dx || 0;
                 dy = dy || 0;
                 alpha = alpha || 1;//alpha 范围为0 - 100
@@ -478,13 +491,23 @@ window.AlloyImage = $AI = window.psLib;
                    jump = 1; 
                 }
 
-                var result;
+                var result,
+                    width = lowerData.width,
+                    height = lowerData.height,
+                    upperLength = u.length,
+                    upperWidth = upperData.width;
 
-                for(var i = 0,n = l.length;i < n;i += 4 * jump){
+                var indexOfArr = [
+                    channelString.indexOf("0") > -1,
+                    channelString.indexOf("1") > -1,
+                    channelString.indexOf("2") > -1
+                ];
 
-                    var ii = i / 4,
-                        width = lowerData.width;
-                        height = lowerData.height;
+                var everyJump = 4 * jump;
+
+                for(var i = 0, n = l.length; i < n; i += everyJump){
+
+                    var ii = i / 4;
 
                     //得到当前点的坐标 y分量
                     var row = parseInt(ii / width); 
@@ -493,10 +516,10 @@ window.AlloyImage = $AI = window.psLib;
                     var uRow = row - dy;
                     var uCol = col - dx;
 
-                    var uIi = uRow * upperData.width + uCol;
+                    var uIi = uRow * upperWidth + uCol;
                     var uI = uIi * 4;
 
-                    if(uI >= 0 && uI < (upperData.data.length - 4) && uCol < upperData.width && uCol >= 0){
+                    if(uI >= 0 && uI < (upperLength - 4) && uCol < upperWidth && uCol >= 0){
 
                         //l[i + 3] = u[uI + 3];//透明度
                         for(var j = 0;j < 3;j ++){
@@ -505,44 +528,45 @@ window.AlloyImage = $AI = window.psLib;
                             if(u[uI + 3] == 0) break;
                             else l[i + 3] = u[uI + 3];
 
+
                             switch(method){
                                 case "颜色减淡" :
-                                    if(channelString.indexOf(j) > -1){
+                                    if(indexOfArr[j]){
                                        result = l[i + j] + (l[i + j] * u[uI + j]) / (255 - u[uI + j]);
                                        l[i + j] = (1 - alpha) * l[i + j] + (alpha) * result;
                                     }
                                     break;
 
                                 case "变暗":
-                                    if(channelString.indexOf(j) > -1){
+                                    if(indexOfArr[j]){
                                         result = l[i + j] < u[uI + j] ? l[i + j] : u[uI + j];
                                         l[i + j] = (1 - alpha) * l[i + j] + (alpha) * result;
                                     }
                                     break;
 
                                 case "变亮":
-                                    if(channelString.indexOf(j) > -1){
+                                    if(indexOfArr[j]){
                                         result = l[i + j] > u[uI + j] ? l[i + j] : u[uI + j];
                                         l[i + j] = (1 - alpha) * l[i + j] + (alpha) * result;
                                     }
                                     break;
 
                                 case "正片叠底":
-                                    if(channelString.indexOf(j) > -1){
+                                    if(indexOfArr[j]){
                                         result = parseInt((l[i + j] * u[uI + j]) / 255);
                                         l[i + j] = (1 - alpha) * l[i + j] + (alpha) * result;
                                     }
                                     break;
 
                                 case "滤色" :
-                                    if(channelString.indexOf(j) > -1){
+                                    if(indexOfArr[j]){
                                         result = parseInt(255 - (255 - l[i + j]) * (255 - u[uI + j]) / 255);
                                         l[i + j] = (1 - alpha) * l[i + j] + (alpha) * result;
                                     }
                                     break;
 
                                 case "叠加":
-                                    if(channelString.indexOf(j) > -1){
+                                    if(indexOfArr[j]){
                                         if(l[i + j] <= 127.5){
                                             result = l[i + j] * u[uI + j] / 127.5;
                                         }else{
@@ -553,7 +577,7 @@ window.AlloyImage = $AI = window.psLib;
                                     break;
 
                                 case "强光":
-                                    if(channelString.indexOf(j) > -1){
+                                    if(indexOfArr[j]){
                                         if(u[uI + j] <= 127.5){
                                             result = l[i + j] * u[uI + j] / 127.5;
                                         }else{
@@ -564,21 +588,21 @@ window.AlloyImage = $AI = window.psLib;
                                     break;
 
                                 case "差值":
-                                    if(channelString.indexOf(j) > -1){
+                                    if(indexOfArr[j]){
                                         result = l[i + j] > u[uI + j] ? l[i + j] - u[uI + j] : u[uI + j] - l[i + j];
                                         l[i + j] = (1 - alpha) * l[i + j] + (alpha) * result;
                                     }
                                     break;
 
                                 case "排除":
-                                    if(channelString.indexOf(j) > -1){
+                                    if(indexOfArr[j]){
                                         result = l[i + j] + u[uI + j] - (l[i + j] * u[uI + j]) / 127.5;
                                         l[i + j] = (1 - alpha) * l[i + j] + (alpha) * result;
                                     }
                                     break;
 
                                 case "点光":
-                                    if(channelString.indexOf(j) > -1){
+                                    if(indexOfArr[j]){
                                         if(l[i + j] < (2 * u[uI + j] - 255)){
                                             result = 2 * u[uI + j] - 255;
                                         }else if(l[i + j] < 2 * u[uI + j]){
@@ -591,14 +615,14 @@ window.AlloyImage = $AI = window.psLib;
                                     break;
 
                                 case "颜色加深":
-                                    if(channelString.indexOf(j) > -1){
+                                    if(indexOfArr[j]){
                                         result = 255 - 255 * (255 - l[i + j]) / u[uI + j];
                                         l[i + j] = (1 - alpha) * l[i + j] + (alpha) * result;
                                     }
                                     break;
 
                                 case "线性加深":
-                                    if(channelString.indexOf(j) > -1){
+                                    if(indexOfArr[j]){
                                         var tempR = l[i + j] + u[uI + j];
                                         result = tempR > 255 ? tempR - 255 : 0;
                                         l[i + j] = (1 - alpha) * l[i + j] + (alpha) * result;
@@ -606,7 +630,7 @@ window.AlloyImage = $AI = window.psLib;
                                     break;
 
                                 case "线性减淡":
-                                    if(channelString.indexOf(j) > -1){
+                                    if(indexOfArr[j]){
                                         var tempR = l[i + j] + u[uI + j];
                                         result = tempR > 255 ? 255 : tempR;
                                         l[i + j] = (1 - alpha) * l[i + j] + (alpha) * result;
@@ -614,7 +638,7 @@ window.AlloyImage = $AI = window.psLib;
                                     break;
 
                                 case "柔光":
-                                    if(channelString.indexOf(j) > -1){
+                                    if(indexOfArr[j]){
                                         if(u[uI + j] < 127.5){
                                             result = ((2 * u[uI + j] - 255) * (255 - l[i + j]) / (255 * 255) + 1) * l[i + j];
                                         }else{
@@ -625,7 +649,7 @@ window.AlloyImage = $AI = window.psLib;
                                     break;
 
                                 case "亮光":
-                                    if(channelString.indexOf(j) > -1){
+                                    if(indexOfArr[j]){
                                         if(u[uI + j] < 127.5){
                                             result = (1 - (255 - l[i + j]) / (2 * u[uI + j])) * 255;
                                         }else{
@@ -636,7 +660,7 @@ window.AlloyImage = $AI = window.psLib;
                                     break;
 
                                 case "线性光":
-                                    if(channelString.indexOf(j) > -1){
+                                    if(indexOfArr[j]){
                                         var tempR = l[i + j] + 2 * u[uI + j] - 255;
                                         result = tempR > 255 ? 255 : tempR;
                                         l[i + j] = (1 - alpha) * l[i + j] + (alpha) * result;
@@ -644,7 +668,7 @@ window.AlloyImage = $AI = window.psLib;
                                     break;
 
                                 case "实色混合":
-                                    if(channelString.indexOf(j) > -1){
+                                    if(indexOfArr[j]){
                                         if(u[uI + j] < (255 - l[i + j])){
                                             result = 0;
                                         }else{
@@ -655,7 +679,7 @@ window.AlloyImage = $AI = window.psLib;
                                     break;
 
                                 default: 
-                                    if(channelString.indexOf(j) > -1){
+                                    if(indexOfArr[j]){
                                         result = u[uI + j];
                                         l[i + j] = (1 - alpha) * l[i + j] + (alpha) * result;
                                     }
