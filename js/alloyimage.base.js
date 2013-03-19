@@ -396,7 +396,7 @@ HTMLImageElement.prototype.loadOnce = function(func){
                 context.lineTo(i / 256 * canvas.width, currY, 1, 1); 
             }
             
-            context.lineTo(canvas.width + 10, height);
+            context.lineTo(canvas.width + 10, canvas.height);
             context.fill();
         },
 
