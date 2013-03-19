@@ -136,7 +136,9 @@
                     msgEle.style.display = "block";
 
                     setTimeout(function(){
+                        var t = + new Date();
                         AP.ps(text).replace(img);
+                        console.log(text + "：" + (+ new Date() - t) / 1000 + "s");
                         msgEle.style.display = "none";
                     }, 2);
                 }
