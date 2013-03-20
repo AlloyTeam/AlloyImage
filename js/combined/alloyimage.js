@@ -309,7 +309,12 @@ HTMLImageElement.prototype.loadOnce = function(func){
         clone: function(){
 
             var tempPsLib = new window[Ps](this.canvas.width, this.canvas.height);
+            tempPsLib.context.putImageData(this.imgData, 0, 0);
+            tempPsLib.imgData = tempPsLib.context.getImageData(0, 0, this.canvas.width, this.canvas.height);
+            /*
             tempPsLib.add(this);
+            */
+
             return tempPsLib;
         },
 
@@ -329,6 +334,11 @@ HTMLImageElement.prototype.loadOnce = function(func){
 
         //返回一个合成后的图像 png base64
         save: function(isFast){
+            if(! this.layers.length){
+                this.context.putImageData(this.imgData, 0, 0);
+                return this.canvas.toDataURL(); 
+            }
+
 
             //创建一个临时的psLib对象，防止因为合并显示对本身imgData影响
             var tempPsLib = new window[Ps](this.canvas.width, this.canvas.height);
