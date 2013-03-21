@@ -152,13 +152,22 @@ h3{
 }
 .d_item{
     width:80px;
-    height:60px;
+    height:90px;
     overflow:hidden;
+    position:relative;
 }
 .d_item img{
     width:80px;
     height:auto;
     border:3px solid rgb(45,45,45);
+}
+.lab{
+    position:absolute;
+    bottom:0;
+    width:100%;
+    text-align:center;
+    padding-bottom:10px;
+    font-size:12px;
 }
 .footer{
     float:right;

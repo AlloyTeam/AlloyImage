@@ -314,6 +314,7 @@ footer a{
     top:-20px;
     border-radius:4px;
     background:#111;
+    -webkit-box-shadow:-2px -2px 0 2px #000;
 }
   .button
         {
@@ -330,7 +331,7 @@ footer a{
             background: -moz-linear-gradient(270deg,
                 transparent,
                 transparent 50%,
-                rgba(0, 0, 0, .3) 50%				
+                rgba(0, 0, 0, .3) 100%				
             );
             background: -webkit-gradient(linear,
                 left top,
@@ -374,6 +375,7 @@ footer a{
         .button
         {
             margin: 8px 4px;
-            background-color:rgba(12,122,27,0.99);/*这里替换掉颜色*/
+            background-color:#efdc5d;/*这里替换掉颜色*/
             display:inline-block;
+            opacity:1;
         }
