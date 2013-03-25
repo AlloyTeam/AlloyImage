@@ -23,7 +23,8 @@
             "锐化" : "sharp",
             "添加杂色" : "noise",
             "曲线" : "curve",
-            "暗角" : "darkCorner"
+            "暗角" : "darkCorner",
+            "喷点" : "dotted"
         };
 
         var EasyReflection = {

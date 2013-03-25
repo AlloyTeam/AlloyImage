@@ -342,6 +342,29 @@
 
                 var p3 = p1.minus(p2);
                 return p3.distance();
+            },
+
+            //将(x,y)的坐标转为单维的i
+            xyToIFun: function(width){
+                return function(x, y, z){
+                    z = z || 0;
+                    return (x * width + y) * 4 + z;
+                };
+            },
+
+            //在(x,y)进行运算
+            //rgbfun 在rgb三个上进行的操作 aFun在alpha进行的操作
+            xyCal: function(imgData, x, y, rgbFun, aFun){
+                var xyToIFun  = this.xyToIFun(imgData.width);
+                for(var i = 0; i < 3; i ++){
+                    var j  = xyToIFun(x, y, i);
+                    imgData[j] = rgbFun(imgData[j]);
+                }
+
+                if(aFun){
+                    imgData[j + 1] = aFun(imgData[j + 1]);
+                }
+
             }
             
         };
