@@ -348,7 +348,7 @@
             xyToIFun: function(width){
                 return function(x, y, z){
                     z = z || 0;
-                    return (x * width + y) * 4 + z;
+                    return (y * width + x) * 4 + z;
                 };
             },
 

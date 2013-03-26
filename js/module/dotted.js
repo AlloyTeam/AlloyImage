@@ -48,8 +48,11 @@
                             var dotX = middleX + disTmlMatrix[i][0];
                             var dotY = middleY + disTmlMatrix[i][1];
 
-                            data[(dotY * width + dotX) * 4 + 3] = 0;
-                            //data[xyToIFun(dotX, dotY, 3)] = 128;
+                            //data[(dotY * width + dotX) * 4 + 3] = 0;
+                            data[xyToIFun(dotX, dotY, 3)] = 225;
+                            data[xyToIFun(dotX, dotY, 2)] = 225;
+                            data[xyToIFun(dotX, dotY, 0)] = 225;
+                            data[xyToIFun(dotX, dotY, 1)] = 225;
                         }
                     }
 

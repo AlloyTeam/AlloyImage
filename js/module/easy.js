@@ -83,6 +83,15 @@
                         return this.add(
                             layerClone, "线性光"
                         );
+                    },
+
+                    //粗糙
+                    e14: function(){
+                       return this.add(
+
+                           window[Ps](this.canvas.width, this.canvas.height, "#000").act("喷点").act("浮雕效果")
+                           ,"叠加"
+                       );
                     }
                 };
 
