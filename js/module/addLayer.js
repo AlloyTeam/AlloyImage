@@ -11,54 +11,55 @@
 
             //isFast用于快速，适用于中间处理
             add: function(lowerData, upperData, method, alpha, dx, dy, isFast, channel){
-                var l = lowerData.data;
-                var u = upperData.data;
-
-
-                dx = dx || 0;
-                dy = dy || 0;
-                alpha = alpha || 1;//alpha 范围为0 - 100
-                isFast = isFast || false;
-                channel = channel || "RGB";
+                var l = lowerData.data,
+                    u = upperData.data,
+                
+                    dx = dx || 0,
+                    dy = dy || 0,
+                    alpha = alpha || 1,//alpha 范围为0 - 100
+                    isFast = isFast || false,
+                    channel = channel || "RGB";
 
                 if(!(/[RGB]+/.test(channel))){
                     channel = "RGB";
                 }
-
-                var channelString = channel.replace("R","0").replace("G","1").replace("B","2");
-
-                var jump = 1;
-                if(isFast){
-                   jump = 1; 
-                }
-
-                var result,
+                
+                var channelString = channel.replace("R","0").replace("G","1").replace("B","2"),
+                    jump = 1,
+                    result,
                     width = lowerData.width,
                     height = lowerData.height,
                     upperLength = u.length,
-                    upperWidth = upperData.width;
+                    upperWidth = upperData.width,
 
-                var indexOfArr = [
-                    channelString.indexOf("0") > -1,
-                    channelString.indexOf("1") > -1,
-                    channelString.indexOf("2") > -1
-                ];
+                    indexOfArr = [
+                        channelString.indexOf("0") > -1,
+                        channelString.indexOf("1") > -1,
+                        channelString.indexOf("2") > -1
+                    ],
+                    everyJump = 4 * jump;
 
-                var everyJump = 4 * jump;
+                     /*
+                if(isFast){
+                   jump = 1; 
+                }
+                */           
+
+                var ii, row, col, uRow, uCol, uIi, uI;
 
                 for(var i = 0, n = l.length; i < n; i += everyJump){
 
-                    var ii = i / 4;
+                    ii = i / 4;
 
                     //得到当前点的坐标 y分量
-                    var row = parseInt(ii / width); 
-                    var col = ii % width;
+                    row = parseInt(ii / width); 
+                    col = ii % width;
 
-                    var uRow = row - dy;
-                    var uCol = col - dx;
+                    uRow = row - dy;
+                    uCol = col - dx;
 
-                    var uIi = uRow * upperWidth + uCol;
-                    var uI = uIi * 4;
+                    uIi = uRow * upperWidth + uCol;
+                    uI = uIi * 4;
 
                     if(uI >= 0 && uI < (upperLength - 4) && uCol < upperWidth && uCol >= 0){
 
@@ -68,7 +69,6 @@
                             //若此点透明则不计算
                             if(u[uI + 3] == 0) break;
                             else l[i + 3] = u[uI + 3];
-
 
                             switch(method){
                                 case "颜色减淡" :
@@ -229,8 +229,6 @@
                     }
                     
                 }
-
-                lowerData.data = l;
 
                 return lowerData;
             }

@@ -165,10 +165,7 @@ HTMLImageElement.prototype.loadOnce = function(func){
             var args = [];
 
             //提取参数为数组
-            for(var i = 0; i < arguments.length; i ++){
-                if(i == 0) continue;
-                args.push(arguments[i]);
-            }
+            args = Array.prototype.slice.call(arguments, 1);
 
             //做一次转发映射
             P.reflect(method, this.imgData, args);

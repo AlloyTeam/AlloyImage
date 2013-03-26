@@ -22,8 +22,6 @@
                     }
                 }
 
-                imgData.data = data;
-
                 return imgData;
             }
         };
