@@ -105,7 +105,7 @@ HTMLImageElement.prototype.loadOnce = function(func){
 
             var canvas = document.createElement("canvas");
             var context = canvas.getContext("2d");
-
+            
             //var l = psLib(20,30);构造适配
             if(!isNaN(img)){
 
@@ -139,6 +139,14 @@ HTMLImageElement.prototype.loadOnce = function(func){
 
             //记录挂接到图层上的对象的引用
             this.layers = [];
+
+            //原生canvas支持时的临时canvas
+            var ctxCanvas = document.createElement("canvas");
+            ctxCanvas.width = canvas.width;
+            ctxCanvas.height = canvas.height;
+
+            this.ctxCanvas = ctxCanvas;
+            this.ctxContext = canvas.getContext("2d");
             
         }else{
 
@@ -422,6 +430,20 @@ HTMLImageElement.prototype.loadOnce = function(func){
         //记录运行时间
         logTime: function(msg){
             console.log(msg + ": " + (+ new Date() - this.startTime) / 1000 + "s");
+        },
+
+        //调用原生canvas.context接口
+        cxt: function(func){
+            //func中的this指向context
+            var ctx = this.ctxContext;
+
+            ctx.putImageData(this.imgData, 0, 0);
+
+            //调用func
+            func.call(ctx);
+            this.imgData = ctx.getImageData(0, 0, this.canvas.width, this.canvas.height);
+
+            return this;
         }
     };
 
