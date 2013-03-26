@@ -111,7 +111,7 @@ HTMLImageElement.prototype.loadOnce = function(func){
 
                 canvas.width = img;
                 canvas.height = width;
-                height = height || "rgba(255,1,1,0)";
+                height = height || "#fff";
                 context.fillStyle = height;
                 context.fillRect(0, 0, img, width);
 
@@ -433,7 +433,7 @@ HTMLImageElement.prototype.loadOnce = function(func){
         },
 
         //调用原生canvas.context接口
-        cxt: function(func){
+        ctx: function(func){
             //func中的this指向context
             var ctx = this.ctxContext;
 
