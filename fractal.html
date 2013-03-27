@@ -15,78 +15,78 @@ var _startTime = + (new Date());
 function fractal(cArr){
 
   //取到canvas元素
-  var canvas = document.createElement("canvas");
-  canvas.width = 700;
-  canvas.height = 600;
+  var canvas = $AI(700, 600);
 
-  var fx = canvas.getContext("2d");
-  document.body.appendChild(canvas);
+  canvas.ctx(function(){
 
-  //取到AI的数学运行库接口
-  var dM = $AI.dorsyMath();
+    var fx = this;
 
-  var count = 0, c, maxCount = 100, maxDistance = 200000000000;
+    //取到AI的数学运行库接口
+    var dM = $AI.dorsyMath();
 
-  //迭代fc函数
-  function fc(z){
-    count ++;
+    var count = 0, c, maxCount = 100, maxDistance = 200000000000;
 
-    //超过最大迭代次数时返回值
-    if(count > maxCount) return z;
+    //迭代fc函数
+    function fc(z){
+      count ++;
 
-    //检查复数模是否超过有界性条件
-    if(z.distance() > maxDistance) return z;
+      //超过最大迭代次数时返回值
+      if(count > maxCount) return z;
 
-    //计算我们的fc值
-    var returnVal = z.mutiply(z).plus(c);
+      //检查复数模是否超过有界性条件
+      if(z.distance() > maxDistance) return z;
 
-    return fc(returnVal);
-  }
+      //计算我们的fc值
+      var returnVal = z.mutiply(z).plus(c);
 
-  var start;
-
-  if(cArr){
-    c = new dM.C(cArr[0], cArr[1]);
-  }else{
-    start = new dM.C(0, 0);
-  }
-
-  //搜寻参数c
-  for(var x = -3; x < 3; x += 0.01){
-    for(var y = -2; y < 2; y += 0.01){
-
-      //初始化参数
-      count = 0;
-
-      if(cArr){
-        start = new dM.C(x, y);
-      }else{
-        c = new dM.C(x, y);
-      }
-
-      //进入迭代
-      var dis = fc(start).distance();
-
-
-      //描点
-      //在Julia集内为黑色
-      if(dis < maxDistance){
-        fx.fillStyle = "#000";
-
-      //根据逃逸速度着色
-      }else{
-        //色相
-        var H = (maxCount - count) / maxCount * Math.PI * 2 - Math.PI;
-
-        var RGB = dM.HSIToRGB(H, 1, 85);
-        var fillStyle = "rgb(" + parseInt(RGB.R) + "," + parseInt(RGB.G) + "," + parseInt(RGB.B) + ")";
-
-        fx.fillStyle = fillStyle;
-      }
-
-      fx.fillRect(x * 100 + 300, y * 100 + 300, 1, 1);
+      return fc(returnVal);
     }
-  }
+
+    var start;
+
+    if(cArr){
+      c = new dM.C(cArr[0], cArr[1]);
+    }else{
+      start = new dM.C(0, 0);
+    }
+
+    //搜寻参数c
+    for(var x = -3; x < 3; x += 0.01){
+      for(var y = -2; y < 2; y += 0.01){
+
+        //初始化参数
+        count = 0;
+
+        if(cArr){
+          start = new dM.C(x, y);
+        }else{
+          c = new dM.C(x, y);
+        }
+
+        //进入迭代
+        var dis = fc(start).distance();
+
+
+        //描点
+        //在Julia集内为黑色
+        if(dis < maxDistance){
+          fx.fillStyle = "#000";
+
+        //根据逃逸速度着色
+        }else{
+          //色相
+          var H = (maxCount - count) / maxCount * Math.PI * 2 - Math.PI;
+
+          var RGB = dM.HSIToRGB(H, 1, 85);
+          var fillStyle = "rgb(" + parseInt(RGB.R) + "," + parseInt(RGB.G) + "," + parseInt(RGB.B) + ")";
+
+          fx.fillStyle = fillStyle;
+        }
+
+        fx.fillRect(x * 100 + 300, y * 100 + 300, 1, 1);
+      }
+    }
+  }).ps("粗糙").show();
 }
 
 //Mandelbrot集
