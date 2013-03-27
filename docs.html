@@ -253,6 +253,25 @@ img.loadOnce(function(){//loadOnce添加为alloyPhoto添加
 <p>说明：取消预览模式下所做的处理<br>
 语法：AlloyImageObj cancel()</p>
 
+<h4>ctx</h4>
+<p>说明：调用原生Canvas API<br />
+语法：AlloyImageObj ctx(Function func)<br />
+func为对图层的处理函数，其内部this指向canvas的context<br />
+如
+<pre><code>var img = document.getElementsByTagName("img")[0];
+img.loadOnce(function(){//loadOnce添加为alloyPhoto添加
+      /*
+         防止用onload事件注册后  replace会改变img的src导致onload事件再次触发形成循环
+      */
+      var ps = AlloyImage(this);
+      ps.ctx(function(){
+        this.fillStyle = "red";
+        this.fillRect(0, 0, 100, 100);
+      }).replace(this);
+});
+</code></pre>
+</p>
+
 <h3>多图层操作</h3>
 
 <h4>addLayer</h4>
