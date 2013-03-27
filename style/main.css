@@ -29,25 +29,33 @@ h3{
 }
 .wrapper{
     border-top:1px solid #282B2F;
-    display:box;
     height:100%;
+    /*
+    display:box;
     display:-webkit-box;
+    display:-moz-box;
     box-orient:horizontal;
     -webkit-box-orient:horizontal;
+    */
 }
 .left{
     width:250px;
     border-right:1px solid #575C62;
     height:100%;
     overflow-y:auto;
-    float:left\9;
+    overflow-x:hidden;
+    float:left;
+    padding:0;
 }
 .right{
+    /*
     box-flex:1;
     -webkit-box-flex:1;
+    -moz-box-flex:1;
+    */
     border-left:1px solid #282B2F;
-    width:600px\9;
-    float:left\9;
+    width:600px;
+    float:left;
 }
 .effects{
     border-top:1px solid #575C62;
@@ -112,6 +120,7 @@ h3{
 .imgWrapper img:hover{
     box-shadow:0 0 10px #52cca0;
     -webkit-box-shadow:0 0 10px #52cca0;
+    -moz-box-shadow:0 0 10px #52cca0;
 }
 
 .effects li:hover{
@@ -130,6 +139,7 @@ h3{
     2-webkit-box-shadow:6px 6px 3px #333;
 }
 .command{
+    background:#27282b;
     background:-webkit-gradient(linear,left top,left bottom,from(#26292d),color-stop(50%,#27282b),to(#26292d));
     height:100px;
     border-top:1px solid #565555;

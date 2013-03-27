@@ -171,9 +171,11 @@
 
         initView: function(){
                 var func = function(){
+                    /*
                     var computedStyle = getComputedStyle(document.getElementById("picWrapper"));
-                    var w_width = computedStyle.getPropertyValue("width");
-                    var w_height = computedStyle.getPropertyValue("height");
+                    */
+                    var w_width = parseInt(document.body.clientWidth) - 250;
+                    var w_height = document.body.clientHeight;
                     var p_width = this.width;
                     var p_height = this.height;
 
