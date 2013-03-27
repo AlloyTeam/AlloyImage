@@ -20,6 +20,7 @@
   var sUserAgent = navigator.userAgent;  
   var fAppVersion = parseFloat(navigator.appVersion);  
   var isIE = sUserAgent.indexOf("compatible") > -1 && sUserAgent.indexOf("MSIE") > -1; 
+  var isFirefox = sUserAgent.toLowerCase().indexOf("firefox") > -1; 
   
   if(isIE){
     var result = /MSIE (\d+\.\d+)/.exec(sUserAgent);
@@ -30,7 +31,7 @@
   }
 
   var chromeFlag = sUserAgent.indexOf("Chrome") > -1 ;  
-  if(ieFlag || chromeFlag){
+  if(ieFlag || chromeFlag || isFirefox){
     
   }else{
     donotShow();
