@@ -120,71 +120,92 @@ img.onload = function(){
 <table>
 <tr>
 <td>参数</td>
+<td>友好参数</td>
 <td>     功能</td>
 <td>附加参数</td>
 <td>用法示例</td>
     </tr>
 <tr>
+  <td>brightness</td>
 <td>亮度</td> <td>调节亮度与对比度 </td>
 <td>亮度，对比度</td>
-<td>act("亮度",10,20)</td>
+<td>act("brightness",10,20)</td>
     </tr>
 <tr>
-<td>色相/饱和度调节 </td> <td> 调节图像色相与饱和度  </td> <td>  色相，饱和度，明度，是否着色模式(可选) </td> <td>   act("色相/饱和度调节",10,0,10,true)</td>
+  <td>setHSI</td>
+<td>色相/饱和度调节 </td> <td> 调节图像色相与饱和度  </td> <td>  色相，饱和度，明度，是否着色模式(可选) </td> <td>   act("setHSI",10,0,10,true)</td>
    </tr>
 <tr>
-<td>曲线</td> <td> 调节灰度曲线  </td> <td>  节点x的坐标数组，节点y的坐标数组 </td> <td>   act("曲线",[0,65,128,255], [0,120,220,255])</td>
+  <td>curve</td>
+<td>曲线</td> <td> 调节灰度曲线  </td> <td>  节点x的坐标数组，节点y的坐标数组 </td> <td>   act("curve",[0,65,128,255], [0,120,220,255])</td>
    </tr>
 <tr>
+  <td>toGray</td>
 <td>灰度处理</td> <td>将图像处理为灰度图像 </td>
 <td>无</td>
-<td>act("灰度处理")</td>
+<td>act("toGray")</td>
     </tr>
 <tr>
+  <td>toThresh</td>
 <td>灰度阈值</td> <td>将图像二值化 </td>
 <td>阈值</td>
-<td>act("灰度阈值",128)</td>
+<td>act("toThresh",128)</td>
     </tr>
 <tr>
+  <td>toReverse</td>
 <td>反色</td> <td>将图像进行反相操作 </td>
 <td>无</td>
-<td>act("反色")</td>
+<td>act("toReverse")</td>
     </tr>
 <tr>
+  <td>gaussBlur</td>
 <td>高斯模糊</td> <td>将图像进行高斯模糊 </td>
 <td>模糊大小</td>
-<td>act("高斯模糊",10)</td>
+<td>act("gaussBlur",10)</td>
     </tr>
 <tr>
+  <td>sharp</td>
 <td>锐化</td> <td>将图像进行锐化 </td>
 <td>锐化大小</td>
-<td>act("锐化",10)</td>
+<td>act("sharp",10)</td>
     </tr>
 <tr>
+  <td>mosaic</td>
 <td>马赛克</td> <td>将图像进行马赛克处理 </td>
 <td>马赛克大小</td>
-<td>act("马赛克",10)</td>
+<td>act("mosaic",10)</td>
     </tr>
 <tr>
+ <td>embossment</td>
 <td>浮雕效果</td> <td>将图像进行浮雕效果处理 </td>
 <td>无</td>
-<td>act("浮雕效果")</td>
+<td>act("embossment")</td>
     </tr>
 <tr>
+  <td>corrode</td>
 <td>腐蚀</td> <td>将图像进行腐蚀效果处理 </td>
 <td>无</td>
-<td>act("腐蚀")</td>
+<td>act("corrode")</td>
     </tr>
 <tr>
+  <td>noise</td>
 <td>添加杂色</td> <td>在图像上添加杂色 </td>
 <td>杂色数量</td>
-<td>act("添加杂色",10)</td>
+<td>act("noise",10)</td>
     </tr>
 <tr>
+  <td>darkCorner</td>
 <td>暗角</td>
 <td>在图像四角添加暗角</td>
 <td>暗角大小0-10, 暗角增加的暗度0-255</td>
-<td>act("暗角", 3, 200)</td>
+<td>act("darkCorner", 3, 200)</td>
+</tr>
+<tr>
+<td>dotted</td>
+<td>喷点</td>
+<td>在图像中添加白色的点</td>
+<td>无</td>
+<td>act("dotted")</td>
 </tr>
 </table><h4>add</h4>
 
@@ -303,55 +324,78 @@ effect具体可选值如下</p>
 <table>
 <tr>
 <td>method值</td>
+<td>友好值</td>
 <td>备注</td>
     </tr>
 <tr>
+  <td>softenFace</td>
 <td>美肤</td>
 <td>美化肤色</td>
 </tr>
 <tr>
+  <td>sketch</td>
 <td>素描</td>
 <td>无</td>
 </tr>
 <tr>
+  <td>softEnhancement</td>
 <td>自然增强</td>
 <td>使图片效果增强</td>
 </tr>
 <tr>
+  <td>purpleStyle</td>
 <td>紫调</td>
 <td>无</td>
 </tr>
 <tr>
+  <td>soften</td>
 <td>柔焦</td>
 <td>无</td>
 </tr>
 <tr>
+  <td>vintage</td>
 <td>复古</td>
 <td>无</td>
 </tr>
 <tr>
+  <td>gray</td>
 <td>黑白</td>
 <td>无</td>
 </tr>
 <tr>
+  <td>lomo</td>
 <td>仿lomo</td>
 <td>无</td>
 </tr>
 <tr>
+  <td>strongEnhancement</td>
 <td>亮白增强</td>
 <td>无</td>
 </tr>
 <tr>
+  <td>strongGray</td>
 <td>灰白</td>
 <td>无</td>
 </tr>
 <tr>
+  <td>lightGray</td>
 <td>灰色</td>
 <td>无</td>
 </tr>
 <tr>
+  <td>warmAutumn</td>
 <td>暖秋</td>
 <td>无</td>
+</tr>
+<tr>
+	<td>carveStyle</td>
+	<td>木雕</td>
+	<td>无</td>
+</tr>
+<tr>
+	<td>rough</td>
+	<td>粗糙</td>
+	<td>无</td>
 </tr>
 </table><pre><code>var img = document.getElementsByTagName("img")[0];
 img.loadOnce(function(){//loadOnce添加为alloyPhoto添加
