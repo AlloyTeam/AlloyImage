@@ -5,7 +5,7 @@
  * */
 ;(function(Ps){
 
-    window[Ps].module("lapOfGauss",function(P){
+    window[Ps].module("borderline",function(P){
 
         var M = {
             process: function(imgData,arg){

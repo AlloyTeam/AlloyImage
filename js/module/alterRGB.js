@@ -1,11 +1,11 @@
 /*
  * @author: Bin Wang
- * @description: 调整RGB色调的值 
+ * @description: 调整亮度对比度
  *
  * */
 ;(function(Ps){
 
-    window[Ps].module("alterRGB",function(P){
+    window[Ps].module("brightness",function(P){
 
         var M = {
             //调节亮度对比度

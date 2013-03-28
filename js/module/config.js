@@ -13,9 +13,9 @@
             "反色": "toReverse",
             "灰度阈值": "toThresh",
             "高斯模糊": "gaussBlur",
-            "亮度": "alterRGB",
+            "亮度": "brightness",
             "浮雕效果": "embossment",
-            "查找边缘": "lapOfGauss",
+            "查找边缘": "borderline",
             "色相/饱和度调节": "setHSI",
             "马赛克": "mosaic",
             "油画": "oilPainting",
@@ -28,20 +28,20 @@
         };
 
         var EasyReflection = {
-            "美肤" : "e1",
-            "素描" : "e2",
-            "自然增强" : "e3",
-            "紫调" : "e4",
-            "柔焦" : "e5",
-            "复古" : "e6",
-            "黑白" : "e7",
-            "仿lomo" : "e8",
-            "亮白增强" : "e9",
-            "灰白" : "e10",
-            "灰色" : "e11",
-            "暖秋" : "e12",
-            "木雕" : "e13",
-            "粗糙" : "e14"
+            "美肤" : "softenFace",
+            "素描" : "sketch",
+            "自然增强" : "softEnhancement",
+            "紫调" : "purpleStyle",
+            "柔焦" : "soften",
+            "复古" : "vintage",
+            "黑白" : "gray",
+            "仿lomo" : "lomo",
+            "亮白增强" : "strongEnhancement",
+            "灰白" : "strongGray",
+            "灰色" : "lightGray",
+            "暖秋" : "warmAutumn",
+            "木雕" : "carveStyle",
+            "粗糙" : "rough"
         };
 
         var Config = {
