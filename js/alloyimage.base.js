@@ -147,6 +147,17 @@ HTMLImageElement.prototype.loadOnce = function(func){
 
             this.ctxCanvas = ctxCanvas;
             this.ctxContext = canvas.getContext("2d");
+
+            //默认使用worker进行处理
+            this.useWorker = 1;
+
+            //初始化readyState为ready,readyState表明处理就绪
+            this.readyState = 1;
+
+            if(this.useWorker){
+                //如果使用worker,则初始化一个dorsyWorker封装实例出来
+                this.dorsyWorker = P.lib.dorsyWorker(this);
+            }
             
         }else{
 
@@ -165,19 +176,37 @@ HTMLImageElement.prototype.loadOnce = function(func){
         return P.lib.dorsyMath;
     };
 
+    //worker监听
+    onmessage = function(data){
+        P.reflect(data[1], data[2], data[3]);
+        postMessge("OK");
+    };
+
     //原型对象
     window[Ps].prototype = {
 
         //动作
         act: function(method, arg){
+            console.log("actStart");
             var args = [];
 
             //提取参数为数组
             args = Array.prototype.slice.call(arguments, 1);
 
-            //做一次转发映射
-            P.reflect(method, this.imgData, args);
+            if(this.useWorker){
+                this.dorsyWorker.queue.push(["act", method, args]);
 
+
+                //如果readyState为就绪状态 表明act为阶段首次动作,进入worker
+                if(this.readyState){
+                    this.readyState = 0;
+                    this.dorsyWorker.startWorker();
+                }
+            }else{
+                //做一次转发映射
+                P.reflect(method, this.imgData, args);
+            }
+            
             return this;
         },
 
@@ -217,8 +246,17 @@ HTMLImageElement.prototype.loadOnce = function(func){
         },
 
         //显示对象 isFast用于快速显示
-        show: function(selector,isFast){
+        show: function(selector, isFast, flag){
+            
+            if(flag){
+            }else{
+                if(this.useWorker){
+                    this.dorsyWorker.queue.push(["show", selector, isFast]);
+                    return this;
+                }
+            }
 
+            /*
             //创建一个临时的psLib对象，防止因为合并显示对本身imgData影响
             var tempPsLib = new window[Ps](this.canvas.width, this.canvas.height);
             tempPsLib.add(this, "正常", 0, 0, isFast);
@@ -237,7 +275,8 @@ HTMLImageElement.prototype.loadOnce = function(func){
             this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
 
             //以临时对象data显示
-            this.context.putImageData(tempPsLib.imgData, 0, 0);
+            */
+            this.context.putImageData(this.imgData, 0, 0);
 
             if(selector){
                 document.querySelector(selector).appendChild(this.canvas);
@@ -444,6 +483,11 @@ HTMLImageElement.prototype.loadOnce = function(func){
             this.imgData = ctx.getImageData(0, 0, this.canvas.width, this.canvas.height);
 
             return this;
+        },
+
+        notify: function(msg){
+            //通知
+            if(msg == "readyStateOK") this.readyState = 1;
         }
     };
 
