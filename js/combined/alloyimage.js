@@ -211,6 +211,7 @@ HTMLImageElement.prototype.loadOnce = function(func){
         //显示对象 isFast用于快速显示
         show: function(selector,isFast){
 
+            /*
             //创建一个临时的psLib对象，防止因为合并显示对本身imgData影响
             var tempPsLib = new window[Ps](this.canvas.width, this.canvas.height);
             tempPsLib.add(this, "正常", 0, 0, isFast);
@@ -229,7 +230,9 @@ HTMLImageElement.prototype.loadOnce = function(func){
             this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
 
             //以临时对象data显示
-            this.context.putImageData(tempPsLib.imgData, 0, 0);
+            //*/
+            //
+            this.context.putImageData(this.imgData, 0, 0);
 
             if(selector){
                 document.querySelector(selector).appendChild(this.canvas);
@@ -291,7 +294,7 @@ HTMLImageElement.prototype.loadOnce = function(func){
             psLibObj = arguments[0];
 
             //做映射转发
-            this.imgData = P.add(this.imgData, psLibObj.imgData, method, alpha, dx, dy, isFast, channel);
+            P.add(this.imgData, psLibObj.imgData, method, alpha, dx, dy, isFast, channel);
 
             return this;
         },
@@ -404,6 +407,10 @@ HTMLImageElement.prototype.loadOnce = function(func){
 
             _this = fun.call(_this);
             return _this;
+        },
+
+        callback: function(func){
+            P.callback = func;
         }
     };
 
@@ -459,6 +466,8 @@ window.AlloyImage = $AI = window.psLib;
 
             //isFast用于快速，适用于中间处理
             add: function(lowerData, upperData, method, alpha, dx, dy, isFast, channel){
+                P.lib.useWorker.add(lowerData.data, upperData.data, method, alpha, dx, dy, channel, lowerData.width, lowerData.height);
+                return;
                 var l = lowerData.data;
                 var u = upperData.data;
                 dx = dx || 0;
@@ -2067,6 +2076,123 @@ window.AlloyImage = $AI = window.psLib;
                 }
 
                 imgData.data = data;
+
+                return imgData;
+            }
+        };
+
+        return M;
+
+    });
+
+})("psLib");
+/*
+ * @author: Bin Wang
+ * @description: worker封装
+ *
+ * */
+;(function(Ps){
+    window[Ps].module("useWorker", function(P){
+
+        function slice(arr, start, end){
+            return Array.prototype.slice.call(arr, start, end);
+        }
+        var M = {
+            //计算的data   worker的个数 处理使用的func data要求是数组
+            //dataList = {
+            //  lowerData: lowerData,
+            //  upperData: upperData,
+            //  length: 100
+            //}
+            //
+            //func = function(lowerData, upperData)
+            add: function(data1, data2, method, alpha, dx, dy, channel, width, height, workerNum){
+                workerNum = workerNum || 6;
+                var length = data1.length;
+                var maxCount = length / workerNum;
+
+                var workerListLength = workerNum;
+
+                for(var i = 0; i < workerNum; i ++){
+                    var end = parseInt((i + 1) * maxCount);
+                    var start = parseInt(end - maxCount);
+
+                    var dataItem1 = slice(data1, start, end + 1);
+                    var dataItem2 = slice(data2, start, end + 1);
+                    var workerItem = new Worker("js/worker/calculator.js");
+
+                    var workerData = {
+                        start: start,
+                        end : end,
+                        data1: dataItem1,
+                        data2: dataItem2,
+                        method: method,
+                        alpha: alpha,
+                        dx: dx,
+                        dy: dy,
+                        width: width,
+                        height:height,
+                        channel: channel
+                    };
+
+
+                    workerItem.postMessage(workerData);
+
+                    workerItem.onmessage = function(e){
+                        workerListLength --;
+
+                        var pushData = e.data;
+                        for(var i = pushData.start; i <= pushData.end; i ++){
+                            data1[i] = pushData.data[i - pushData.start];
+                        }
+                        if(workerListLength == 0){
+                            M.complete(data1);
+                        }
+                    };
+                }
+            },
+            //所有计算成功后
+            complete: function(data){
+                P.callback && P.callback();
+            }
+        };
+
+        return M;
+
+    });
+})("psLib");
+/*
+ * @author: Bin Wang
+ * @description:  验证码识别 
+ *
+ * */
+;(function(Ps){
+
+    window[Ps].module("vericodeReg",function(P){
+
+        var M = {
+            process: function(imgData,arg){
+                var R = parseInt(arg[0]) || 100;
+                var data = imgData.data;
+                var width = imgData.width;
+                var height = imgData.height;
+                var xLength = R * 2 + 1;
+
+                //区块
+                for(var x = 0;x < width;x ++){
+
+                    for(var y = 0;y < height;y ++){
+                        
+                        var realI = y * width + x;
+                        for(var j = 0;j < 3;j ++){
+                            var rand = parseInt(Math.random() * R * 2) - R;
+                            data[realI * 4 + j] += rand;
+                        }
+
+                    }
+
+                }
+
 
                 return imgData;
             }

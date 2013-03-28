@@ -1,0 +1,34 @@
+<!DOCTYPE HTML>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title></title>
+</head>
+<body>
+	
+<div id="msg"></div>
+<!--
+<script type="text/javascript" src="js/alloyimage.base.js"></script>
+<script type="text/javascript" src="js/module/useWorker.js"></script>
+<script type="text/javascript" src="js/module/addLayer.js"></script>
+-->
+<script type="text/javascript" src="js/combined/alloyimage.js"></script>
+<img src="img/1.jpg" alt="" id="p1" />
+<img src="img/2.jpg" alt="" id="p2" />
+<script type="text/javascript">
+  window.onload = function(){
+  var m1 = new $AI(document.getElementById("p1"));
+  var m2 = new $AI(document.getElementById("p2"));
+
+  var t = + (new Date());
+  m1.add(m2, "线性加深")
+  .callback(
+      function(data){
+        m1.show();
+        document.getElementById("msg").innerHTML = (( + new Date() - t) / 1000);
+      }
+  );
+  };
+</script>
+</body>
+</html>

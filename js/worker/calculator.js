@@ -1,20 +1,7 @@
-/*
- * @author: Bin Wang
- * @description: Main add
- *
- * */
-;(function(Ps){
-
-    window[Ps].module("addLayer",function(P){
-
-        var Add = {
-
-            //isFast用于快速，适用于中间处理
-            add: function(lowerData, upperData, method, alpha, dx, dy, isFast, channel){
-                P.lib.useWorker.add(lowerData.data, upperData.data, method, alpha, dx, dy, channel, lowerData.width, lowerData.height);
-                return;
-                var l = lowerData.data;
-                var u = upperData.data;
+onmessage = function(e){
+ var add = function(lowerData, upperData, method, alpha, dx, dy, isFast, channel, width, height){
+                var l = lowerData;
+                var u = upperData;
                 dx = dx || 0;
                 dy = dy || 0;
                 alpha = alpha || 1;//alpha 范围为0 - 100
@@ -36,9 +23,7 @@
 
                 for(var i = 0,n = l.length;i < n;i += 4 * jump){
 
-                    var ii = i / 4,
-                        width = lowerData.width;
-                        height = lowerData.height;
+                    var ii = i / 4;
 
                     //得到当前点的坐标 y分量
                     var row = parseInt(ii / width); 
@@ -219,14 +204,15 @@
                     
                 }
 
-                lowerData.data = l;
+                lowerData = l;
 
                 return lowerData;
-            }
-        };
+    }
 
-        return Add;
-
+    var data = e.data;
+    postMessage({
+        data: add(data.data1, data.data2, data.method, data.alpha, data.dx, data.dy, data.isFast, data.channel, data.width, data.height),
+        start: data.start,
+        end: data.end
     });
-
-})("psLib");
+};

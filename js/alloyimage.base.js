@@ -211,6 +211,7 @@ HTMLImageElement.prototype.loadOnce = function(func){
         //显示对象 isFast用于快速显示
         show: function(selector,isFast){
 
+            /*
             //创建一个临时的psLib对象，防止因为合并显示对本身imgData影响
             var tempPsLib = new window[Ps](this.canvas.width, this.canvas.height);
             tempPsLib.add(this, "正常", 0, 0, isFast);
@@ -229,7 +230,9 @@ HTMLImageElement.prototype.loadOnce = function(func){
             this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
 
             //以临时对象data显示
-            this.context.putImageData(tempPsLib.imgData, 0, 0);
+            //*/
+            //
+            this.context.putImageData(this.imgData, 0, 0);
 
             if(selector){
                 document.querySelector(selector).appendChild(this.canvas);
@@ -291,7 +294,7 @@ HTMLImageElement.prototype.loadOnce = function(func){
             psLibObj = arguments[0];
 
             //做映射转发
-            this.imgData = P.add(this.imgData, psLibObj.imgData, method, alpha, dx, dy, isFast, channel);
+            P.add(this.imgData, psLibObj.imgData, method, alpha, dx, dy, isFast, channel);
 
             return this;
         },
@@ -404,6 +407,10 @@ HTMLImageElement.prototype.loadOnce = function(func){
 
             _this = fun.call(_this);
             return _this;
+        },
+
+        callback: function(func){
+            P.callback = func;
         }
     };
 
