@@ -6,6 +6,7 @@
 </head>
 <body>
 <img id="pic" src="img/12.jpg" alt="" />
+<div id="m"></div>
 <script type="text/javascript">
 document.write('<script src="js\/combined\/alloyimage.js?' + new Date() + '" type="text\/javascript"><\/script>');
 </script>
@@ -14,85 +15,13 @@ window.onload = function(){
     var _startTime = + new Date();
     var img = document.getElementById("pic");
     $AI.useWorker("");
-    $AI(img).act("toGray").add( $AI(img).act("toGray").act("反色").act("高斯模糊", 10), "线性减淡").show().complete(function(){
-        console.log((+ new Date() - _startTime) / 1000 + "s");
-        });
+    var m = $AI(img).ps("复古").show("#m");
+
       /*.act("查找边缘").act("浮雕效果").show().complete(function(){
         console.log((+ new Date() - _startTime) / 1000 + "s");
     });
     */
-                         var m = $AI(img).add(
-                            $AI(img) , "滤色"
-                        ).add(
-                            $AI(img) , "柔光"
-                        );
 
-                        m.add(
-                            $AI(img).act("反色") , "正常","20%","B"
-                            ).act("暗角", 6, 200).show().complete(function(){
-                                
-          console.log((+ new Date() - _startTime) / 1000 + "s");
-                              });;
-                                                 var m2 = $AI(img).add(
-                            $AI(img) , "滤色"
-                        ).add(
-                            $AI(img) , "柔光"
-                        );
-
-                        m2.add(
-                            $AI(img).act("反色") , "正常","20%","B"
-                            ).act("暗角", 6, 200).show().complete(function(){
-                                
-          console.log((+ new Date() - _startTime) / 1000 + "s");
-                              });;
-                        var m3 = $AI(img).add(
-                            $AI(img) , "滤色"
-                        ).add(
-                            $AI(img) , "柔光"
-                        );
-
-                        m3.add(
-                            $AI(img).act("反色") , "正常","20%","B"
-                            ).act("暗角", 6, 200).show().complete(function(){
-                                
-          console.log((+ new Date() - _startTime) / 1000 + "s");
-                              });;
-                        var m4 = $AI(img).add(
-                            $AI(img) , "滤色"
-                        ).add(
-                            $AI(img) , "柔光"
-                        );
-
-                        m4.add(
-                            $AI(img).act("反色") , "正常","20%","B"
-                            ).act("暗角", 6, 200).show().complete(function(){
-                                
-          console.log((+ new Date() - _startTime) / 1000 + "s");
-                              });;
-                                                var m5 = $AI(img).add(
-                            $AI(img) , "滤色"
-                        ).add(
-                            $AI(img) , "柔光"
-                        );
-
-                        m5.add(
-                            $AI(img).act("反色") , "正常","20%","B"
-                            ).act("暗角", 6, 200).show().complete(function(){
-                                
-          console.log((+ new Date() - _startTime) / 1000 + "s");
-                              });;
-                                                var m6 = $AI(img).add(
-                            $AI(img) , "滤色"
-                        ).add(
-                            $AI(img) , "柔光"
-                        );
-
-                        m6.add(
-                            $AI(img).act("反色") , "正常","20%","B"
-                            ).act("暗角", 6, 200).show().complete(function(){
-                                
-          console.log((+ new Date() - _startTime) / 1000 + "s");
-                              });;
 }
 </script>
 </body>

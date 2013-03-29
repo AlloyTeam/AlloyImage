@@ -20,7 +20,7 @@ Array.prototype.del = function(arr){
 };
 
 var isMainThread;
-HTMLImageElement = {}, window = {};
+ window = {};
 /*
 //给图像对象添加初次加载才触发事件，后续不触发
 HTMLImageElement.prototype.loadOnce = function(func){
@@ -217,12 +217,8 @@ HTMLImageElement.prototype.loadOnce = function(func){
             if(this.useWorker){
                 this.dorsyWorker.queue.push(["act", method, args]);
 
-
-                //如果readyState为就绪状态 表明act为阶段首次动作,进入worker
-                if(this.readyState){
-                    this.readyState = 0;
-                    this.dorsyWorker.startWorker();
-                }
+                checkStartWorker.call(this);
+                
             }else{
                 //做一次转发映射
                 P.reflect(method, this.imgData, args);
@@ -363,11 +359,8 @@ HTMLImageElement.prototype.loadOnce = function(func){
             if(this.useWorker){
                 this.dorsyWorker.queue.push(['add', psLibObj, method, alpha, dx, dy, isFast, channel]);
 
-                //如果readyState为就绪状态 表明act为阶段首次动作,进入worker
-                if(this.readyState){
-                    this.readyState = 0;
-                    this.dorsyWorker.startWorker();
-                }
+                checkStartWorker.call(this);
+
             }else{
                 //做映射转发
                 this.imgData = P.add(this.imgData, psLibObj.imgData, method, alpha, dx, dy, isFast, channel);
@@ -383,7 +376,18 @@ HTMLImageElement.prototype.loadOnce = function(func){
             return this;
         },
 
-        clone: function(){
+        clone: function(workerFlag){
+
+            /*
+            if(workerFlag){
+            }else{
+
+                if(this.useWorker){
+                    this.dorsyWorker.queue.push(['clone']);
+                    return this;
+                }
+            }
+            */
 
             var tempPsLib = new window[Ps](this.canvas.width, this.canvas.height);
             tempPsLib.context.putImageData(this.imgData, 0, 0);
@@ -533,6 +537,18 @@ HTMLImageElement.prototype.loadOnce = function(func){
             }
         }
     };
+
+    //以下为AI所有的私有的方法,不需要公开 private methods
+
+    //检查是否要开始worker
+    function checkStartWorker(){
+
+        //如果readyState为就绪状态 表明act为阶段首次动作,进入worker
+        if(this.readyState){
+            this.readyState = 0;
+            this.dorsyWorker.startWorker();
+        }
+    }
 
 })("psLib");
 

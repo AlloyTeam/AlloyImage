@@ -60,7 +60,7 @@
                                 //构造参数
                                 var params = [
                                         aiObj.imgData,
-                                        action[1].imgData,
+                                        action[1].imgData
                                     ].concat(
                                         action.slice(2)
                                     );
@@ -82,6 +82,12 @@
                     }else if(action[0] == "complete"){
                         //console.log("complete trigger");
                         action[1] && action[1]();
+                        this.shiftAction();
+
+                    //如果是复制图层
+                    }else if(action[0] == "clone"){
+                        aiObj.clone(1);
+                        this.shiftAction();
                     }
                 },
 
