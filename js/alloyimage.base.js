@@ -19,6 +19,9 @@ Array.prototype.del = function(arr){
     return b;
 };
 
+var isMainThread;
+HTMLImageElement = {}, window = {};
+/*
 //给图像对象添加初次加载才触发事件，后续不触发
 HTMLImageElement.prototype.loadOnce = function(func){
    var i = 0;
@@ -27,7 +30,9 @@ HTMLImageElement.prototype.loadOnce = function(func){
         i ++;
    };
 };
+*/
 
+//postMessage("OK");
 ;(function(Ps){
 
     //被所有对象引用的一个对象,静态对象,主处理模块
@@ -154,7 +159,7 @@ HTMLImageElement.prototype.loadOnce = function(func){
             this.ctxContext = canvas.getContext("2d");
 
             //默认使用worker进行处理
-            this.useWorker = 1;
+            this.useWorker = P.useWorker;
 
             //初始化readyState为ready,readyState表明处理就绪
             this.readyState = 1;
@@ -181,10 +186,21 @@ HTMLImageElement.prototype.loadOnce = function(func){
         return P.lib.dorsyMath;
     };
 
+    //定义使用worker
+    window[Ps].useWorker = function(path){
+        P.useWorker = 1;
+        P.path = path;
+    };
+
     //worker监听
-    onmessage = function(data){
-        P.reflect(data[1], data[2], data[3]);
-        postMessge("OK");
+    onmessage = function(e){
+        var data = e.data, imgData;
+        if(data[0] == "act"){
+            imgData = P.reflect(data[1], data[2], data[3]);
+        }else if(data[0] == "add"){
+            imgData = P.add.apply(P, data[1]);
+        }
+        postMessage(imgData);
     };
 
     //原型对象
@@ -192,7 +208,7 @@ HTMLImageElement.prototype.loadOnce = function(func){
 
         //动作
         act: function(method, arg){
-            console.log("actStart");
+            //console.log("actStart");
             var args = [];
 
             //提取参数为数组
@@ -228,14 +244,6 @@ HTMLImageElement.prototype.loadOnce = function(func){
             this.addLayer(newLayer, "正常", 0, 0);
             newLayer.act(method, arg1, arg2, arg3, arg4);
 
-            return this;
-        },
-
-        //使用worker来处理
-        //func     处理过程
-        //callback 回调函数
-        worker: function(func, callback){
-            P.worker(func, callback);
             return this;
         },
 
@@ -350,8 +358,20 @@ HTMLImageElement.prototype.loadOnce = function(func){
 
             psLibObj = arguments[0];
 
-            //做映射转发
-            this.imgData = P.add(this.imgData, psLibObj.imgData, method, alpha, dx, dy, isFast, channel);
+            //console.log("add init");
+
+            if(this.useWorker){
+                this.dorsyWorker.queue.push(['add', psLibObj, method, alpha, dx, dy, isFast, channel]);
+
+                //如果readyState为就绪状态 表明act为阶段首次动作,进入worker
+                if(this.readyState){
+                    this.readyState = 0;
+                    this.dorsyWorker.startWorker();
+                }
+            }else{
+                //做映射转发
+                this.imgData = P.add(this.imgData, psLibObj.imgData, method, alpha, dx, dy, isFast, channel);
+            }
 
             return this;
         },
@@ -501,6 +521,16 @@ HTMLImageElement.prototype.loadOnce = function(func){
         notify: function(msg){
             //通知
             if(msg == "readyStateOK") this.readyState = 1;
+        },
+
+        //所有动作异步执行完了的回调
+        complete: function(func){
+            if(this.useWorker){
+                //console.log("complete init");
+                this.dorsyWorker.queue.push(['complete', func]);
+            }else{
+                func();
+            }
         }
     };
 
