@@ -91,6 +91,11 @@ HTMLImageElement.prototype.loadOnce = function(func){
             return this.lib.addLayer.add(lowerData, upperData, method, alpha, dx, dy, isFast, channel);
         },
 
+        //用worker进行异步处理
+        worker: function(func, callback){
+            
+        },
+
         //对图像进行掩模算子变换
         applyMatrix: function(imgData, matrixArr){
         }
@@ -194,6 +199,14 @@ HTMLImageElement.prototype.loadOnce = function(func){
             this.addLayer(newLayer, "正常", 0, 0);
             newLayer.act(method, arg1, arg2, arg3, arg4);
 
+            return this;
+        },
+
+        //使用worker来处理
+        //func     处理过程
+        //callback 回调函数
+        worker: function(func, callback){
+            P.worker(func, callback);
             return this;
         },
 
