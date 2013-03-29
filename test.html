@@ -43,7 +43,7 @@ var Main = {
         imgEl.src = "0/" + x + "_" + y + ".jpg";
 
         imgEl.loadOnce(function(){
-          $AI(this).ps("素描").act("灰度处理").show("#" + id);
+          $AI(this).ps("柔焦").show("#" + id);
           console.log((new Date() - startTime) / 1000 + "s");
         });
 
