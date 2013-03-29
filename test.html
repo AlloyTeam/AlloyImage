@@ -1,0 +1,69 @@
+<!DOCTYPE HTML>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title></title>
+</head>
+<body style="position:relative;">
+<script type="text/javascript" src="js/combined/alloyimage.js"></script>
+<script type="text/javascript">
+$AI.useWorker("");
+
+//给图像对象添加初次加载才触发事件，后续不触发
+HTMLImageElement.prototype.loadOnce = function(func){
+   var i = 0;
+   this.onload = function(){
+        if(!i) func.call(this, null);
+        i ++;
+   };
+};
+
+var startTime = + new Date();
+var WIDTH = 4, HEIGHT = 4, IMAGE_WIDTH = 512, IMAGE_HEIGHT = 512;
+var Main = {
+   imgs: [],
+   init: function(){
+     for(var x = 0; x < WIDTH; x ++){
+       this.imgs[x] = [];
+     }
+
+     this.drawImgs();
+   },
+   drawSigleImg: function(x, y){
+        var imgEl = document.createElement("img");
+        var div = document.createElement("div");
+        div.style.position = "absolute";
+        div.style.left = x * IMAGE_WIDTH + "px";
+        div.style.top = y * IMAGE_HEIGHT + "px";
+        var id = "t" + x + "" + y;
+        div.id = id;
+
+        document.body.appendChild(div);
+        imgEl.src = "0/" + x + "_" + y + ".jpg";
+
+        imgEl.loadOnce(function(){
+          $AI(this).act("亮度", 23, 23).show("#" + id);
+          console.log((new Date() - startTime) / 1000 + "s");
+        });
+
+        //this.imgs[x][y] = imgEl;
+
+        
+   },
+   drawImgs: function(){
+       for(var y = 0; y < HEIGHT; y ++){
+         for(var x = 0; x < WIDTH; x ++){
+           this.drawSigleImg(x, y);
+         }
+       }
+   },
+
+   doWorker: function(){
+   }
+};
+
+Main.init();
+
+</script>	
+</body>
+</html>
