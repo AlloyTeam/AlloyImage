@@ -1660,7 +1660,7 @@ window.AlloyImage = $AI = window.psLib;
 
         var M = function(aiObj){
             //static private single
-            var worker = new Worker("js/combined/alloyImage.js?" + (new Date()));
+            var worker = new Worker("js/combined/alloyimage.js?" + (new Date()));
 
             var workerObj = {
                 //等待处理的队列
