@@ -1,0 +1,19 @@
+<!DOCTYPE HTML>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title></title>
+</head>
+<body>
+<img id="pic" src="img/9.jpg" alt="" />
+<script type="text/javascript">
+document.write('<script src="js\/combined\/alloyimage.js?' + new Date() + '" type="text\/javascript"><\/script>');
+</script>
+<script type="text/javascript">
+var img = document.getElementById("pic");
+img.loadOnce(function(){
+    $AI(img).act("toGray").act("mosaic").show();
+});
+</script>
+</body>
+</html>

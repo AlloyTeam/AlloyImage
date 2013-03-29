@@ -6,15 +6,28 @@
   <script type="text/javascript" src="js/combined/alloyimage.js"></script>
 </head>
 <body>
+<div class="s">vbbsd</div>
 	
 <script type="text/javascript">	
-var c = $AI(500, 400, "blue");
-c.ctx(function(){
-    this.fillStyle = "red";
-    this.fillRect(0, 0, 300, 300);
-  }).act("添加杂色").show().ctx(function(){;
-      this.fillRect(400, 300, 100, 100);
-    }).show();
+var img = new Image();
+img.src = "img/7.jpg";
+
+img.onload = function(){
+
+  var canvas = $AI(this);
+
+  canvas
+    .ps("美肤")
+    .ctx(function(){
+          this.fillStyle = "red";
+          for(var i = 0; i < 20; i ++){
+            this.fillRect(i * 4, i * 4, 20, 20);
+            this.fillRect(70 - i * 4, i * 4, 20, 20);
+          }
+      })
+    .act("锐化", 2)
+    .show();
+};
 </script>
 </body>
 </html>

@@ -4,13 +4,13 @@
  *
  */
 
-//åˆ é™¤å‡ ä¸ªå…ƒç´    arrä¸ºæ•°ç»„ä¸‹æ ‡ 
+//É¾³ı¼¸¸öÔªËØ   arrÎªÊı×éÏÂ±ê 
 Array.prototype.del = function(arr){
 
-    //å¯¹æ•°ç»„é‡æ–°æ’åº
+    //¶ÔÊı×éÖØĞÂÅÅĞò
     arr.sort();
 
-    //å¤åˆ¶æ•°ç»„ï¼Œé˜²æ­¢æ±¡æŸ“
+    //¸´ÖÆÊı×é£¬·ÀÖ¹ÎÛÈ¾
     var b = this.concat([]);
     for(var i = arr.length - 1; i >= 0; i --){
         b = b.slice(0, arr[i]).concat(b.slice(arr[i] + 1));
@@ -19,7 +19,7 @@ Array.prototype.del = function(arr){
     return b;
 };
 
-//ç»™å›¾åƒå¯¹è±¡æ·»åŠ åˆæ¬¡åŠ è½½æ‰è§¦å‘äº‹ä»¶ï¼Œåç»­ä¸è§¦å‘
+//¸øÍ¼Ïñ¶ÔÏóÌí¼Ó³õ´Î¼ÓÔØ²Å´¥·¢ÊÂ¼ş£¬ºóĞø²»´¥·¢
 HTMLImageElement.prototype.loadOnce = function(func){
    var i = 0;
    this.onload = function(){
@@ -30,23 +30,23 @@ HTMLImageElement.prototype.loadOnce = function(func){
 
 ;(function(Ps){
 
-    //è¢«æ‰€æœ‰å¯¹è±¡å¼•ç”¨çš„ä¸€ä¸ªå¯¹è±¡,é™æ€å¯¹è±¡,ä¸»å¤„ç†æ¨¡å—
+    //±»ËùÓĞ¶ÔÏóÒıÓÃµÄÒ»¸ö¶ÔÏó,¾²Ì¬¶ÔÏó,Ö÷´¦ÀíÄ£¿é
     var P = {
 
-        //æ¨¡å—æ± 
+        //Ä£¿é³Ø
         lib: [],
 
-        //åˆå§‹åŒ–å‡†å¤‡
+        //³õÊ¼»¯×¼±¸
         init: function(){
             this.require("config");
         },
 
-        //æ¨¡å—æ³¨å†Œæ–¹æ³•
+        //Ä£¿é×¢²á·½·¨
         module: function(name, func){
             this.lib[name] = func.call(null, this);
         },
 
-        //åŠ è½½æ–‡ä»¶
+        //¼ÓÔØÎÄ¼ş
         require: function(name){
             var _this = this;
             var scriptLoader = document.createElement("script");
@@ -58,60 +58,55 @@ HTMLImageElement.prototype.loadOnce = function(func){
             }
         },
 
-        //é”™è¯¯å¤„ç†éƒ¨åˆ†
+        //´íÎó´¦Àí²¿·Ö
         handlerror: function(e){
-            //this.destroySelf("ç¨‹åºå› æœªçŸ¥åŸå› ä¸­æ–­");
+            //this.destroySelf("³ÌĞòÒòÎ´ÖªÔ­ÒòÖĞ¶Ï");
         },
 
-        //ç¨‹åºè¢«è¿«è‡ªæ€ï¼Œæ€å‰è¯·ç•™ä¸‹é—å˜±
+        //³ÌĞò±»ÆÈ×ÔÉ±£¬É±Ç°ÇëÁôÏÂÒÅÖö
         destroySelf: function(msg){
             delete window[Ps];
             var e = new Error(msg);
             throw(e);
         },
 
-        //æ˜ å°„å™¨,å°†ä¸­æ–‡æ–¹æ³•æˆ–...æ˜ å°„ä¸ºå®é™…æ–¹æ³•
+        //Ó³ÉäÆ÷,½«ÖĞÎÄ·½·¨»ò...Ó³ÉäÎªÊµ¼Ê·½·¨
         reflect: function(method, imgData, args){
 
-            //å¾—åˆ°å®é™…çš„æ¨¡å—åç§°
+            //µÃµ½Êµ¼ÊµÄÄ£¿éÃû³Æ
             var moduleName = this.lib.config.getModuleName(method);
 
-            //äº¤ç”±å®é™…å¤„ç†æ•°æ®å•å…ƒå¤„ç†
+            //½»ÓÉÊµ¼Ê´¦ÀíÊı¾İµ¥Ôª´¦Àí
             return this.lib[moduleName].process(imgData, args);
         },
 
-        //ç»„åˆæ•ˆæœæ˜ å°„å™¨
+        //×éºÏĞ§¹ûÓ³ÉäÆ÷
         reflectEasy: function(effect){
             var fun = this.lib.config.getEasyFun(effect);
             return this.lib.easy.getFun(fun);
         },
 
-        //åˆå¹¶ä¸€ä¸ªå›¾å±‚åˆ°å¯¹è±¡
+        //ºÏ²¢Ò»¸öÍ¼²ãµ½¶ÔÏó
         add: function(lowerData, upperData, method, alpha, dx, dy, isFast, channel){
             return this.lib.addLayer.add(lowerData, upperData, method, alpha, dx, dy, isFast, channel);
         },
 
-        //ç”¨workerè¿›è¡Œå¼‚æ­¥å¤„ç†
-        worker: function(func, callback){
-            
-        },
-
-        //å¯¹å›¾åƒè¿›è¡Œæ©æ¨¡ç®—å­å˜æ¢
+        //¶ÔÍ¼Ïñ½øĞĞÑÚÄ£Ëã×Ó±ä»»
         applyMatrix: function(imgData, matrixArr){
         }
     };
 
-    //è¿”å›å¤–éƒ¨æ¥å£
+    //·µ»ØÍâ²¿½Ó¿Ú
     window[Ps] = function(img, width, height){
 
         if(this instanceof window[Ps]){
-            //è®°å½•æ—¶é—´ time trace
+            //¼ÇÂ¼Ê±¼ä time trace
             this.startTime = + new Date();
 
             var canvas = document.createElement("canvas");
             var context = canvas.getContext("2d");
             
-            //var l = psLib(20,30);æ„é€ é€‚é…
+            //var l = psLib(20,30);¹¹ÔìÊÊÅä
             if(!isNaN(img)){
 
                 canvas.width = img;
@@ -133,84 +128,105 @@ HTMLImageElement.prototype.loadOnce = function(func){
 
             }
 
-            //å°†å¼•ç”¨çš„canvaså¯¹è±¡æŒ‚æ¥åˆ°å¯¹è±¡ä¸Š
+            //½«ÒıÓÃµÄcanvas¶ÔÏó¹Ò½Óµ½¶ÔÏóÉÏ
             this.canvas = canvas;
             this.context = context;
             this.imgData = context.getImageData(0, 0, canvas.width, canvas.height);
 
-            //èµ‹äºˆå¯¹è±¡å”¯ä¸€ID
+            //¸³Óè¶ÔÏóÎ¨Ò»ID
             this.name = Ps + "_" + Math.random();
             this.canvas.id = this.name;
 
-            //è®°å½•æŒ‚æ¥åˆ°å›¾å±‚ä¸Šçš„å¯¹è±¡çš„å¼•ç”¨
+            //¼ÇÂ¼¹Ò½Óµ½Í¼²ãÉÏµÄ¶ÔÏóµÄÒıÓÃ
             this.layers = [];
 
-            //åŸç”Ÿcanvasæ”¯æŒæ—¶çš„ä¸´æ—¶canvas
+            //Ô­ÉúcanvasÖ§³ÖÊ±µÄÁÙÊ±canvas
             var ctxCanvas = document.createElement("canvas");
             ctxCanvas.width = canvas.width;
             ctxCanvas.height = canvas.height;
 
             this.ctxCanvas = ctxCanvas;
             this.ctxContext = canvas.getContext("2d");
+
+            //Ä¬ÈÏÊ¹ÓÃworker½øĞĞ´¦Àí
+            this.useWorker = 1;
+
+            //³õÊ¼»¯readyStateÎªready,readyState±íÃ÷´¦Àí¾ÍĞ÷
+            this.readyState = 1;
+
+            if(this.useWorker){
+                //Èç¹ûÊ¹ÓÃworker,Ôò³õÊ¼»¯Ò»¸ödorsyWorker·â×°ÊµÀı³öÀ´
+                this.dorsyWorker = P.lib.dorsyWorker(this);
+            }
             
         }else{
 
-            //è¿”å›è‡ªèº«æ„é€ å¯¹è±¡
+            //·µ»Ø×ÔÉí¹¹Ôì¶ÔÏó
             return new window[Ps](img, width, height);
         }
     };
 
-    //æ¨¡å—æ³¨å†Œæ–¹æ³•
+    //Ä£¿é×¢²á·½·¨
     window[Ps].module = function(name, func){
         P.module(name, func);
     };
 
-    //è¿”å›ä¸€ä¸ªå¤–éƒ¨ç‹¬ç«‹çš„æ•°å­¦å¤„ç†æ¨¡å¼å‡ºå»
+    //·µ»ØÒ»¸öÍâ²¿¶ÀÁ¢µÄÊıÑ§´¦ÀíÄ£Ê½³öÈ¥
     window[Ps].dorsyMath = function(){
         return P.lib.dorsyMath;
     };
 
-    //åŸå‹å¯¹è±¡
+    //worker¼àÌı
+    onmessage = function(data){
+        P.reflect(data[1], data[2], data[3]);
+        postMessge("OK");
+    };
+
+    //Ô­ĞÍ¶ÔÏó
     window[Ps].prototype = {
 
-        //åŠ¨ä½œ
+        //¶¯×÷
         act: function(method, arg){
+            console.log("actStart");
             var args = [];
 
-            //æå–å‚æ•°ä¸ºæ•°ç»„
+            //ÌáÈ¡²ÎÊıÎªÊı×é
             args = Array.prototype.slice.call(arguments, 1);
 
-            //åšä¸€æ¬¡è½¬å‘æ˜ å°„
-            P.reflect(method, this.imgData, args);
+            if(this.useWorker){
+                this.dorsyWorker.queue.push(["act", method, args]);
 
+
+                //Èç¹ûreadyStateÎª¾ÍĞ÷×´Ì¬ ±íÃ÷actÎª½×¶ÎÊ×´Î¶¯×÷,½øÈëworker
+                if(this.readyState){
+                    this.readyState = 0;
+                    this.dorsyWorker.startWorker();
+                }
+            }else{
+                //×öÒ»´Î×ª·¢Ó³Éä
+                P.reflect(method, this.imgData, args);
+            }
+            
             return this;
         },
 
-        //é¢„è§ˆæ¨¡å¼ ï¼Œæ‰€æœ‰çš„å†æ“ä½œå…¨éƒ¨åŸºäºåŸç‚¹ï¼Œä¸ä¼šæ”¹å˜æœ¬å›¾å±‚çš„æ•ˆæœï¼Œç›´åˆ°actä¼šå»é™¤è¿™éƒ¨åˆ†å›¾å±‚
+        //Ô¤ÀÀÄ£Ê½ £¬ËùÓĞµÄÔÙ²Ù×÷È«²¿»ùÓÚÔ­µã£¬²»»á¸Ä±ä±¾Í¼²ãµÄĞ§¹û£¬Ö±µ½act»áÈ¥³ıÕâ²¿·ÖÍ¼²ã
         view: function(method, arg1, arg2, arg3, arg4){
 
-            //å…‹éš†æœ¬å›¾å±‚å¯¹è±¡
+            //¿ËÂ¡±¾Í¼²ã¶ÔÏó
             var newLayer = this.clone();
 
-            //æ ‡è®°æœ¬å›¾å±‚çš„ç§ç±»ä¸ºé¢„è§ˆçš„å·²åˆå¹¶çš„å›¾å±‚
+            //±ê¼Ç±¾Í¼²ãµÄÖÖÀàÎªÔ¤ÀÀµÄÒÑºÏ²¢µÄÍ¼²ã
             newLayer.type = 1;
 
-            //æŒ‚æ¥å…‹éš†å›¾å±‚å‰¯æœ¬åˆ°å¯¹è±¡
-            this.addLayer(newLayer, "æ­£å¸¸", 0, 0);
+            //¹Ò½Ó¿ËÂ¡Í¼²ã¸±±¾µ½¶ÔÏó
+            this.addLayer(newLayer, "Õı³£", 0, 0);
             newLayer.act(method, arg1, arg2, arg3, arg4);
 
             return this;
         },
 
-        //ä½¿ç”¨workeræ¥å¤„ç†
-        //func     å¤„ç†è¿‡ç¨‹
-        //callback å›è°ƒå‡½æ•°
-        worker: function(func, callback){
-            P.worker(func, callback);
-            return this;
-        },
-
-        //å°†viewçš„ç»“æœæ‰§è¡Œåˆ°å›¾å±‚
+        //½«viewµÄ½á¹ûÖ´ĞĞµ½Í¼²ã
         excute: function(){
             var layers = this.layers;
             var n = layers.length;
@@ -220,7 +236,7 @@ HTMLImageElement.prototype.loadOnce = function(func){
             }
         },
 
-        //å–æ¶ˆviewçš„ç»“æœæ‰§è¡Œ
+        //È¡ÏûviewµÄ½á¹ûÖ´ĞĞ
         cancel: function(){
             var layers = this.layers;
             var n = layers.length;
@@ -229,15 +245,24 @@ HTMLImageElement.prototype.loadOnce = function(func){
             }
         },
 
-        //æ˜¾ç¤ºå¯¹è±¡ isFastç”¨äºå¿«é€Ÿæ˜¾ç¤º
-        show: function(selector,isFast){
+        //ÏÔÊ¾¶ÔÏó isFastÓÃÓÚ¿ìËÙÏÔÊ¾
+        show: function(selector, isFast, flag){
+            
+            if(flag){
+            }else{
+                if(this.useWorker){
+                    this.dorsyWorker.queue.push(["show", selector, isFast]);
+                    return this;
+                }
+            }
 
-            //åˆ›å»ºä¸€ä¸ªä¸´æ—¶çš„psLibå¯¹è±¡ï¼Œé˜²æ­¢å› ä¸ºåˆå¹¶æ˜¾ç¤ºå¯¹æœ¬èº«imgDataå½±å“
+            /*
+            //´´½¨Ò»¸öÁÙÊ±µÄpsLib¶ÔÏó£¬·ÀÖ¹ÒòÎªºÏ²¢ÏÔÊ¾¶Ô±¾ÉíimgDataÓ°Ïì
             var tempPsLib = new window[Ps](this.canvas.width, this.canvas.height);
-            tempPsLib.add(this, "æ­£å¸¸", 0, 0, isFast);
+            tempPsLib.add(this, "Õı³£", 0, 0, isFast);
             this.tempPsLib = tempPsLib;
 
-            //å°†æŒ‚æ¥åˆ°æœ¬å¯¹è±¡ä¸Šçš„å›¾å±‚å¯¹è±¡ ä¸€èµ·åˆå¹¶åˆ°ä¸´æ—¶çš„psLibå¯¹è±¡ä¸Šå» ç”¨äºæ˜¾ç¤ºåˆå¹¶çš„ç»“æœï¼Œä¸ä¼šå½±å“æ¯ä¸ªå›¾å±‚ï¼ŒåŒ…æ‹¬æœ¬å›¾å±‚
+            //½«¹Ò½Óµ½±¾¶ÔÏóÉÏµÄÍ¼²ã¶ÔÏó Ò»ÆğºÏ²¢µ½ÁÙÊ±µÄpsLib¶ÔÏóÉÏÈ¥ ÓÃÓÚÏÔÊ¾ºÏ²¢µÄ½á¹û£¬²»»áÓ°ÏìÃ¿¸öÍ¼²ã£¬°üÀ¨±¾Í¼²ã
             for(var i = 0; i < this.layers.length; i ++){
                 var tA = this.layers[i];
                 var layers = tA[0].layers;
@@ -249,8 +274,9 @@ HTMLImageElement.prototype.loadOnce = function(func){
 
             this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
 
-            //ä»¥ä¸´æ—¶å¯¹è±¡dataæ˜¾ç¤º
-            this.context.putImageData(tempPsLib.imgData, 0, 0);
+            //ÒÔÁÙÊ±¶ÔÏódataÏÔÊ¾
+            */
+            this.context.putImageData(this.imgData, 0, 0);
 
             if(selector){
                 document.querySelector(selector).appendChild(this.canvas);
@@ -261,7 +287,7 @@ HTMLImageElement.prototype.loadOnce = function(func){
             return this;
         },
 
-        //æ›¿æ¢åŸæ¥çš„å›¾ç‰‡
+        //Ìæ»»Ô­À´µÄÍ¼Æ¬
         replace: function(img){
             if(img){
                 img.onload = function(){};
@@ -271,12 +297,12 @@ HTMLImageElement.prototype.loadOnce = function(func){
             return this;
         },
 
-        //åˆå¹¶ä¸€ä¸ªAlloyImageå›¾å±‚ä¸Šå»
+        //ºÏ²¢Ò»¸öAlloyImageÍ¼²ãÉÏÈ¥
         add: function(){
             
             var numberArr = [], psLibObj, method, alpha, dx, dy, isFast, channel;
 
-            //åšé‡è½½
+            //×öÖØÔØ
             for(var i = 0; i < arguments.length; i ++){
                 if(!i) continue;
 
@@ -301,23 +327,23 @@ HTMLImageElement.prototype.loadOnce = function(func){
                 }
             }
 
-            //èµ‹å€¼
+            //¸³Öµ
             dx = numberArr[0] || 0;
             dy = numberArr[1] || 0;
-            method = method || "æ­£å¸¸";
+            method = method || "Õı³£";
             alpha = alpha / 100 || 1;
             isFast = isFast || false;
             channel = channel || "RGB";
 
             psLibObj = arguments[0];
 
-            //åšæ˜ å°„è½¬å‘
+            //×öÓ³Éä×ª·¢
             this.imgData = P.add(this.imgData, psLibObj.imgData, method, alpha, dx, dy, isFast, channel);
 
             return this;
         },
 
-        //æŒ‚è½½ä¸€ä¸ªå›¾å±‚ä¸Šå»ï¼Œä¸ä¼šå½±å“æœ¬èº«ï¼Œåªæ˜¯æ˜¾ç¤ºæœ‰å˜åŒ–
+        //¹ÒÔØÒ»¸öÍ¼²ãÉÏÈ¥£¬²»»áÓ°Ïì±¾Éí£¬Ö»ÊÇÏÔÊ¾ÓĞ±ä»¯
         addLayer: function(psLibObj, method, dx, dy){
             this.layers.push([psLibObj, method, dx, dy]);
 
@@ -336,7 +362,7 @@ HTMLImageElement.prototype.loadOnce = function(func){
             return tempPsLib;
         },
 
-        //äº¤æ¢a,bå›¾å±‚çš„é¡ºåº,abä»£è¡¨å½“å‰åºå·
+        //½»»»a,bÍ¼²ãµÄË³Ğò,ab´ú±íµ±Ç°ĞòºÅ
         swap: function(a, b){
             var temp = this.layers[a];
             this.layers[a] = this.layers[b];
@@ -345,12 +371,12 @@ HTMLImageElement.prototype.loadOnce = function(func){
             return this;
         },
 
-        //åˆ é™¤å‡ ä¸ªå›¾å±‚åºå·
+        //É¾³ı¼¸¸öÍ¼²ãĞòºÅ
         deleteLayers: function(arr){
             this.layers = this.layers.del(arr);
         },
 
-        //è¿”å›ä¸€ä¸ªåˆæˆåçš„å›¾åƒ png base64
+        //·µ»ØÒ»¸öºÏ³ÉºóµÄÍ¼Ïñ png base64
         save: function(isFast){
             if(! this.layers.length){
                 this.context.putImageData(this.imgData, 0, 0);
@@ -358,12 +384,12 @@ HTMLImageElement.prototype.loadOnce = function(func){
             }
 
 
-            //åˆ›å»ºä¸€ä¸ªä¸´æ—¶çš„psLibå¯¹è±¡ï¼Œé˜²æ­¢å› ä¸ºåˆå¹¶æ˜¾ç¤ºå¯¹æœ¬èº«imgDataå½±å“
+            //´´½¨Ò»¸öÁÙÊ±µÄpsLib¶ÔÏó£¬·ÀÖ¹ÒòÎªºÏ²¢ÏÔÊ¾¶Ô±¾ÉíimgDataÓ°Ïì
             var tempPsLib = new window[Ps](this.canvas.width, this.canvas.height);
-            tempPsLib.add(this, "æ­£å¸¸", 0, 0, isFast);
+            tempPsLib.add(this, "Õı³£", 0, 0, isFast);
             this.tempPsLib = tempPsLib;
 
-            //å°†æŒ‚æ¥åˆ°æœ¬å¯¹è±¡ä¸Šçš„å›¾å±‚å¯¹è±¡ ä¸€èµ·åˆå¹¶åˆ°ä¸´æ—¶çš„psLibå¯¹è±¡ä¸Šå» ç”¨äºæ˜¾ç¤ºåˆå¹¶çš„ç»“æœï¼Œä¸ä¼šå½±å“æ¯ä¸ªå›¾å±‚ï¼ŒåŒ…æ‹¬æœ¬å›¾å±‚
+            //½«¹Ò½Óµ½±¾¶ÔÏóÉÏµÄÍ¼²ã¶ÔÏó Ò»ÆğºÏ²¢µ½ÁÙÊ±µÄpsLib¶ÔÏóÉÏÈ¥ ÓÃÓÚÏÔÊ¾ºÏ²¢µÄ½á¹û£¬²»»áÓ°ÏìÃ¿¸öÍ¼²ã£¬°üÀ¨±¾Í¼²ã
             for(var i = 0; i < this.layers.length; i ++){
                 var tA = this.layers[i];
                 var layers = tA[0].layers;
@@ -376,13 +402,13 @@ HTMLImageElement.prototype.loadOnce = function(func){
 
             this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
 
-            //ä»¥ä¸´æ—¶å¯¹è±¡dataæ˜¾ç¤º
+            //ÒÔÁÙÊ±¶ÔÏódataÏÔÊ¾
             this.context.putImageData(tempPsLib.imgData, 0, 0);
 
             return this.canvas.toDataURL(); 
         },
 
-        //ç»˜åˆ¶ç›´æ–¹å›¾
+        //»æÖÆÖ±·½Í¼
         drawRect: function(selector){
             var canvas;
 
@@ -428,35 +454,40 @@ HTMLImageElement.prototype.loadOnce = function(func){
             context.fill();
         },
 
-        //ç»„åˆæ•ˆæœ
+        //×éºÏĞ§¹û
         ps: function(effect){
             var fun = P.reflectEasy(effect);
             var _this = this;
 
             _this = fun.call(_this);
 
-            this.logTime("ç»„åˆæ•ˆæœ" + effect);
+            this.logTime("×éºÏĞ§¹û" + effect);
 
             return _this;
         },
 
-        //è®°å½•è¿è¡Œæ—¶é—´
+        //¼ÇÂ¼ÔËĞĞÊ±¼ä
         logTime: function(msg){
             console.log(msg + ": " + (+ new Date() - this.startTime) / 1000 + "s");
         },
 
-        //è°ƒç”¨åŸç”Ÿcanvas.contextæ¥å£
+        //µ÷ÓÃÔ­Éúcanvas.context½Ó¿Ú
         ctx: function(func){
-            //funcä¸­çš„thisæŒ‡å‘context
+            //funcÖĞµÄthisÖ¸Ïòcontext
             var ctx = this.ctxContext;
 
             ctx.putImageData(this.imgData, 0, 0);
 
-            //è°ƒç”¨func
+            //µ÷ÓÃfunc
             func.call(ctx);
             this.imgData = ctx.getImageData(0, 0, this.canvas.width, this.canvas.height);
 
             return this;
+        },
+
+        notify: function(msg){
+            //Í¨Öª
+            if(msg == "readyStateOK") this.readyState = 1;
         }
     };
 
@@ -465,7 +496,7 @@ HTMLImageElement.prototype.loadOnce = function(func){
 window.AlloyImage = $AI = window.psLib;
 /*
  * @author: Bin Wang
- * @description:ç°åº¦æ‰©å±•
+ * @description:»Ò¶ÈÀ©Õ¹
  *
  * */
 ;(function(Ps){
@@ -510,14 +541,14 @@ window.AlloyImage = $AI = window.psLib;
 
         var Add = {
 
-            //isFastç”¨äºå¿«é€Ÿï¼Œé€‚ç”¨äºä¸­é—´å¤„ç†
+            //isFastÓÃÓÚ¿ìËÙ£¬ÊÊÓÃÓÚÖĞ¼ä´¦Àí
             add: function(lowerData, upperData, method, alpha, dx, dy, isFast, channel){
                 var l = lowerData.data,
                     u = upperData.data,
                 
                     dx = dx || 0,
                     dy = dy || 0,
-                    alpha = alpha || 1,//alpha èŒƒå›´ä¸º0 - 100
+                    alpha = alpha || 1,//alpha ·¶Î§Îª0 - 100
                     isFast = isFast || false,
                     channel = channel || "RGB";
 
@@ -552,7 +583,7 @@ window.AlloyImage = $AI = window.psLib;
 
                     ii = i / 4;
 
-                    //å¾—åˆ°å½“å‰ç‚¹çš„åæ ‡ yåˆ†é‡
+                    //µÃµ½µ±Ç°µãµÄ×ø±ê y·ÖÁ¿
                     row = parseInt(ii / width); 
                     col = ii % width;
 
@@ -564,50 +595,50 @@ window.AlloyImage = $AI = window.psLib;
 
                     if(uI >= 0 && uI < (upperLength - 4) && uCol < upperWidth && uCol >= 0){
 
-                        //l[i + 3] = u[uI + 3];//é€æ˜åº¦
+                        //l[i + 3] = u[uI + 3];//Í¸Ã÷¶È
                         for(var j = 0;j < 3;j ++){
 
-                            //è‹¥æ­¤ç‚¹é€æ˜åˆ™ä¸è®¡ç®—
+                            //Èô´ËµãÍ¸Ã÷Ôò²»¼ÆËã
                             if(u[uI + 3] == 0) break;
                             else l[i + 3] = u[uI + 3];
 
                             switch(method){
-                                case "é¢œè‰²å‡æ·¡" :
+                                case "ÑÕÉ«¼õµ­" :
                                     if(indexOfArr[j]){
                                        result = l[i + j] + (l[i + j] * u[uI + j]) / (255 - u[uI + j]);
                                        l[i + j] = (1 - alpha) * l[i + j] + (alpha) * result;
                                     }
                                     break;
 
-                                case "å˜æš—":
+                                case "±ä°µ":
                                     if(indexOfArr[j]){
                                         result = l[i + j] < u[uI + j] ? l[i + j] : u[uI + j];
                                         l[i + j] = (1 - alpha) * l[i + j] + (alpha) * result;
                                     }
                                     break;
 
-                                case "å˜äº®":
+                                case "±äÁÁ":
                                     if(indexOfArr[j]){
                                         result = l[i + j] > u[uI + j] ? l[i + j] : u[uI + j];
                                         l[i + j] = (1 - alpha) * l[i + j] + (alpha) * result;
                                     }
                                     break;
 
-                                case "æ­£ç‰‡å åº•":
+                                case "ÕıÆ¬µşµ×":
                                     if(indexOfArr[j]){
                                         result = parseInt((l[i + j] * u[uI + j]) / 255);
                                         l[i + j] = (1 - alpha) * l[i + j] + (alpha) * result;
                                     }
                                     break;
 
-                                case "æ»¤è‰²" :
+                                case "ÂËÉ«" :
                                     if(indexOfArr[j]){
                                         result = parseInt(255 - (255 - l[i + j]) * (255 - u[uI + j]) / 255);
                                         l[i + j] = (1 - alpha) * l[i + j] + (alpha) * result;
                                     }
                                     break;
 
-                                case "å åŠ ":
+                                case "µş¼Ó":
                                     if(indexOfArr[j]){
                                         if(l[i + j] <= 127.5){
                                             result = l[i + j] * u[uI + j] / 127.5;
@@ -618,7 +649,7 @@ window.AlloyImage = $AI = window.psLib;
                                     }
                                     break;
 
-                                case "å¼ºå…‰":
+                                case "Ç¿¹â":
                                     if(indexOfArr[j]){
                                         if(u[uI + j] <= 127.5){
                                             result = l[i + j] * u[uI + j] / 127.5;
@@ -629,21 +660,21 @@ window.AlloyImage = $AI = window.psLib;
                                     }
                                     break;
 
-                                case "å·®å€¼":
+                                case "²îÖµ":
                                     if(indexOfArr[j]){
                                         result = l[i + j] > u[uI + j] ? l[i + j] - u[uI + j] : u[uI + j] - l[i + j];
                                         l[i + j] = (1 - alpha) * l[i + j] + (alpha) * result;
                                     }
                                     break;
 
-                                case "æ’é™¤":
+                                case "ÅÅ³ı":
                                     if(indexOfArr[j]){
                                         result = l[i + j] + u[uI + j] - (l[i + j] * u[uI + j]) / 127.5;
                                         l[i + j] = (1 - alpha) * l[i + j] + (alpha) * result;
                                     }
                                     break;
 
-                                case "ç‚¹å…‰":
+                                case "µã¹â":
                                     if(indexOfArr[j]){
                                         if(l[i + j] < (2 * u[uI + j] - 255)){
                                             result = 2 * u[uI + j] - 255;
@@ -656,14 +687,14 @@ window.AlloyImage = $AI = window.psLib;
                                     }
                                     break;
 
-                                case "é¢œè‰²åŠ æ·±":
+                                case "ÑÕÉ«¼ÓÉî":
                                     if(indexOfArr[j]){
                                         result = 255 - 255 * (255 - l[i + j]) / u[uI + j];
                                         l[i + j] = (1 - alpha) * l[i + j] + (alpha) * result;
                                     }
                                     break;
 
-                                case "çº¿æ€§åŠ æ·±":
+                                case "ÏßĞÔ¼ÓÉî":
                                     if(indexOfArr[j]){
                                         var tempR = l[i + j] + u[uI + j];
                                         result = tempR > 255 ? tempR - 255 : 0;
@@ -671,7 +702,7 @@ window.AlloyImage = $AI = window.psLib;
                                     }
                                     break;
 
-                                case "çº¿æ€§å‡æ·¡":
+                                case "ÏßĞÔ¼õµ­":
                                     if(indexOfArr[j]){
                                         var tempR = l[i + j] + u[uI + j];
                                         result = tempR > 255 ? 255 : tempR;
@@ -679,7 +710,7 @@ window.AlloyImage = $AI = window.psLib;
                                     }
                                     break;
 
-                                case "æŸ”å…‰":
+                                case "Èá¹â":
                                     if(indexOfArr[j]){
                                         if(u[uI + j] < 127.5){
                                             result = ((2 * u[uI + j] - 255) * (255 - l[i + j]) / (255 * 255) + 1) * l[i + j];
@@ -690,7 +721,7 @@ window.AlloyImage = $AI = window.psLib;
                                     }
                                     break;
 
-                                case "äº®å…‰":
+                                case "ÁÁ¹â":
                                     if(indexOfArr[j]){
                                         if(u[uI + j] < 127.5){
                                             result = (1 - (255 - l[i + j]) / (2 * u[uI + j])) * 255;
@@ -701,7 +732,7 @@ window.AlloyImage = $AI = window.psLib;
                                     }
                                     break;
 
-                                case "çº¿æ€§å…‰":
+                                case "ÏßĞÔ¹â":
                                     if(indexOfArr[j]){
                                         var tempR = l[i + j] + 2 * u[uI + j] - 255;
                                         result = tempR > 255 ? 255 : tempR;
@@ -709,7 +740,7 @@ window.AlloyImage = $AI = window.psLib;
                                     }
                                     break;
 
-                                case "å®è‰²æ··åˆ":
+                                case "ÊµÉ«»ìºÏ":
                                     if(indexOfArr[j]){
                                         if(u[uI + j] < (255 - l[i + j])){
                                             result = 0;
@@ -742,7 +773,7 @@ window.AlloyImage = $AI = window.psLib;
 })("psLib");
 /*
  * @author: Bin Wang
- * @description: è°ƒæ•´äº®åº¦å¯¹æ¯”åº¦
+ * @description: µ÷ÕûÁÁ¶È¶Ô±È¶È
  *
  * */
 ;(function(Ps){
@@ -750,7 +781,7 @@ window.AlloyImage = $AI = window.psLib;
     window[Ps].module("brightness",function(P){
 
         var M = {
-            //è°ƒèŠ‚äº®åº¦å¯¹æ¯”åº¦
+            //µ÷½ÚÁÁ¶È¶Ô±È¶È
             process: function(imgData, args){
                 var data = imgData.data;
                 var brightness = args[0] / 50;// -1,1
@@ -775,7 +806,7 @@ window.AlloyImage = $AI = window.psLib;
 })("psLib");
 /*
  * @author: Bin Wang
- * @description: æŸ¥æ‰¾è¾¹ç¼˜
+ * @description: ²éÕÒ±ßÔµ
  *
  * */
 ;(function(Ps){
@@ -854,41 +885,41 @@ window.AlloyImage = $AI = window.psLib;
 
     window[Ps].module("config",function(P){
 
-        //è®°å½•æ˜ å°„å…³ç³»
+        //¼ÇÂ¼Ó³Éä¹ØÏµ
         var Reflection = {
-            "ç°åº¦å¤„ç†": "toGray",
-            "åè‰²": "toReverse",
-            "ç°åº¦é˜ˆå€¼": "toThresh",
-            "é«˜æ–¯æ¨¡ç³Š": "gaussBlur",
-            "äº®åº¦": "brightness",
-            "æµ®é›•æ•ˆæœ": "embossment",
-            "æŸ¥æ‰¾è¾¹ç¼˜": "borderline",
-            "è‰²ç›¸/é¥±å’Œåº¦è°ƒèŠ‚": "setHSI",
-            "é©¬èµ›å…‹": "mosaic",
-            "æ²¹ç”»": "oilPainting",
-            "è…èš€": "corrode",
-            "é”åŒ–" : "sharp",
-            "æ·»åŠ æ‚è‰²" : "noise",
-            "æ›²çº¿" : "curve",
-            "æš—è§’" : "darkCorner",
-            "å–·ç‚¹" : "dotted"
+            "»Ò¶È´¦Àí": "toGray",
+            "·´É«": "toReverse",
+            "»Ò¶ÈãĞÖµ": "toThresh",
+            "¸ßË¹Ä£ºı": "gaussBlur",
+            "ÁÁ¶È": "brightness",
+            "¸¡µñĞ§¹û": "embossment",
+            "²éÕÒ±ßÔµ": "borderline",
+            "É«Ïà/±¥ºÍ¶Èµ÷½Ú": "setHSI",
+            "ÂíÈü¿Ë": "mosaic",
+            "ÓÍ»­": "oilPainting",
+            "¸¯Ê´": "corrode",
+            "Èñ»¯" : "sharp",
+            "Ìí¼ÓÔÓÉ«" : "noise",
+            "ÇúÏß" : "curve",
+            "°µ½Ç" : "darkCorner",
+            "Åçµã" : "dotted"
         };
 
         var EasyReflection = {
-            "ç¾è‚¤" : "softenFace",
-            "ç´ æ" : "sketch",
-            "è‡ªç„¶å¢å¼º" : "softEnhancement",
-            "ç´«è°ƒ" : "purpleStyle",
-            "æŸ”ç„¦" : "soften",
-            "å¤å¤" : "vintage",
-            "é»‘ç™½" : "gray",
-            "ä»¿lomo" : "lomo",
-            "äº®ç™½å¢å¼º" : "strongEnhancement",
-            "ç°ç™½" : "strongGray",
-            "ç°è‰²" : "lightGray",
-            "æš–ç§‹" : "warmAutumn",
-            "æœ¨é›•" : "carveStyle",
-            "ç²—ç³™" : "rough"
+            "ÃÀ·ô" : "softenFace",
+            "ËØÃè" : "sketch",
+            "×ÔÈ»ÔöÇ¿" : "softEnhancement",
+            "×Ïµ÷" : "purpleStyle",
+            "Èá½¹" : "soften",
+            "¸´¹Å" : "vintage",
+            "ºÚ°×" : "gray",
+            "·Âlomo" : "lomo",
+            "ÁÁ°×ÔöÇ¿" : "strongEnhancement",
+            "»Ò°×" : "strongGray",
+            "»ÒÉ«" : "lightGray",
+            "Å¯Çï" : "warmAutumn",
+            "Ä¾µñ" : "carveStyle",
+            "´Ö²Ú" : "rough"
         };
 
         var Config = {
@@ -909,7 +940,7 @@ window.AlloyImage = $AI = window.psLib;
 })("psLib");
 /*
  * @author: Bin Wang
- * @description:    è…èš€ 
+ * @description:    ¸¯Ê´ 
  *
  * */
 ;(function(Ps){
@@ -924,13 +955,13 @@ window.AlloyImage = $AI = window.psLib;
                 var height = imgData.height;
                 var xLength = R * 2 + 1;
 
-                //åŒºå—
+                //Çø¿é
                 for(var x = 0; x < width; x ++){
 
                     for(var y = 0; y < height; y ++){
                         
-                        var randomI = parseInt(Math.random() * R * 2) - R ;//åŒºå—éšæœºä»£è¡¨
-                        var randomJ = parseInt(Math.random() * R * 2) - R;//åŒºå—éšæœºä»£è¡¨
+                        var randomI = parseInt(Math.random() * R * 2) - R ;//Çø¿éËæ»ú´ú±í
+                        var randomJ = parseInt(Math.random() * R * 2) - R;//Çø¿éËæ»ú´ú±í
                         var realI = y * width + x;
                         var realJ = (y + randomI) * width + x + randomJ;
 
@@ -953,7 +984,7 @@ window.AlloyImage = $AI = window.psLib;
 })("psLib");
 /*
  * @author: Bin Wang
- * @description:    æ›²çº¿ 
+ * @description:    ÇúÏß 
  *
  * */
 ;(function(Ps){
@@ -966,13 +997,13 @@ window.AlloyImage = $AI = window.psLib;
                  * arg   arg[0] = [3,3] ,arg[1]  = [2,2]
                  * */
 
-                //è·å¾—æ’å€¼å‡½æ•°
+                //»ñµÃ²åÖµº¯Êı
                 var f = P.lib.dorsyMath.lagrange(arg[0], arg[1]);
                 var data = imgData.data;
                 var width = imgData.width;
                 var height = imgData.height;
 
-                //åŒºå—
+                //Çø¿é
                 for(var x = 0; x < width; x ++){
 
                     for(var y = 0; y < height; y ++){
@@ -998,7 +1029,7 @@ window.AlloyImage = $AI = window.psLib;
 })("psLib");
 /*
  * @author: Bin Wang
- * @description:     æš—è§’
+ * @description:     °µ½Ç
  *
  * */
 ;(function(Ps){
@@ -1007,13 +1038,13 @@ window.AlloyImage = $AI = window.psLib;
 
         var M = {
             process: function(imgData,arg){
-                //æš—è§’çº§åˆ« åˆ†1-10çº§å§
+                //°µ½Ç¼¶±ğ ·Ö1-10¼¶°É
                 var R = parseInt(arg[0]) || 3;
 
-                //æš—è§’çš„å½¢çŠ¶
+                //°µ½ÇµÄĞÎ×´
                 var type = arg[2] || "round";
 
-                //æš—è§’æœ€ç»ˆçš„çº§åˆ« 0 - 255
+                //°µ½Ç×îÖÕµÄ¼¶±ğ 0 - 255
                 var lastLevel = arg[1] || 30;
 
                 var data = imgData.data;
@@ -1021,33 +1052,33 @@ window.AlloyImage = $AI = window.psLib;
                 var height = imgData.height;
                 var xLength = R * 2 + 1;
 
-                //è®¡ç®—ä¸­å¿ƒç‚¹
+                //¼ÆËãÖĞĞÄµã
                 var middleX = width * 2 / 3;
                 var middleY = height * 1/ 2;
                 
-                //è®¡ç®—è·ä¸­å¿ƒç‚¹æœ€é•¿è·ç¦»
+                //¼ÆËã¾àÖĞĞÄµã×î³¤¾àÀë
                 var maxDistance = P.lib.dorsyMath.distance([middleX ,middleY]);
-                //å¼€å§‹äº§ç”Ÿæš—è§’çš„è·ç¦»
+                //¿ªÊ¼²úÉú°µ½ÇµÄ¾àÀë
                 var startDistance = maxDistance * (1 - R / 10);
 
                 var f = function(x, p0, p1, p2, p3){
 
-                 //åŸºäºä¸‰æ¬¡è´å¡å°”æ›²çº¿ 
+                 //»ùÓÚÈı´Î±´Èû¶ûÇúÏß 
                      return p0 * Math.pow((1 - x), 3) + 3 * p1 * x * Math.pow((1 - x), 2) + 3 * p2 * x * x * (1 - x) + p3 * Math.pow(x, 3);
                }
 
-                //è®¡ç®—å½“å‰ç‚¹åº”å¢åŠ çš„æš—åº¦
+                //¼ÆËãµ±Ç°µãÓ¦Ôö¼ÓµÄ°µ¶È
                 function calDark(x, y, p){
-                    //è®¡ç®—è·ä¸­å¿ƒç‚¹è·ç¦»
+                    //¼ÆËã¾àÖĞĞÄµã¾àÀë
                     var distance = P.lib.dorsyMath.distance([x, y], [middleX, middleY]);
                     var currBilv = (distance - startDistance) / (maxDistance - startDistance);
                     if(currBilv < 0) currBilv = 0;
 
-                    //åº”è¯¥å¢åŠ æš—åº¦
+                    //Ó¦¸ÃÔö¼Ó°µ¶È
                     return  f(currBilv, 0, 0.02, 0.3, 1) * p * lastLevel / 255;
                 }
 
-                //åŒºå—
+                //Çø¿é
                 for(var x = 0; x < width; x ++){
 
                     for(var y = 0; y < height; y ++){
@@ -1074,8 +1105,8 @@ window.AlloyImage = $AI = window.psLib;
 })("psLib");
 /*
  * @author: Bin Wang
- * @description:æ•°å­¦å¤„ç†æ¨¡å—-core 
- * FFT çŸ©é˜µ å¤æ•° Langrangeæ’å€¼
+ * @description:ÊıÑ§´¦ÀíÄ£¿é-core 
+ * FFT ¾ØÕó ¸´Êı Langrange²åÖµ
  *
  * */
 ;(function(Ps){
@@ -1085,13 +1116,13 @@ window.AlloyImage = $AI = window.psLib;
         var M = {
             FFT1: function(dataArr){
             /*
-             * @description:å¿«é€Ÿå‚…é‡Œå¶å˜æ¢
-             * @æŒ‰æ—¶é—´æŠ½å–
+             * @description:¿ìËÙ¸µÀïÒ¶±ä»»
+             * @°´Ê±¼ä³éÈ¡
              * */
                 var size = dataArr.length;
                 var count = 0;
 
-                //------è®¡ç®—æƒé‡W------------
+                //------¼ÆËãÈ¨ÖØW------------
                 var W = [];
                 for(var i = 0; i < size; i ++){
                     W[i] = this.exp(-2 * Math.PI * i / size);
@@ -1101,44 +1132,44 @@ window.AlloyImage = $AI = window.psLib;
                 butterflyCal();
                 return dataArr;
 
-                //è¶å½¢è¿ç®—å•å…ƒ
+                //µûĞÎÔËËãµ¥Ôª
                 function butterflyCal(){
                     count ++;
 
-                    //è¶å½¢å•å…ƒä¸ªæ•°
+                    //µûĞÎµ¥Ôª¸öÊı
                     var singleLength = size / Math.pow(2,count);
                     var everyLength = size / singleLength;
 
                     for(var i = 0; i < singleLength; i ++){
 
-                        //é€æ¬¡è®¡ç®—è¶å½¢å•å…ƒ
+                        //Öğ´Î¼ÆËãµûĞÎµ¥Ôª
                         singleButterflyCal(i * everyLength, (i + 1) * everyLength - 1, count);
                     }
 
-                    //å¦‚æœå•å…ƒä¸ªæ•°å¤§äº1ç»§ç»­è¿ç®—
+                    //Èç¹ûµ¥Ôª¸öÊı´óÓÚ1¼ÌĞøÔËËã
                     if(singleLength > 1){
 
-                        //é€’å½’
+                        //µİ¹é
                         butterflyCal();
                     }else{
                     }
                     
                 }
 
-                //ä¸€ä¸ªè¶å½¢å•å…ƒ nè¿ç®—æ¬¡æ•° è¶å½¢å•å…ƒçš„æˆå¯¹é—´éš”
+                //Ò»¸öµûĞÎµ¥Ôª nÔËËã´ÎÊı µûĞÎµ¥ÔªµÄ³É¶Ô¼ä¸ô
                 function singleButterflyCal(start, end, n){
 
                     var delta =  Math.pow(2,n - 1);
 
                     for(var i = start, j = 0; i <= (end - delta); i ++){
 
-                        //i çš„è¿ç®—å¯¹
+                        //i µÄÔËËã¶Ô
                         var pairI = i + delta;
 
-                        //è®¡ç®—iè¿ç®—æ—¶çš„æƒé‡ä¸‹æ ‡
+                        //¼ÆËãiÔËËãÊ±µÄÈ¨ÖØÏÂ±ê
                         var currWeightForI = j * size / Math.pow(2,n);
 
-                        //è®¡ç®—içš„è¿ç®—å¯¹æ—¶å€™çš„æƒé‡
+                        //¼ÆËãiµÄÔËËã¶ÔÊ±ºòµÄÈ¨ÖØ
                         var currWeightForPairI = currWeightForI + size / 4;
 
                         if(!(dataArr[i] instanceof M.C)) dataArr[i] = new M.C(dataArr[i]);
@@ -1159,16 +1190,16 @@ window.AlloyImage = $AI = window.psLib;
 
             DFT: function(){
             /*
-             * @description:ç¦»æ•£å‚…é‡Œå¶å˜æ¢
+             * @description:ÀëÉ¢¸µÀïÒ¶±ä»»
              * */
 
             },
 
             Matrix: function(arr,arg,arg2){
             /*
-             * @descriptiont:çŸ©é˜µç±»
-             * æ„é€ ä¸€ä¸ªçŸ©é˜µ,å½“ç„¶ä»åŸå§‹çš„æ•°æ®æ„é€ ,ä½†å…·æœ‰çŸ©é˜µçš„æ‰€æœ‰åŸºæœ¬è¿ç®—æ–¹æ³•
-             * arrå‚æ•°å¯ä»¥ä¸ºçŸ©é˜µ,é™„åŠ å­—ç¬¦ä¸²å‚æ•°ä¸ºæ„é€ çš„è¡Œåˆ—å¦‚ ([0,0],"3*4")    æˆ–("æ„é€ 3*4çš„1çŸ©é˜µ")  ("æ„é€ 3*4çš„0çŸ©é˜µ")
+             * @descriptiont:¾ØÕóÀà
+             * ¹¹ÔìÒ»¸ö¾ØÕó,µ±È»´ÓÔ­Ê¼µÄÊı¾İ¹¹Ôì,µ«¾ßÓĞ¾ØÕóµÄËùÓĞ»ù±¾ÔËËã·½·¨
+             * arr²ÎÊı¿ÉÒÔÎª¾ØÕó,¸½¼Ó×Ö·û´®²ÎÊıÎª¹¹ÔìµÄĞĞÁĞÈç ([0,0],"3*4")    »ò("¹¹Ôì3*4µÄ1¾ØÕó")  ("¹¹Ôì3*4µÄ0¾ØÕó")
              * */
                 var resultArr = [];
 
@@ -1182,7 +1213,7 @@ window.AlloyImage = $AI = window.psLib;
                         n = arg2;
                     }
 
-                    //æœ¬èº«äºŒç»´çš„
+                    //±¾Éí¶şÎ¬µÄ
                     if(arr[0] && arr[0][0]){
                         for(var i = 0;i < m;i ++){
                             resultArr[i] = [];
@@ -1191,7 +1222,7 @@ window.AlloyImage = $AI = window.psLib;
                             }
                         }
 
-                    //ä¸€ç»´çš„
+                    //Ò»Î¬µÄ
                     }else{
 
                         for(var i = 0;i < m;i ++){
@@ -1217,11 +1248,11 @@ window.AlloyImage = $AI = window.psLib;
 
             C: function(r,i){
             /*
-             * @description:å¤æ•°å¯¹è±¡
+             * @description:¸´Êı¶ÔÏó
              *
              * */
-               this.r = r || 0;//å®éƒ¨
-               this.i = i || 0;//è™šéƒ¨
+               this.r = r || 0;//Êµ²¿
+               this.i = i || 0;//Ğé²¿
             },
 
             exp: function(theta,r){//  r e^(i * theta) = r cos theta + r i * sin theta
@@ -1238,11 +1269,11 @@ window.AlloyImage = $AI = window.psLib;
 
             lagrange: function(xArr,yArr){
             /*
-             * Lagrangeæ’å€¼
+             * Lagrange²åÖµ
              * @usage   M.lagrange([1,2],[2,4])(3);
              * */
                 var num = xArr.length;
-                function getLk(x,k){//è®¡ç®—lk
+                function getLk(x,k){//¼ÆËãlk
                     var omigaXk = 1;
                     var omigaX = 1;
                     for(var i = 0;i < num;i ++){
@@ -1267,7 +1298,7 @@ window.AlloyImage = $AI = window.psLib;
 
             },
 
-            applyMatrix: function(imgData,matrixArr,low){//å¯¹å›¾è±¡ä¿¡å·å®è¡Œæ©æ¨¡ç®—å­å˜æ¢ lowä¸ºé˜ˆå€¼,æ»¤æ³¢è¿ç®—
+            applyMatrix: function(imgData,matrixArr,low){//¶ÔÍ¼ÏóĞÅºÅÊµĞĞÑÚÄ£Ëã×Ó±ä»» lowÎªãĞÖµ,ÂË²¨ÔËËã
 
                 low = low || 0;
                 var data = imgData.data;
@@ -1338,7 +1369,7 @@ window.AlloyImage = $AI = window.psLib;
 
             },
 
-            HSIToRGB: function(H,S,I){//Hä¸ºå¼§åº¦å€¼
+            HSIToRGB: function(H,S,I){//HÎª»¡¶ÈÖµ
                 //H (-Math.PI , Math.PI)  S (-1,1) I (-255,255)
                 if(H < 0){
                     H %= 2 * Math.PI;
@@ -1375,7 +1406,7 @@ window.AlloyImage = $AI = window.psLib;
                 };
             },
 
-            applyInHSI: function(imgData,func){//åœ¨hsiç©ºé—´ä¸Šåº”ç”¨func
+            applyInHSI: function(imgData,func){//ÔÚhsi¿Õ¼äÉÏÓ¦ÓÃfunc
                 /*
                  * function(i){
                  *      i.H += 3;
@@ -1397,7 +1428,7 @@ window.AlloyImage = $AI = window.psLib;
                 
             },
 
-            applyInCoordinate: function(imgData,func){//åœ¨åæ ‡ç©ºé—´ä¸Šåº”ç”¨func
+            applyInCoordinate: function(imgData,func){//ÔÚ×ø±ê¿Õ¼äÉÏÓ¦ÓÃfunc
                 /*
                  * function(dot){
                  *      
@@ -1405,7 +1436,7 @@ window.AlloyImage = $AI = window.psLib;
                  * */
             },
 
-            //è®¡ç®—ä¸¤ä¸ªç‚¹ä¹‹é—´çš„è·ç¦»
+            //¼ÆËãÁ½¸öµãÖ®¼äµÄ¾àÀë
             //p1   array
             //p2   array
             distance: function(p1, p2){
@@ -1418,7 +1449,7 @@ window.AlloyImage = $AI = window.psLib;
                 return p3.distance();
             },
 
-            //å°†(x,y)çš„åæ ‡è½¬ä¸ºå•ç»´çš„i
+            //½«(x,y)µÄ×ø±ê×ªÎªµ¥Î¬µÄi
             xyToIFun: function(width){
                 return function(x, y, z){
                     z = z || 0;
@@ -1426,8 +1457,8 @@ window.AlloyImage = $AI = window.psLib;
                 };
             },
 
-            //åœ¨(x,y)è¿›è¡Œè¿ç®—
-            //rgbfun åœ¨rgbä¸‰ä¸ªä¸Šè¿›è¡Œçš„æ“ä½œ aFunåœ¨alphaè¿›è¡Œçš„æ“ä½œ
+            //ÔÚ(x,y)½øĞĞÔËËã
+            //rgbfun ÔÚrgbÈı¸öÉÏ½øĞĞµÄ²Ù×÷ aFunÔÚalpha½øĞĞµÄ²Ù×÷
             xyCal: function(imgData, x, y, rgbFun, aFun){
                 var xyToIFun  = this.xyToIFun(imgData.width);
                 for(var i = 0; i < 3; i ++){
@@ -1450,12 +1481,12 @@ window.AlloyImage = $AI = window.psLib;
         */
 
         M.Matrix.prototype = {
-            /*m: 0,//æ•°å­¦ä¸Šä¼ ç»Ÿçš„m*nçŸ©é˜µ
+            /*m: 0,//ÊıÑ§ÉÏ´«Í³µÄm*n¾ØÕó
             n: 0,
 */
             plus: function(matrix){
                 if(this.m != matrix.m || this.n != matrix.n){
-                    throw new Error("çŸ©é˜µåŠ æ³•è¡Œåˆ—ä¸åŒ¹é…");
+                    throw new Error("¾ØÕó¼Ó·¨ĞĞÁĞ²»Æ¥Åä");
                 }
 
 
@@ -1470,7 +1501,7 @@ window.AlloyImage = $AI = window.psLib;
 
             minus: function(matrix){
                 if(this.m != matrix.m || this.n != matrix.n){
-                    throw new Error("çŸ©é˜µå‡æ³•æ³•è¡Œåˆ—ä¸åŒ¹é…");
+                    throw new Error("¾ØÕó¼õ·¨·¨ĞĞÁĞ²»Æ¥Åä");
                 }
 
 
@@ -1483,9 +1514,9 @@ window.AlloyImage = $AI = window.psLib;
                 return tempM;
             },
 
-            mutiply: function(matrix){//å·¦ä¹˜å¦ä¸€çŸ©é˜µ
+            mutiply: function(matrix){//×ó³ËÁíÒ»¾ØÕó
                 if(this.n != matrix.m){
-                    throw new Error("çŸ©é˜µä¹˜æ³•è¡Œåˆ—ä¸åŒ¹é…");
+                    throw new Error("¾ØÕó³Ë·¨ĞĞÁĞ²»Æ¥Åä");
                 }
 
 
@@ -1538,12 +1569,12 @@ window.AlloyImage = $AI = window.psLib;
 
                 return tempC;
             },
-            conjugated: function(){//å–å…±è½­
+            conjugated: function(){//È¡¹²éî
                 var tempC = new M.C(this.r,-this.i);
                 return tempC;
             },
 
-            //å–æ¨¡
+            //È¡Ä£
             distance: function(){
                 return Math.sqrt(this.r * this.r + this.i * this.i);
             }
@@ -1558,9 +1589,96 @@ window.AlloyImage = $AI = window.psLib;
     });
 
 })("psLib");
+/* * @author: Bin Wang
+ * @description: Main worker
+ *
+ * */
+;(function(Ps){
+
+    window[Ps].module("dorsyWorker",function(P){
+        //µÈ´ıÊ±¼ä
+        var WAITING_SECONDS = 800;
+
+        var M = function(aiObj){
+            //static private single
+            var worker = new Worker("js/combined/workerTest.js?" + (new Date()));
+
+            var workerObj = {
+                //µÈ´ı´¦ÀíµÄ¶ÓÁĞ
+                queue: [],
+                //¿ªÊ¼½øÈë¶àÏß³Ì
+                startWorker: function(){
+                    console.log("startWorker");
+                    this.shiftAction();
+                },
+
+                //´Ó¶ÓÁĞÖĞÈ¡³öÒ»¸ö¶¯×÷À´´¦Àí
+                shiftAction: function(){
+                    var action = this.queue.shift(), _this = this;
+
+                    //Èç¹ûÃ»ÓĞÁË,µÈ´ı100msÔÙ´Î¼ì²é, Èç¹û»¹Ã»ÓĞ,±íÃ÷¶ÓÁĞÖĞÎŞĞÂÔö´¦Àí¶¯×÷, readyOK
+                    if(! action){
+                        setTimeout(function(){
+                            action = _this.queue.shift();
+
+                            if(! action){
+                                aiObj.notify("readyStateOK");
+                            }
+
+                        }, WAITING_SECONDS);
+                    }
+
+                    //´Ë´¦ÀíÎª¶¯×÷
+                    if(action[0] == "act"){
+                        console.log("postStart");
+
+                        //Ïòworker·¢ÏûÏ¢
+                        worker.postMessage([action[1], aiObj.imgData, action[2]]);
+
+                    //ÎªÌí¼ÓÒª¼ì²éÌí¼ÓµÄÍ¼²ãÊÇ·ñ´¦ÀíÍê³É
+                    }else if(action[0] == "add"){
+                        function checkReadyState(){
+                            //Íê³É
+                            if(action[1].readyState){
+
+                            //Èç¹ûÃ»ÓĞÍê³ÉÔò²»¶Ï¼ì²éÊÇ·ñÍê³É,ÆÚ¼ä¿ÉÒÔ×öÆäËûµÄ¶¯×÷,µ«´¦ÀíÔİÊ±ÖĞÖ¹
+                            }else{
+                                setTimeout(function(){
+                                    checkReadyState();
+                                }, WAITING_SECONDS);
+                            }
+                        }
+                    }else if(action[0] == "show"){
+                        aiObj.show(action[1], action[2], 1);
+                    }
+                },
+
+                //worker»Øµ÷¼àÌı
+                callback: function(data){
+                    console.log("callback");
+                    aiObj.imgData = data;
+                    this.shiftAction();
+                }
+            };
+
+            //ÊÕµ½ÏûÏ¢ºóÔÙ´Ó¶ÓÁĞÖĞ¼ì²éÈ»ºó½øĞĞ´¦Àí
+            worker.onmessage = function(e){
+                console.log("onmessage");
+                workerObj.callback(e.data);
+            };
+
+            return workerObj;
+        };
+
+        return M;
+
+    });
+
+})("psLib");
+
 /*
  * @author: Bin Wang
- * @description:  é©¬èµ›å…‹ 
+ * @description:  ÂíÈü¿Ë 
  *
  * */
 ;(function(Ps){
@@ -1568,11 +1686,11 @@ window.AlloyImage = $AI = window.psLib;
     window[Ps].module("dotted",function(P){
 
         var M = {
-            process: function(imgData,arg){//è°ƒèŠ‚äº®åº¦å¯¹æ¯”åº¦
-                //çŸ©å½¢åŠå¾„
+            process: function(imgData,arg){//µ÷½ÚÁÁ¶È¶Ô±È¶È
+                //¾ØĞÎ°ë¾¶
                 var R = parseInt(arg[0]) || 1;
 
-                //å†…å°åœ†åŠå¾„
+                //ÄÚĞ¡Ô²°ë¾¶
                 var r = parseInt(arg[1]) || 1;
 
                 var data = imgData.data;
@@ -1580,7 +1698,7 @@ window.AlloyImage = $AI = window.psLib;
                 var height = imgData.height;
                 var xLength = R * 2 + 1;
 
-                //æ„é€ è·ç¦»æ¨¡æ¿
+                //¹¹Ôì¾àÀëÄ£°å
                 var disTmlMatrix = [
                 ];
 
@@ -1597,7 +1715,7 @@ window.AlloyImage = $AI = window.psLib;
 
                 var xyToIFun = P.lib.dorsyMath.xyToIFun(width);
 
-                //å°†å¤§äºè·ç¦»å¤–é¢çš„é€æ˜åº¦ç½®ä¸º0
+                //½«´óÓÚ¾àÀëÍâÃæµÄÍ¸Ã÷¶ÈÖÃÎª0
                 for(var x = 0, n = parseInt(width / xLength); x < n; x ++){
 
                     for(var y = 0, m = parseInt(height / xLength); y < m;y ++){
@@ -1638,7 +1756,7 @@ window.AlloyImage = $AI = window.psLib;
 })("psLib");
 /*
  * @author: Bin Wang
- * @description:    è…èš€ 
+ * @description:    ¸¯Ê´ 
  *
  * */
 ;(function(Ps){
@@ -1648,87 +1766,87 @@ window.AlloyImage = $AI = window.psLib;
         var M = {
             getFun: function(fun){
                 var Effects = {
-                    softenFace: function(){//ç¾è‚¤
+                    softenFace: function(){//ÃÀ·ô
                         var _this = this.clone();
                         return  _this.add(
-                            this.act("é«˜æ–¯æ¨¡ç³Š",10),"æ»¤è‰²"
-                        ).act("äº®åº¦",-10,5);
+                            this.act("¸ßË¹Ä£ºı",10),"ÂËÉ«"
+                        ).act("ÁÁ¶È",-10,5);
                     },
-                    sketch: function(){//ç´ æ
-                        var _this = this.act("ç°åº¦å¤„ç†").clone();
+                    sketch: function(){//ËØÃè
+                        var _this = this.act("»Ò¶È´¦Àí").clone();
                         return this.add(
-                            _this.act("åè‰²").act("é«˜æ–¯æ¨¡ç³Š",8), "é¢œè‰²å‡æ·¡"
-                        ).act("é”åŒ–",1);
+                            _this.act("·´É«").act("¸ßË¹Ä£ºı",8), "ÑÕÉ«¼õµ­"
+                        ).act("Èñ»¯",1);
                     },
-                    softEnhancement: function(){//è‡ªç„¶å¢å¼º
-                      return this.act("æ›²çº¿",[0,190,255],[0,229,255]);
+                    softEnhancement: function(){//×ÔÈ»ÔöÇ¿
+                      return this.act("ÇúÏß",[0,190,255],[0,229,255]);
                     },
                     purpleStyle: function(){
                         var _this = this.clone();
                         return this.add(
-                            _this.act("é«˜æ–¯æ¨¡ç³Š",3), "æ­£ç‰‡å åº•" ,"RG"
+                            _this.act("¸ßË¹Ä£ºı",3), "ÕıÆ¬µşµ×" ,"RG"
                         );
                         
                     },
                     soften: function(){
                         var _this = this.clone();
                         return this.add(
-                            _this.act("é«˜æ–¯æ¨¡ç³Š",6), "å˜æš—"
+                            _this.act("¸ßË¹Ä£ºı",6), "±ä°µ"
                         );
                     },
-                    vintage: function(){//å¤å¤
+                    vintage: function(){//¸´¹Å
                         var _this = this.clone();
-                        return this.act("ç°åº¦å¤„ç†").add(
-                            window[Ps](this.canvas.width,this.canvas.height,"#808080").act("æ·»åŠ æ‚è‰²").act("é«˜æ–¯æ¨¡ç³Š",4).act("è‰²ç›¸/é¥±å’Œåº¦è°ƒèŠ‚",32,19,0,true),"å åŠ "
+                        return this.act("»Ò¶È´¦Àí").add(
+                            window[Ps](this.canvas.width,this.canvas.height,"#808080").act("Ìí¼ÓÔÓÉ«").act("¸ßË¹Ä£ºı",4).act("É«Ïà/±¥ºÍ¶Èµ÷½Ú",32,19,0,true),"µş¼Ó"
                         );
                     },
-                    gray: function(){//é»‘ç™½
-                        return this.act("ç°åº¦å¤„ç†");
+                    gray: function(){//ºÚ°×
+                        return this.act("»Ò¶È´¦Àí");
                     },
-                    lomo: function(){//ä»¿lomo
+                    lomo: function(){//·Âlomo
                         var m = this.clone().add(
-                            this.clone() , "æ»¤è‰²"
+                            this.clone() , "ÂËÉ«"
                         ).add(
-                            this.clone() , "æŸ”å…‰"
+                            this.clone() , "Èá¹â"
                         );
 
                         return m.add(
-                            this.clone().act("åè‰²") , "æ­£å¸¸","20%","B"
-                        ).act("æš—è§’", 6, 200);
+                            this.clone().act("·´É«") , "Õı³£","20%","B"
+                        ).act("°µ½Ç", 6, 200);
                         
                     },
                     strongEnhancement: function(){
                         return this.clone().add(
-                            this.clone().act("æ›²çº¿",[0,50,255],[0,234,255]), "æŸ”å…‰"
+                            this.clone().act("ÇúÏß",[0,50,255],[0,234,255]), "Èá¹â"
                         );
                     },
-                    strongGray: function(){//é«˜å¯¹æ¯” ç°ç™½
-                        return this.act("ç°åº¦å¤„ç†").act("æ›²çº¿",[0,61,69,212,255],[0,111,176,237,255]);
+                    strongGray: function(){//¸ß¶Ô±È »Ò°×
+                        return this.act("»Ò¶È´¦Àí").act("ÇúÏß",[0,61,69,212,255],[0,111,176,237,255]);
                     },
                     lightGray: function(){
-                            return this.act("ç°åº¦å¤„ç†").act("æ›²çº¿",[0,60,142,194,255],[0,194,240,247,255])
+                            return this.act("»Ò¶È´¦Àí").act("ÇúÏß",[0,60,142,194,255],[0,194,240,247,255])
                     },
                     warmAutumn: function(){
-                        var m = this.clone().act("è‰²ç›¸/é¥±å’Œåº¦è°ƒèŠ‚",36,47,8,true).act("æš—è§’", 6, 150);
+                        var m = this.clone().act("É«Ïà/±¥ºÍ¶Èµ÷½Ú",36,47,8,true).act("°µ½Ç", 6, 150);
                         return this.add(
-                            m, "å åŠ "
+                            m, "µş¼Ó"
                         );
                     },
 
-                    //æœ¨é›•çš„æ•ˆæœ
+                    //Ä¾µñµÄĞ§¹û
                     carveStyle: function(){
-                        var layerClone = this.clone().act("é©¬èµ›å…‹").act("æŸ¥æ‰¾è¾¹ç¼˜").act("æµ®é›•æ•ˆæœ");
+                        var layerClone = this.clone().act("ÂíÈü¿Ë").act("²éÕÒ±ßÔµ").act("¸¡µñĞ§¹û");
                         return this.add(
-                            layerClone, "çº¿æ€§å…‰"
+                            layerClone, "ÏßĞÔ¹â"
                         );
                     },
 
-                    //ç²—ç³™
+                    //´Ö²Ú
                     rough: function(){
                        return this.add(
 
-                           window[Ps](this.canvas.width, this.canvas.height, "#000").act("å–·ç‚¹").act("åè‰²").act("æµ®é›•æ•ˆæœ")
-                           ,"å åŠ "
+                           window[Ps](this.canvas.width, this.canvas.height, "#000").act("Åçµã").act("·´É«").act("¸¡µñĞ§¹û")
+                           ,"µş¼Ó"
                        );
                     }
                 };
@@ -1744,7 +1862,7 @@ window.AlloyImage = $AI = window.psLib;
 })("psLib");
 /*
  * @author: Bin Wang
- * @description:  æµ®é›•æ•ˆæœ
+ * @description:  ¸¡µñĞ§¹û
  *
  * */
 ;(function(Ps){
@@ -1752,7 +1870,7 @@ window.AlloyImage = $AI = window.psLib;
     window[Ps].module("embossment",function(P){
 
         var M = {
-            process: function(imgData,arg){//è°ƒèŠ‚äº®åº¦å¯¹æ¯”åº¦
+            process: function(imgData,arg){//µ÷½ÚÁÁ¶È¶Ô±È¶È
                 var data = imgData.data;
                 var width = imgData.width;
                 var height = imgData.height;
@@ -1789,7 +1907,7 @@ window.AlloyImage = $AI = window.psLib;
 })("psLib");
 /*
  * @author: az@alloyTeam Bin Wang
- * @description: é«˜æ–¯æ¨¡ç³Š
+ * @description: ¸ßË¹Ä£ºı
  *
  * */
 ;(function(Ps){
@@ -1799,12 +1917,12 @@ window.AlloyImage = $AI = window.psLib;
         var M = {
 
           /**
-             * é«˜æ–¯æ¨¡ç³Š
+             * ¸ßË¹Ä£ºı
              * @param  {Array} pixes  pix array
-             * @param  {Number} width å›¾ç‰‡çš„å®½åº¦
-             * @param  {Number} height å›¾ç‰‡çš„é«˜åº¦
-             * @param  {Number} radius å–æ ·åŒºåŸŸåŠå¾„, æ­£æ•°, å¯é€‰, é»˜è®¤ä¸º 3.0
-             * @param  {Number} sigma æ ‡å‡†æ–¹å·®, å¯é€‰, é»˜è®¤å–å€¼ä¸º radius / 3
+             * @param  {Number} width Í¼Æ¬µÄ¿í¶È
+             * @param  {Number} height Í¼Æ¬µÄ¸ß¶È
+             * @param  {Number} radius È¡ÑùÇøÓò°ë¾¶, ÕıÊı, ¿ÉÑ¡, Ä¬ÈÏÎª 3.0
+             * @param  {Number} sigma ±ê×¼·½²î, ¿ÉÑ¡, Ä¬ÈÏÈ¡ÖµÎª radius / 3
              * @return {Array}
              */
             process: function(imgData,radius, sigma) {
@@ -1823,26 +1941,26 @@ window.AlloyImage = $AI = window.psLib;
                 
                 a = 1 / (Math.sqrt(2 * Math.PI) * sigma);
                 b = -1 / (2 * sigma * sigma);
-                //ç”Ÿæˆé«˜æ–¯çŸ©é˜µ
+                //Éú³É¸ßË¹¾ØÕó
                 for (i = 0, x = -radius; x <= radius; x++, i++){
                     g = a * Math.exp(b * x * x);
                     gaussMatrix[i] = g;
                     gaussSum += g;
                 
                 }
-                //å½’ä¸€åŒ–, ä¿è¯é«˜æ–¯çŸ©é˜µçš„å€¼åœ¨[0,1]ä¹‹é—´
+                //¹éÒ»»¯, ±£Ö¤¸ßË¹¾ØÕóµÄÖµÔÚ[0,1]Ö®¼ä
                 for (i = 0, len = gaussMatrix.length; i < len; i++) {
                     gaussMatrix[i] /= gaussSum;
                 }
-                //x æ–¹å‘ä¸€ç»´é«˜æ–¯è¿ç®—
+                //x ·½ÏòÒ»Î¬¸ßË¹ÔËËã
                 for (y = 0; y < height; y++) {
                     for (x = 0; x < width; x++) {
                         r = g = b = a = 0;
                         gaussSum = 0;
                         for(j = -radius; j <= radius; j++){
                             k = x + j;
-                            if(k >= 0 && k < width){//ç¡®ä¿ k æ²¡è¶…å‡º x çš„èŒƒå›´
-                                //r,g,b,a å››ä¸ªä¸€ç»„
+                            if(k >= 0 && k < width){//È·±£ k Ã»³¬³ö x µÄ·¶Î§
+                                //r,g,b,a ËÄ¸öÒ»×é
                                 i = (y * width + k) * 4;
                                 r += pixes[i] * gaussMatrix[j + radius];
                                 g += pixes[i + 1] * gaussMatrix[j + radius];
@@ -1852,7 +1970,7 @@ window.AlloyImage = $AI = window.psLib;
                             }
                         }
                         i = (y * width + x) * 4;
-                        // é™¤ä»¥ gaussSum æ˜¯ä¸ºäº†æ¶ˆé™¤å¤„äºè¾¹ç¼˜çš„åƒç´ , é«˜æ–¯è¿ç®—ä¸è¶³çš„é—®é¢˜
+                        // ³ıÒÔ gaussSum ÊÇÎªÁËÏû³ı´¦ÓÚ±ßÔµµÄÏñËØ, ¸ßË¹ÔËËã²»×ãµÄÎÊÌâ
                         // console.log(gaussSum)
                         pixes[i] = r / gaussSum;
                         pixes[i + 1] = g / gaussSum;
@@ -1860,14 +1978,14 @@ window.AlloyImage = $AI = window.psLib;
                         // pixes[i + 3] = a ;
                     }
                 }
-                //y æ–¹å‘ä¸€ç»´é«˜æ–¯è¿ç®—
+                //y ·½ÏòÒ»Î¬¸ßË¹ÔËËã
                 for (x = 0; x < width; x++) {
                     for (y = 0; y < height; y++) {
                         r = g = b = a = 0;
                         gaussSum = 0;
                         for(j = -radius; j <= radius; j++){
                             k = y + j;
-                            if(k >= 0 && k < height){//ç¡®ä¿ k æ²¡è¶…å‡º y çš„èŒƒå›´
+                            if(k >= 0 && k < height){//È·±£ k Ã»³¬³ö y µÄ·¶Î§
                                 i = (k * width + x) * 4;
                                 r += pixes[i] * gaussMatrix[j + radius];
                                 g += pixes[i + 1] * gaussMatrix[j + radius];
@@ -1899,7 +2017,7 @@ window.AlloyImage = $AI = window.psLib;
 })("psLib");
 /*
  * @author: Bin Wang
- * @description: æŸ¥æ‰¾è¾¹ç¼˜
+ * @description: ²éÕÒ±ßÔµ
  *
  * */
 ;(function(Ps){
@@ -1933,7 +2051,7 @@ window.AlloyImage = $AI = window.psLib;
 })("psLib");
 /*
  * @author: Bin Wang
- * @description:  é©¬èµ›å…‹ 
+ * @description:  ÂíÈü¿Ë 
  *
  * */
 ;(function(Ps){
@@ -1941,7 +2059,7 @@ window.AlloyImage = $AI = window.psLib;
     window[Ps].module("mosaic",function(P){
 
         var M = {
-            process: function(imgData,arg){//è°ƒèŠ‚äº®åº¦å¯¹æ¯”åº¦
+            process: function(imgData,arg){//µ÷½ÚÁÁ¶È¶Ô±È¶È
                 var R = parseInt(arg[0]) || 3;
                 var data = imgData.data;
                 var width = imgData.width;
@@ -1993,7 +2111,7 @@ window.AlloyImage = $AI = window.psLib;
 })("psLib");
 /*
  * @author: Bin Wang
- * @description:   æ·»åŠ æ‚è‰² 
+ * @description:   Ìí¼ÓÔÓÉ« 
  *
  * */
 ;(function(Ps){
@@ -2008,7 +2126,7 @@ window.AlloyImage = $AI = window.psLib;
                 var height = imgData.height;
                 var xLength = R * 2 + 1;
 
-                //åŒºå—
+                //Çø¿é
                 for(var x = 0;x < width;x ++){
 
                     for(var y = 0;y < height;y ++){
@@ -2035,7 +2153,7 @@ window.AlloyImage = $AI = window.psLib;
 })("psLib");
 /*
  * @author: Bin Wang
- * @description: æ²¹ç”» 
+ * @description: ÓÍ»­ 
  *
  * */
 ;(function(Ps){
@@ -2050,7 +2168,7 @@ window.AlloyImage = $AI = window.psLib;
                 var height = imgData.height;
                 var xLength = R * 2 + 1;
 
-                //åŒºå—
+                //Çø¿é
                 for(var x = 0;x < width;x ++){
 
                     for(var y = 0;y < height;y ++){
@@ -2081,20 +2199,20 @@ window.AlloyImage = $AI = window.psLib;
 })("psLib");
 /*
  * @author: Bin Wang
- * @description: è°ƒæ•´RGB é¥±å’Œå’Œåº¦  
+ * @description: µ÷ÕûRGB ±¥ºÍºÍ¶È  
  *H (-2*Math.PI , 2 * Math.PI)  S (-100,100) I (-100,100)
- * ç€è‰²åŸç†  å‹¾é€‰ç€è‰²åï¼Œæ‰€æœ‰çš„åƒç´ ä¸ç®¡ä¹‹å‰æ˜¯ä»€ä¹ˆè‰²ç›¸ï¼Œéƒ½å˜æˆå½“å‰è®¾ç½®çš„è‰²ç›¸ï¼Œç„¶åé¥±å’Œåº¦å˜æˆç°åœ¨è®¾ç½®çš„é¥±å’Œåº¦ï¼Œä½†ä¿æŒæ˜åº¦ä¸ºåŸæ¥çš„åŸºç¡€ä¸ŠåŠ ä¸Šè®¾ç½®çš„æ˜åº¦
+ * ×ÅÉ«Ô­Àí  ¹´Ñ¡×ÅÉ«ºó£¬ËùÓĞµÄÏñËØ²»¹ÜÖ®Ç°ÊÇÊ²Ã´É«Ïà£¬¶¼±ä³Éµ±Ç°ÉèÖÃµÄÉ«Ïà£¬È»ºó±¥ºÍ¶È±ä³ÉÏÖÔÚÉèÖÃµÄ±¥ºÍ¶È£¬µ«±£³ÖÃ÷¶ÈÎªÔ­À´µÄ»ù´¡ÉÏ¼ÓÉÏÉèÖÃµÄÃ÷¶È
  * */
 ;(function(Ps){
 
     window[Ps].module("setHSI",function(P){
 
         var M = {
-            process: function(imgData,arg){//è°ƒèŠ‚äº®åº¦å¯¹æ¯”åº¦
+            process: function(imgData,arg){//µ÷½ÚÁÁ¶È¶Ô±È¶È
                 arg[0] = arg[0] / 180 * Math.PI;
                 arg[1] = arg[1] / 100 || 0;
                 arg[2] = arg[2] / 100 * 255 || 0;
-                arg[3] = arg[3] || false;//ç€è‰²
+                arg[3] = arg[3] || false;//×ÅÉ«
 
                 P.lib.dorsyMath.applyInHSI(imgData,function(i){
 
@@ -2121,7 +2239,7 @@ window.AlloyImage = $AI = window.psLib;
 })("psLib");
 /*
  * @author: Bin Wang
- * @description:é”åŒ– 
+ * @description:Èñ»¯ 
  *
  * */
 ;(function(Ps){
@@ -2162,7 +2280,7 @@ window.AlloyImage = $AI = window.psLib;
 })("psLib");
 /*
  * @author: Bin Wang
- * @description: ç°åº¦å¤„ç†
+ * @description: »Ò¶È´¦Àí
  *
  * */
 ;(function(Ps){
@@ -2191,7 +2309,7 @@ window.AlloyImage = $AI = window.psLib;
 })("psLib");
 /*
  * @author: Bin Wang
- * @description: åè‰²
+ * @description: ·´É«
  *
  * */
 ;(function(Ps){
@@ -2221,7 +2339,7 @@ window.AlloyImage = $AI = window.psLib;
 })("psLib");
 /*
  * @author: Bin Wang
- * @description:ç°åº¦é˜ˆå€¼ åšåªæœ‰2çº§ç°åº¦å›¾åƒå¤„ç† 
+ * @description:»Ò¶ÈãĞÖµ ×öÖ»ÓĞ2¼¶»Ò¶ÈÍ¼Ïñ´¦Àí 
  *
  * */
 ;(function(Ps){
@@ -2251,21 +2369,3 @@ window.AlloyImage = $AI = window.psLib;
     });
 
 })("psLib");
-/*
- * @author: Bin Wang
- * @description: worker 
- *
- * */
-;(function(Ps){
-
-    window[Ps].module("worker",function(P){
-
-        var M = {
-        };
-
-        return M;
-
-    });
-
-})("psLib");
-
