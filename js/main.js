@@ -1,5 +1,5 @@
 (function(){
-    var MsgBox = function(title, msg, inhtml){
+   var MsgBox = function(title, msg, inhtml){
 
       //初始化参数
       this.width = "500px";

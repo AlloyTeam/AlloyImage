@@ -1,0 +1,12 @@
+// ≈‰÷√Àµ√˜£∫https://github.com/modulejs/modjs
+module.exports = {
+    tasks:{
+        cat:{
+            source:['./js/alloyimage.base.js',"./js/module/*.js"]
+            ,dest: './js/combined/alloyimage.js'
+        }
+    },
+    targets:{
+        dist: "cat"
+    }
+};

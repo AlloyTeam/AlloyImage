@@ -9,7 +9,7 @@
 
         var M = {
 
-          /**
+            /**
              * 高斯模糊
              * @param  {Array} pixes  pix array
              * @param  {Number} width 图片的宽度

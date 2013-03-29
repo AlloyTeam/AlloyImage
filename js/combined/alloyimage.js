@@ -555,42 +555,6 @@ HTMLImageElement.prototype.loadOnce = function(func){
 window.AlloyImage = $AI = window.psLib;
 /*
  * @author: Bin Wang
- * @description:灰度扩展
- *
- * */
-;(function(Ps){
-
-    window[Ps].module("ImageEnhance",function(P){
-
-        var M = {
-            process: function(imgData,arg1,arg2){
-                var lamta = arg || 0.5;
-                var data = imgData.data;
-                var width = imgData.width;
-                var height = imgData.height;
-                var p1 = arg1 || {x: 10,y: 10};
-                var p2 = arg2 || {x: 50,y: 40};
-
-                function transfer(d){
-                }
-
-                for(var i = 0,n = data.length;i < n;i += 4){
-                    
-                }
-
-                imgData.data = data;
-
-                return imgData;
-            }
-        };
-
-        return M;
-
-    });
-
-})("psLib");
-/*
- * @author: Bin Wang
  * @description: Main add
  *
  * */
@@ -2004,7 +1968,7 @@ window.AlloyImage = $AI = window.psLib;
 
         var M = {
 
-          /**
+            /**
              * 高斯模糊
              * @param  {Array} pixes  pix array
              * @param  {Number} width 图片的宽度
@@ -2094,6 +2058,42 @@ window.AlloyImage = $AI = window.psLib;
                 }
                 //end
                 imgData.data = pixes;
+                return imgData;
+            }
+        };
+
+        return M;
+
+    });
+
+})("psLib");
+/*
+ * @author: Bin Wang
+ * @description:灰度扩展
+ *
+ * */
+;(function(Ps){
+
+    window[Ps].module("ImageEnhance",function(P){
+
+        var M = {
+            process: function(imgData,arg1,arg2){
+                var lamta = arg || 0.5;
+                var data = imgData.data;
+                var width = imgData.width;
+                var height = imgData.height;
+                var p1 = arg1 || {x: 10,y: 10};
+                var p2 = arg2 || {x: 50,y: 40};
+
+                function transfer(d){
+                }
+
+                for(var i = 0,n = data.length;i < n;i += 4){
+                    
+                }
+
+                imgData.data = data;
+
                 return imgData;
             }
         };
@@ -2288,8 +2288,10 @@ window.AlloyImage = $AI = window.psLib;
 /*
  * @author: Bin Wang
  * @description: 调整RGB 饱和和度  
- *H (-2*Math.PI , 2 * Math.PI)  S (-100,100) I (-100,100)
- * 着色原理  勾选着色后，所有的像素不管之前是什么色相，都变成当前设置的色相，然后饱和度变成现在设置的饱和度，但保持明度为原来的基础上加上设置的明度
+ * H (-2*Math.PI , 2 * Math.PI)  S (-100,100) I (-100,100)
+ * 着色原理  勾选着色后，所有的像素不管之前是什么色相，都变成当前设置的色相，
+ * 然后饱和度变成现在设置的饱和度，但保持明度为原来的基础上加上设置的明度
+ *
  * */
 ;(function(Ps){
 
