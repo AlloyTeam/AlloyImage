@@ -273,7 +273,6 @@ HTMLImageElement.prototype.loadOnce = function(func){
                 }
             }
 
-            /*
             //创建一个临时的psLib对象，防止因为合并显示对本身imgData影响
             var tempPsLib = new window[Ps](this.canvas.width, this.canvas.height);
             tempPsLib.add(this, "正常", 0, 0, isFast);
@@ -292,8 +291,7 @@ HTMLImageElement.prototype.loadOnce = function(func){
             this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
 
             //以临时对象data显示
-            */
-            this.context.putImageData(this.imgData, 0, 0);
+            this.context.putImageData(this.tempPsLib.imgData, 0, 0);
 
             if(selector){
                 document.querySelector(selector).appendChild(this.canvas);
