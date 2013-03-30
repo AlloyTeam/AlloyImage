@@ -1,8 +1,8 @@
-/*
+/**
  * @author: Bin Wang
  * @description:    腐蚀 
  *
- * */
+ */
 ;(function(Ps){
 
     window[Ps].module("corrode", function(P){

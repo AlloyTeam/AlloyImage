@@ -1,8 +1,8 @@
-/*
+/**
  * @author: Bin Wang
  * @description: 油画 
  *
- * */
+ */
 ;(function(Ps){
 
     window[Ps].module("oilPainting",function(P){

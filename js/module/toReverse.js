@@ -1,8 +1,8 @@
-/*
+/**
  * @author: Bin Wang
  * @description: 反色
  *
- * */
+ */
 ;(function(Ps){
 
     window[Ps].module("toReverse",function(P){

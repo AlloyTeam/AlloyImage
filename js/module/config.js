@@ -1,8 +1,8 @@
-/*
+/**
  * @author: Bin Wang
  * @description: Main config
  *
- * */
+ */
 ;(function(Ps){
 
     window[Ps].module("config",function(P){

@@ -1,7 +1,8 @@
-/* * @author: Bin Wang
+/** 
+ * @author: Bin Wang
  * @description: Main worker
  *
- * */
+ */
 ;(function(Ps){
 
     window[Ps].module("dorsyWorker",function(P){
@@ -10,7 +11,10 @@
 
         var M = function(aiObj){
             //static private single
-            var worker = new Worker("js/combined/alloyImage.js?" + (new Date()));
+            var worker = new Worker(P.path);// + "?" + (+ new Date()));
+            if(! worker){
+                throw new Error("使用worker时，alloyimage文件目录指定出错");
+            }
 
             var workerObj = {
                 //等待处理的队列
@@ -53,7 +57,6 @@
                     }else if(actionMethod == "add"){
                         //console.log("add");
 
-                        checkReadyState();
 
                         function checkReadyState(){
 
@@ -77,6 +80,8 @@
                                 }, WAITING_SECONDS);
                             }
                         }
+
+                        checkReadyState();
                     }else if(actionMethod == "show"){
                         aiObj.show(action[1], action[2], 1);
                         this.shiftAction();

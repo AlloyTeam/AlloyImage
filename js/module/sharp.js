@@ -1,8 +1,8 @@
-/*
+/**
  * @author: Bin Wang
  * @description:锐化 
  *
- * */
+ */
 ;(function(Ps){
 
     window[Ps].module("sharp",function(P){

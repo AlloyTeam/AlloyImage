@@ -1,9 +1,9 @@
-/*
+/**
  * @author: Bin Wang
  * @description:数学处理模块-core 
  * FFT 矩阵 复数 Langrange插值
  *
- * */
+ */
 ;(function(Ps){
 
     window[Ps].module("dorsyMath", function(P){

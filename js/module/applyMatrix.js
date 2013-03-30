@@ -1,8 +1,8 @@
-/*
+/**
  * @author: Bin Wang
  * @description: 查找边缘
  *
- * */
+ */
 ;(function(Ps){
 
     window[Ps].module("applyMatrix",function(P){

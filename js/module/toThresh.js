@@ -1,8 +1,8 @@
-/*
+/**
  * @author: Bin Wang
  * @description:灰度阈值 做只有2级灰度图像处理 
  *
- * */
+ */
 ;(function(Ps){
 
     window[Ps].module("toThresh",function(P){

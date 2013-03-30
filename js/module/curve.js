@@ -1,8 +1,8 @@
-/*
+/**
  * @author: Bin Wang
  * @description:    曲线 
  *
- * */
+ */
 ;(function(Ps){
 
     window[Ps].module("curve", function(P){

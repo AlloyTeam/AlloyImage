@@ -1,8 +1,8 @@
-/*
+/**
  * @author: Bin Wang
  * @description: 灰度处理
  *
- * */
+ */
 ;(function(Ps){
 
     window[Ps].module("toGray",function(P){

@@ -1,8 +1,8 @@
-/*
+/**
  * @author: Bin Wang
  * @description: 调整亮度对比度
  *
- * */
+ */
 ;(function(Ps){
 
     window[Ps].module("brightness",function(P){

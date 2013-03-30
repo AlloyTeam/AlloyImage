@@ -1,4 +1,4 @@
-/*
+/**
  * @author:Bin Wang
  * @description: Main
  *
@@ -19,20 +19,21 @@ Array.prototype.del = function(arr){
     return b;
 };
 
-var isMainThread;
- window = {};
-/*
-//给图像对象添加初次加载才触发事件，后续不触发
-HTMLImageElement.prototype.loadOnce = function(func){
-   var i = 0;
-   this.onload = function(){
-        if(!i) func.call(this, null);
-        i ++;
-   };
-};
-*/
+//worker适配
+try{
 
-//postMessage("OK");
+    //给图像对象添加初次加载才触发事件，后续不触发
+    HTMLImageElement.prototype.loadOnce = function(func){
+       var i = 0;
+       this.onload = function(){
+            if(!i) func.call(this, null);
+            i ++;
+       };
+    };
+}catch(e){
+    window = {};
+}
+
 ;(function(Ps){
 
     //被所有对象引用的一个对象,静态对象,主处理模块
@@ -186,10 +187,47 @@ HTMLImageElement.prototype.loadOnce = function(func){
         return P.lib.dorsyMath;
     };
 
-    //定义使用worker
+    window[Ps].setName = function(name){
+        P.name = name || "alloyimage.js";
+    };
+
+    //定义使用worker,需要给出alloyimage所在路径
     window[Ps].useWorker = function(path){
+        
+        //如果不能使用worker，直接降级为单线程
+        if(! window.Worker){
+            this.useWorker = 0;
+
+            console.log("AI_WARNING: 浏览器不支持web worker, 自动切换为单线程\nAI_WARNING: the brower doesn't support Web Worker");
+            return;
+        }
+
+        var path = path || "";
+
+        //如果以目录给出，默认为默认文件名
+        if(/[\/\\]$/.test(path)){
+            path = path + P.name;
+        }else{
+        }
+
+        if(path == "") path = "alloyimage.js";
+
         P.useWorker = 1;
         P.path = path;
+
+        //检测文件是否存在
+        var xhr = new XMLHttpRequest();
+        xhr.onreadystatechange = function(){
+
+            if(xhr.readyState == 4){
+
+                if(xhr.status == "404"){
+                    P.destroySelf("AI_ERROR：使用worker时，ai文件路径指定错误\nAI_ERROR: error occured while using web worker since indicate the wrong path of file ai");
+                }
+            }
+        };
+        xhr.open("GET", path, false);
+        xhr.send();
     };
 
     //worker监听

@@ -1,8 +1,8 @@
-/*
+/**
  * @author: Bin Wang
  * @description:   添加杂色 
  *
- * */
+ */
 ;(function(Ps){
 
     window[Ps].module("noise",function(P){

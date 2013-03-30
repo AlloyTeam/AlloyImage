@@ -1,8 +1,8 @@
-/*
+/**
  * @author: az@alloyTeam Bin Wang
  * @description: 高斯模糊
  *
- * */
+ */
 ;(function(Ps){
 
     window[Ps].module("gaussBlur",function(P){

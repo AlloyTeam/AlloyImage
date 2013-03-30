@@ -1,8 +1,8 @@
-/*
+/**
  * @author: Bin Wang
  * @description:     暗角
  *
- * */
+ */
 ;(function(Ps){
 
     window[Ps].module("darkCorner", function(P){

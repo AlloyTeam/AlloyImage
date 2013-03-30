@@ -1,8 +1,8 @@
-/*
+/**
  * @author: Bin Wang
  * @description:灰度扩展
  *
- * */
+ */
 ;(function(Ps){
 
     window[Ps].module("ImageEnhance",function(P){

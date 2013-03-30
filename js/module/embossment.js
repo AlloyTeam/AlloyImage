@@ -1,8 +1,8 @@
-/*
+/**
  * @author: Bin Wang
  * @description:  浮雕效果
  *
- * */
+ */
 ;(function(Ps){
 
     window[Ps].module("embossment",function(P){
