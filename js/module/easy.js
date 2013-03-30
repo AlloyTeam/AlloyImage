@@ -17,10 +17,10 @@
                         ).act("亮度",-10,5);
                     },
                     sketch: function(){//素描
-                        var _this = this.act("灰度处理").clone();
+                        var _this = this.clone();
                         return this.add(
                             _this.act("反色").act("高斯模糊",8), "颜色减淡"
-                        ).act("锐化",1);
+                        ).act("toGray").act("锐化",1);
                     },
                     softEnhancement: function(){//自然增强
                       return this.act("曲线",[0,190,255],[0,229,255]);

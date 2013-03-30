@@ -273,22 +273,31 @@ HTMLImageElement.prototype.loadOnce = function(func){
                 }
             }
 
-            //创建一个临时的psLib对象，防止因为合并显示对本身imgData影响
-            var tempPsLib = new window[Ps](this.canvas.width, this.canvas.height);
-            tempPsLib.add(this, "正常", 0, 0, isFast);
-            this.tempPsLib = tempPsLib;
+            //如果其上无其他挂载图层，加快处理
+            if(this.layers.length == 0){
+                this.tempPsLib = {
+                    imgData: this.imgData
+                };
+            }else{
 
-            //将挂接到本对象上的图层对象 一起合并到临时的psLib对象上去 用于显示合并的结果，不会影响每个图层，包括本图层
-            for(var i = 0; i < this.layers.length; i ++){
-                var tA = this.layers[i];
-                var layers = tA[0].layers;
-                var currLayer = tA[0];
+                //创建一个临时的psLib对象，防止因为合并显示对本身imgData影响
+                var tempPsLib = new window[Ps](this.canvas.width, this.canvas.height);
+                tempPsLib.add(this, "正常", 0, 0, isFast);
+                this.tempPsLib = tempPsLib;
 
-                if(layers[layers.length - 1] && layers[layers.length - 1][0].type == 1) currLayer = layers[layers.length - 1][0];
-                tempPsLib.add(currLayer, tA[1], tA[2], tA[3], isFast);
+                //将挂接到本对象上的图层对象 一起合并到临时的psLib对象上去 用于显示合并的结果，不会影响每个图层，包括本图层
+                for(var i = 0; i < this.layers.length; i ++){
+                    var tA = this.layers[i];
+                    var layers = tA[0].layers;
+                    var currLayer = tA[0];
+
+                    if(layers[layers.length - 1] && layers[layers.length - 1][0].type == 1) currLayer = layers[layers.length - 1][0];
+                    tempPsLib.add(currLayer, tA[1], tA[2], tA[3], isFast);
+                }
+
+                this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
+
             }
-
-            this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
 
             //以临时对象data显示
             this.context.putImageData(this.tempPsLib.imgData, 0, 0);
@@ -303,10 +312,20 @@ HTMLImageElement.prototype.loadOnce = function(func){
         },
 
         //替换原来的图片
-        replace: function(img){
+        replace: function(img, workerFlag){
+            if(workerFlag){
+            }else{
+                if(this.useWorker){
+                    this.dorsyWorker.queue.push(['replace', img]);
+                    checkStartWorker.call(this);
+
+                    return this;
+                }
+            }
+
             if(img){
                 img.onload = function(){};
-                img.src = this.save();
+                img.src = this.save(0, workerFlag);
             }
 
             return this;
@@ -412,7 +431,17 @@ HTMLImageElement.prototype.loadOnce = function(func){
         },
 
         //返回一个合成后的图像 png base64
-        save: function(isFast){
+        save: function(isFast, workerFlag){
+            if(workerFlag){
+            }else{
+                if(this.useWorker){
+                    this.dorsyWorker.queue.push(['save']);
+                    checkStartWorker.call(this);
+
+                    return this;
+                }
+            }
+
             if(! this.layers.length){
                 this.context.putImageData(this.imgData, 0, 0);
                 return this.canvas.toDataURL(); 
@@ -1688,14 +1717,17 @@ window.AlloyImage = $AI = window.psLib;
                         return;
                     }
 
+                    //调用方法
+                    var actionMethod = action[0];
+
                     //此处理为动作
-                    if(action[0] == "act"){
+                    if(actionMethod == "act"){
 
                         //向worker发消息
                         worker.postMessage(["act", action[1], aiObj.imgData, action[2]]);
 
                     //为添加要检查添加的图层是否处理完成
-                    }else if(action[0] == "add"){
+                    }else if(actionMethod == "add"){
                         //console.log("add");
 
                         checkReadyState();
@@ -1722,19 +1754,25 @@ window.AlloyImage = $AI = window.psLib;
                                 }, WAITING_SECONDS);
                             }
                         }
-                    }else if(action[0] == "show"){
+                    }else if(actionMethod == "show"){
                         aiObj.show(action[1], action[2], 1);
                         this.shiftAction();
 
                     //遇到回调出现
-                    }else if(action[0] == "complete"){
+                    }else if(actionMethod == "complete"){
                         //console.log("complete trigger");
                         action[1] && action[1]();
                         this.shiftAction();
 
                     //如果是复制图层
-                    }else if(action[0] == "clone"){
+                    }else if(actionMethod == "clone"){
                         aiObj.clone(1);
+                        this.shiftAction();
+                    }else if(actionMethod == "save"){
+                        aiObj.save(0, 1);
+                        this.shiftAction();
+                    }else if(actionMethod == "replace"){
+                        aiObj.replace(action[1], 1);
                         this.shiftAction();
                     }
                 },
@@ -1859,10 +1897,10 @@ window.AlloyImage = $AI = window.psLib;
                         ).act("亮度",-10,5);
                     },
                     sketch: function(){//素描
-                        var _this = this.act("灰度处理").clone();
+                        var _this = this.clone();
                         return this.add(
                             _this.act("反色").act("高斯模糊",8), "颜色减淡"
-                        ).act("锐化",1);
+                        ).act("toGray").act("锐化",1);
                     },
                     softEnhancement: function(){//自然增强
                       return this.act("曲线",[0,190,255],[0,229,255]);

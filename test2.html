@@ -5,7 +5,7 @@
 	<title></title>
 </head>
 <body>
-<img id="pic" src="img/12.jpg" alt="" />
+<img id="pic" src="img/7.jpg" alt="" />
 <div id="m"></div>
 <script type="text/javascript">
 document.write('<script src="js\/combined\/alloyimage.js?' + new Date() + '" type="text\/javascript"><\/script>');
@@ -15,7 +15,7 @@ window.onload = function(){
     var _startTime = + new Date();
     var img = document.getElementById("pic");
     $AI.useWorker("");
-    var m = $AI(img).ps("复古").show("#m");
+    var m = $AI(img).ps("素描").show("#m");
 
       /*.act("查找边缘").act("浮雕效果").show().complete(function(){
         console.log((+ new Date() - _startTime) / 1000 + "s");

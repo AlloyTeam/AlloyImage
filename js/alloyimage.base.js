@@ -273,22 +273,31 @@ HTMLImageElement.prototype.loadOnce = function(func){
                 }
             }
 
-            //创建一个临时的psLib对象，防止因为合并显示对本身imgData影响
-            var tempPsLib = new window[Ps](this.canvas.width, this.canvas.height);
-            tempPsLib.add(this, "正常", 0, 0, isFast);
-            this.tempPsLib = tempPsLib;
+            //如果其上无其他挂载图层，加快处理
+            if(this.layers.length == 0){
+                this.tempPsLib = {
+                    imgData: this.imgData
+                };
+            }else{
 
-            //将挂接到本对象上的图层对象 一起合并到临时的psLib对象上去 用于显示合并的结果，不会影响每个图层，包括本图层
-            for(var i = 0; i < this.layers.length; i ++){
-                var tA = this.layers[i];
-                var layers = tA[0].layers;
-                var currLayer = tA[0];
+                //创建一个临时的psLib对象，防止因为合并显示对本身imgData影响
+                var tempPsLib = new window[Ps](this.canvas.width, this.canvas.height);
+                tempPsLib.add(this, "正常", 0, 0, isFast);
+                this.tempPsLib = tempPsLib;
 
-                if(layers[layers.length - 1] && layers[layers.length - 1][0].type == 1) currLayer = layers[layers.length - 1][0];
-                tempPsLib.add(currLayer, tA[1], tA[2], tA[3], isFast);
+                //将挂接到本对象上的图层对象 一起合并到临时的psLib对象上去 用于显示合并的结果，不会影响每个图层，包括本图层
+                for(var i = 0; i < this.layers.length; i ++){
+                    var tA = this.layers[i];
+                    var layers = tA[0].layers;
+                    var currLayer = tA[0];
+
+                    if(layers[layers.length - 1] && layers[layers.length - 1][0].type == 1) currLayer = layers[layers.length - 1][0];
+                    tempPsLib.add(currLayer, tA[1], tA[2], tA[3], isFast);
+                }
+
+                this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
+
             }
-
-            this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
 
             //以临时对象data显示
             this.context.putImageData(this.tempPsLib.imgData, 0, 0);
@@ -303,10 +312,20 @@ HTMLImageElement.prototype.loadOnce = function(func){
         },
 
         //替换原来的图片
-        replace: function(img){
+        replace: function(img, workerFlag){
+            if(workerFlag){
+            }else{
+                if(this.useWorker){
+                    this.dorsyWorker.queue.push(['replace', img]);
+                    checkStartWorker.call(this);
+
+                    return this;
+                }
+            }
+
             if(img){
                 img.onload = function(){};
-                img.src = this.save();
+                img.src = this.save(0, workerFlag);
             }
 
             return this;
@@ -412,7 +431,17 @@ HTMLImageElement.prototype.loadOnce = function(func){
         },
 
         //返回一个合成后的图像 png base64
-        save: function(isFast){
+        save: function(isFast, workerFlag){
+            if(workerFlag){
+            }else{
+                if(this.useWorker){
+                    this.dorsyWorker.queue.push(['save']);
+                    checkStartWorker.call(this);
+
+                    return this;
+                }
+            }
+
             if(! this.layers.length){
                 this.context.putImageData(this.imgData, 0, 0);
                 return this.canvas.toDataURL(); 

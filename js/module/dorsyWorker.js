@@ -40,14 +40,17 @@
                         return;
                     }
 
+                    //调用方法
+                    var actionMethod = action[0];
+
                     //此处理为动作
-                    if(action[0] == "act"){
+                    if(actionMethod == "act"){
 
                         //向worker发消息
                         worker.postMessage(["act", action[1], aiObj.imgData, action[2]]);
 
                     //为添加要检查添加的图层是否处理完成
-                    }else if(action[0] == "add"){
+                    }else if(actionMethod == "add"){
                         //console.log("add");
 
                         checkReadyState();
@@ -74,19 +77,25 @@
                                 }, WAITING_SECONDS);
                             }
                         }
-                    }else if(action[0] == "show"){
+                    }else if(actionMethod == "show"){
                         aiObj.show(action[1], action[2], 1);
                         this.shiftAction();
 
                     //遇到回调出现
-                    }else if(action[0] == "complete"){
+                    }else if(actionMethod == "complete"){
                         //console.log("complete trigger");
                         action[1] && action[1]();
                         this.shiftAction();
 
                     //如果是复制图层
-                    }else if(action[0] == "clone"){
+                    }else if(actionMethod == "clone"){
                         aiObj.clone(1);
+                        this.shiftAction();
+                    }else if(actionMethod == "save"){
+                        aiObj.save(0, 1);
+                        this.shiftAction();
+                    }else if(actionMethod == "replace"){
+                        aiObj.replace(action[1], 1);
                         this.shiftAction();
                     }
                 },

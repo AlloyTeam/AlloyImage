@@ -206,6 +206,7 @@
     };
     
     window.addEventListener("DOMContentLoaded", function(){
+        $AI.useWorker();
         Main.init();
     }, false);
 
