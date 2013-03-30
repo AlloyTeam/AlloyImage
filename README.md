@@ -1,4 +1,4 @@
-[AlloyPhoto](http://alloyteam.github.com/AlloyPhoto/) - Image Processing Lib Based On HTML5
+[AlloyImage](http://alloyteam.github.com/AlloyPhoto/) - Image Processing Lib Based On HTML5
 ===========================
 
 ### Fetures
@@ -10,10 +10,12 @@
 5. 多种基本滤镜处理效果
 6. 多种组合风格效果
 
+7. <span style='color:red'>保持接口一致的单、多线程支持</span>
+
 ### Changelog
 
-#### AlloyPhoto 1.1
+#### AlloyImage 1.1
 1. 优化代码，组合效果处理性能提升80%
 2. 添加木雕组合效果
 
-#### AlloyPhoto 1.0
+#### AlloyImage 1.0
