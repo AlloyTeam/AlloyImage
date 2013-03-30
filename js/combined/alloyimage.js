@@ -273,7 +273,6 @@ HTMLImageElement.prototype.loadOnce = function(func){
                 }
             }
 
-            /*
             //创建一个临时的psLib对象，防止因为合并显示对本身imgData影响
             var tempPsLib = new window[Ps](this.canvas.width, this.canvas.height);
             tempPsLib.add(this, "正常", 0, 0, isFast);
@@ -292,8 +291,7 @@ HTMLImageElement.prototype.loadOnce = function(func){
             this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
 
             //以临时对象data显示
-            */
-            this.context.putImageData(this.imgData, 0, 0);
+            this.context.putImageData(this.tempPsLib.imgData, 0, 0);
 
             if(selector){
                 document.querySelector(selector).appendChild(this.canvas);
@@ -1660,7 +1658,7 @@ window.AlloyImage = $AI = window.psLib;
 
         var M = function(aiObj){
             //static private single
-            var worker = new Worker("js/combined/alloyimage.js?" + (new Date()));
+            var worker = new Worker("js/combined/alloyImage.js?" + (new Date()));
 
             var workerObj = {
                 //等待处理的队列
@@ -2004,7 +2002,7 @@ window.AlloyImage = $AI = window.psLib;
 
         var M = {
 
-          /**
+            /**
              * 高斯模糊
              * @param  {Array} pixes  pix array
              * @param  {Number} width 图片的宽度
@@ -2288,8 +2286,10 @@ window.AlloyImage = $AI = window.psLib;
 /*
  * @author: Bin Wang
  * @description: 调整RGB 饱和和度  
- *H (-2*Math.PI , 2 * Math.PI)  S (-100,100) I (-100,100)
- * 着色原理  勾选着色后，所有的像素不管之前是什么色相，都变成当前设置的色相，然后饱和度变成现在设置的饱和度，但保持明度为原来的基础上加上设置的明度
+ * H (-2*Math.PI , 2 * Math.PI)  S (-100,100) I (-100,100)
+ * 着色原理  勾选着色后，所有的像素不管之前是什么色相，都变成当前设置的色相，
+ * 然后饱和度变成现在设置的饱和度，但保持明度为原来的基础上加上设置的明度
+ *
  * */
 ;(function(Ps){
 
