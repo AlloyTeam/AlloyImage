@@ -102,7 +102,6 @@
                     var rTop = top + (y - dy);
                     if(rLeft < 0) rLeft = 0;
                     if(rTop < 0) rTop = 0;
-                    console.log("x:" + x + " y:" + y + "| left:" + left + ",top:" + top + "| dx:" + dx + ",dy:" + dy);
 
                     pic.style.left = rLeft + "px";
                     pic.style.top = rTop + "px";
@@ -137,9 +136,10 @@
 
                     setTimeout(function(){
                         var t = + new Date();
-                        AP.ps(text).replace(img);
-                        console.log(text + "：" + (+ new Date() - t) / 1000 + "s");
-                        msgEle.style.display = "none";
+                        AP.ps(text).replace(img).complete(function(){
+                            console.log(text + "：" + (+ new Date() - t) / 1000 + "s");
+                            msgEle.style.display = "none";
+                        });
                     }, 2);
                 }
             });
@@ -244,6 +244,8 @@
 
     window.addEventListener("DOMContentLoaded", function(){
         msgEle = document.getElementById("infoMsg");
+
+        //$AI.useWorker("js/combined/alloyimage.js");
         Main.init();
     }, false);
 
