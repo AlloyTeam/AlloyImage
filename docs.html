@@ -407,6 +407,45 @@ img.loadOnce(function(){//loadOnce添加为alloyPhoto添加
 });
 </code></pre>
 
+<h3 id="mutiThread">使用多线程处理<span style="color:red;position:relative;top:-5px;left:5px;font-size:12px;">New</span></h3>
+<h4>开启多线程</h4>    
+<p>
+    注:alloyimage1.1及以下版本不支持此功能,如需要使用可以用多线程测试link中引用的alloyimage版本或者git上最新源码,多图层处理中的API(addLayer, swap, deleteLayers)暂时不支持此功能.
+    </p>
+    <p>
+    用法: $AI.useWorker(String path);   或者 AlloyImage.useWorker(String path);<br />
+      说明: 其中,path参数为alloyimage文件相对当前html文档的路径<br />
+      不需要更改原AI代码,只需要使用AI代码前加上此句即可,删除此句,便是传统单线程.加上就是多线程.<br />
+      <pre><code>
+window.onload = function(){
+    var img = document.getElementById("pic");
+
+    //此句为开启多线程
+    $AI.useWorker("js/combined/alloyimage.js");
+
+    $AI(img).ps("素描").show("#m");
+};
+      </code></pre>
+    </p>
+<h4>使用回调</h4>
+<p>
+用法: AlloyImageObj complete(Function callback);<br />
+说明: 处理完之后的回调<br />
+注意: 此方法单线程同样支持<br />
+      <pre><code>
+window.onload = function(){
+    var img = document.getElementById("pic");
+
+    //此句为开启多线程
+    $AI.useWorker("js/combined/alloyimage.js");
+
+    $AI(img).ps("素描").show("#m").complete(function(){
+      console.log("img OK");
+    });
+};
+      </code></pre>
+      </p>
+
 <h3>demo</h3>
 
 <p>1.鼠标滑上变彩色，移开灰度</p>
