@@ -8,7 +8,7 @@
 <a href='old.html' style='position:absolute;z-index:10; top:0;left:0;'>原图</a>
 <script type="text/javascript" src="js/combined/alloyimage.js"></script>
 <script type="text/javascript">
-$AI.useWorker("");
+$AI.useWorker("js/combined/alloyimage.js");
 
 //给图像对象添加初次加载才触发事件，后续不触发
 HTMLImageElement.prototype.loadOnce = function(func){
