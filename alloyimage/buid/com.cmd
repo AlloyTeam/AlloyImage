@@ -1,4 +1,4 @@
-java -jar compiler.jar js\combined\alloyimage.js --js_output_file=js\combined\temp.js
-del js\combined\alloyimage.js
-rename js\combined\temp.js alloyimage.js
-del js\combined\temp.js
+java -jar compiler.jar ..\combined\alloyimage.js --js_output_file=..\combined\temp.js
+del ..\combined\alloyimage.js
+rename ..\combined\temp.js alloyimage.js
+del ..\combined\temp.js
