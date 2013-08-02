@@ -2522,7 +2522,7 @@ window.AlloyImage = $AI = window.psLib;
             getColor: {
                 process: function(imgData, args){
                 
-                  dM = P.lib.dorsyMath;
+                  var dM = P.lib.dorsyMath;
                   var xyToIFun = dM.xyToIFun(imgData.width), i;
 
                   var sum = [0, 0, 0];
