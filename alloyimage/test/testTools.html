@@ -1,0 +1,25 @@
+<!DOCTYPE HTML>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title></title>
+</head>
+<body>
+<script type="text/javascript" src="../combined/alloyimage.js"></script>	
+<script type="text/javascript">
+function getColor(num){
+  var img = new Image();
+  img.src = "../res/img/" + num + ".jpg";
+
+  img.onload = function(){
+    var ai = $AI(this);
+    var color = ai.Tools.getColor();
+    ai.show();
+    $AI(200, 200, color).show();
+  };
+}
+
+getColor(10);
+</script>
+</body>
+</html>

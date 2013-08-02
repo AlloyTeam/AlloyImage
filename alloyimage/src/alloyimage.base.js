@@ -6,12 +6,15 @@
  */
 
 //删除几个元素   arr为数组下标 
+//Delete some elements from Array, param arr stands for the indexes of elements being deleted
 Array.prototype.del = function(arr){
 
     //对数组重新排序
+    //Sort array
     arr.sort();
 
     //复制数组，防止污染
+    //Clone array in case of being modified
     var b = this.concat([]);
     for(var i = arr.length - 1; i >= 0; i --){
         b = b.slice(0, arr[i]).concat(b.slice(arr[i] + 1));
@@ -21,6 +24,7 @@ Array.prototype.del = function(arr){
 };
 
 //worker适配
+//For web worker adapting different cases
 try{
 
     //给图像对象添加初次加载才触发事件，后续不触发
@@ -38,6 +42,7 @@ try{
 ;(function(Ps){
 
     //被所有对象引用的一个对象,静态对象,主处理模块
+    //主处理模块要求与DOM操作无关
     var P = {
 
         //模块池
@@ -105,11 +110,23 @@ try{
 
         //对图像进行掩模算子变换
         applyMatrix: function(imgData, matrixArr){
+        },
+
+        //args[0]代表处理方法，args[1...]代表参数
+        tools: function(imgData, args){
+            var actMethod = args[0];
+
+            if(this.lib.Tools[actMethod]){
+                return this.lib.Tools[actMethod].process(imgData, args);
+            }else{
+                throw new Error("AI_ERROR: 不存在的工具方法_" + actMethod);
+            }
         }
     };
 
     //返回外部接口
     window[Ps] = function(img, width, height){
+        var _this = this;
 
         if(this instanceof window[Ps]){
             //记录时间 time trace
@@ -169,6 +186,15 @@ try{
             if(this.useWorker){
                 //如果使用worker,则初始化一个dorsyWorker封装实例出来
                 this.dorsyWorker = P.lib.dorsyWorker(this);
+            }
+
+            //mix P.lib.Tools method to $AI.Tools
+            if(P.lib.Tools){
+                for(var i in P.lib.Tools){
+                    this.Tools[i] = function(args){
+                        return _this.Tools(i, args);
+                    };
+                }
             }
             
         }else{
@@ -601,6 +627,11 @@ try{
             }else{
                 func();
             }
+        },
+
+        //图像的工具方法 不会返回AI本身
+        Tools: function(args){
+            return P.tools(this.imgData, arguments);
         }
     };
 
