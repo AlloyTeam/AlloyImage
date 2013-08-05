@@ -5,7 +5,7 @@
  */
 ;(function(Ps){
 
-    window[Ps].module("borderline",function(P){
+    window[Ps].module("Filter.borderline",function(P){
 
         var M = {
             process: function(imgData,arg){

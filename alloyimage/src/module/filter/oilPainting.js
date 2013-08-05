@@ -5,7 +5,7 @@
  */
 ;(function(Ps){
 
-    window[Ps].module("oilPainting",function(P){
+    window[Ps].module("Filter.oilPainting",function(P){
 
         var M = {
             process: function(imgData,arg){

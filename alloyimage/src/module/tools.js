@@ -143,6 +143,46 @@
                   var color = "rgb(" + parseInt(rgb.R) + "," + parseInt(rgb.G) + "," + parseInt(rgb.B) + ")";
                   return color;
                 }
+            },
+
+            toText: {
+                process: function(imgData, args){
+                    var data = imgData.data,
+                        width = imgData.width,
+                        height = imgData.height,
+                        averageG,
+
+                        //灰度串
+                        str = args[0] || ".:;!#@",
+
+                        //记录位置信息Arr
+                        positionArr = [],
+                        
+                        //结果字符
+                        resultStr = "";
+                        
+                        console.log(str);
+
+                    var dM = P.lib.dorsyMath;
+                    var xyToIFun = dM.xyToIFun(imgData.width);
+
+                    //创建div串
+                    var i, everyLevel = 255 / str.length, j;
+                    for(var x = 0; x < width; x += 1){
+                        for(var y = 0; y < height; y += 1){
+                            i = xyToIFun(x, y, 0);
+                            averageG = (data[i] + data[i + 1] + data[i + 2]) / 3;
+
+                            j = parseInt(averageG / everyLevel);
+
+                            resultStr += str[j];
+                        }
+
+                        resultStr += "<br />";
+                    }
+
+                    return resultStr;
+                }
             }
         };
 

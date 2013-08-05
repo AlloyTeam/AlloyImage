@@ -55,7 +55,29 @@ try{
 
         //模块注册方法
         module: function(name, func){
-            this.lib[name] = func.call(null, this);
+            var moduleArr = [name];
+            if(/\./g.test(name)){
+                moduleArr = name.split(".");
+            }
+
+            var count = -1, _this = this;
+            function addModule(obj){
+                count ++;
+
+                var attr = moduleArr[count];
+
+                //递归出口
+                if(count == moduleArr.length - 1){
+                    obj[attr] = func.call(null, _this);
+
+                    return;
+                }
+
+                obj[attr] ? addModule(obj[attr]) : addModule(obj[attr] = {});
+            }
+
+            addModule(this.lib);
+
         },
 
         //加载文件
@@ -88,13 +110,31 @@ try{
             //得到实际的模块名称
             var moduleName = this.lib.config.getModuleName(method);
 
-            //交由实际处理数据单元处理
-            return this.lib[moduleName].process(imgData, args);
+            var spaceName = moduleName.spaceName;
+            var actName = moduleName.actName;
+
+            switch(spaceName){
+                case "Filter":
+                    return this.lib[spaceName][actName].process(imgData, args);
+                    //break;
+
+                case "Alteration":
+                    return this.lib[actName].process(imgData, args);
+                    //break;
+
+                case "ComEffect":
+                    return this.lib[actName].process(imgData, args);
+                    //break;
+
+                default:
+                    //逻辑几乎不会到这里 出于好的习惯，加上default
+                    this.destroySelf("AI_ERROR: ");
+            }
         },
 
         //组合效果映射器
         reflectEasy: function(effect){
-            var fun = this.lib.config.getEasyFun(effect);
+            var fun = this.lib.config.getEasyFun(effect).actName;
             return this.lib.easy.getFun(fun);
         },
 
@@ -114,7 +154,7 @@ try{
 
         //args[0]代表处理方法，args[1...]代表参数
         tools: function(imgData, args){
-            var actMethod = args[0];
+            var actMethod = Array.prototype.shift.call(args);
 
             if(this.lib.Tools[actMethod]){
                 return this.lib.Tools[actMethod].process(imgData, args);

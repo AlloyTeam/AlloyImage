@@ -5,7 +5,7 @@
  */
 ;(function(Ps){
 
-    window[Ps].module("darkCorner", function(P){
+    window[Ps].module("Filter.darkCorner", function(P){
 
         var M = {
             process: function(imgData,arg){

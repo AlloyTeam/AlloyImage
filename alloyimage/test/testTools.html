@@ -5,6 +5,7 @@
 	<title></title>
 </head>
 <body>
+<div id="t"></div>
 <script type="text/javascript" src="../combined/alloyimage.js"></script>	
 <script type="text/javascript">
 function getColor(num){
@@ -19,7 +20,20 @@ function getColor(num){
   };
 }
 
-getColor(10);
+function getText(num){
+  var img = new Image();
+  img.src = "../res/img/" + num + ".jpg";
+
+  img.onload = function(){
+    var ai = $AI(this);
+    ai.show();
+    var text = ai.Tools.toText();
+    document.getElementById("t").innerHTML = text;
+  };
+}
+
+//getColor(12);
+getText(5);
 </script>
 </body>
 </html>

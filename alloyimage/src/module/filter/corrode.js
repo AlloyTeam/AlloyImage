@@ -5,7 +5,7 @@
  */
 ;(function(Ps){
 
-    window[Ps].module("corrode", function(P){
+    window[Ps].module("Filter.corrode", function(P){
 
         var M = {
             process: function(imgData, arg){

@@ -5,7 +5,7 @@
  */
 ;(function(Ps){
 
-    window[Ps].module("dotted",function(P){
+    window[Ps].module("Filter.dotted",function(P){
 
         var M = {
             process: function(imgData,arg){//调节亮度对比度

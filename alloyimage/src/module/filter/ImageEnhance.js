@@ -5,7 +5,7 @@
  */
 ;(function(Ps){
 
-    window[Ps].module("ImageEnhance",function(P){
+    window[Ps].module("Filter.ImageEnhance",function(P){
 
         var M = {
             process: function(imgData,arg1,arg2){

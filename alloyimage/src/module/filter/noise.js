@@ -5,7 +5,7 @@
  */
 ;(function(Ps){
 
-    window[Ps].module("noise",function(P){
+    window[Ps].module("Filter.noise",function(P){
 
         var M = {
             process: function(imgData,arg){

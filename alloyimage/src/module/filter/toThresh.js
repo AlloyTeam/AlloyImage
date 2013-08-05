@@ -5,11 +5,11 @@
  */
 ;(function(Ps){
 
-    window[Ps].module("toThresh",function(P){
+    window[Ps].module("Filter.toThresh",function(P){
 
         var M = {
             process: function(imgData,arg){
-                imgData = P.lib.toGray.process(imgData);
+                imgData = P.reflect("toGray", imgData);
                 var data = imgData.data;
 
                 var arg = arg[0] || 128;

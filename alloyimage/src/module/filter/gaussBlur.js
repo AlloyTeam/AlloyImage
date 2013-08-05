@@ -5,7 +5,7 @@
  */
 ;(function(Ps){
 
-    window[Ps].module("gaussBlur",function(P){
+    window[Ps].module("Filter.gaussBlur",function(P){
 
         var M = {
 

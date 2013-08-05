@@ -55,7 +55,29 @@ try{
 
         //模块注册方法
         module: function(name, func){
-            this.lib[name] = func.call(null, this);
+            var moduleArr = [name];
+            if(/\./g.test(name)){
+                moduleArr = name.split(".");
+            }
+
+            var count = -1, _this = this;
+            function addModule(obj){
+                count ++;
+
+                var attr = moduleArr[count];
+
+                //递归出口
+                if(count == moduleArr.length - 1){
+                    obj[attr] = func.call(null, _this);
+
+                    return;
+                }
+
+                obj[attr] ? addModule(obj[attr]) : addModule(obj[attr] = {});
+            }
+
+            addModule(this.lib);
+
         },
 
         //加载文件
@@ -88,13 +110,31 @@ try{
             //得到实际的模块名称
             var moduleName = this.lib.config.getModuleName(method);
 
-            //交由实际处理数据单元处理
-            return this.lib[moduleName].process(imgData, args);
+            var spaceName = moduleName.spaceName;
+            var actName = moduleName.actName;
+
+            switch(spaceName){
+                case "Filter":
+                    return this.lib[spaceName][actName].process(imgData, args);
+                    //break;
+
+                case "Alteration":
+                    return this.lib[actName].process(imgData, args);
+                    //break;
+
+                case "ComEffect":
+                    return this.lib[actName].process(imgData, args);
+                    //break;
+
+                default:
+                    //逻辑几乎不会到这里 出于好的习惯，加上default
+                    this.destroySelf("AI_ERROR: ");
+            }
         },
 
         //组合效果映射器
         reflectEasy: function(effect){
-            var fun = this.lib.config.getEasyFun(effect);
+            var fun = this.lib.config.getEasyFun(effect).actName;
             return this.lib.easy.getFun(fun);
         },
 
@@ -114,7 +154,7 @@ try{
 
         //args[0]代表处理方法，args[1...]代表参数
         tools: function(imgData, args){
-            var actMethod = args[0];
+            var actMethod = Array.prototype.shift.call(args);
 
             if(this.lib.Tools[actMethod]){
                 return this.lib.Tools[actMethod].process(imgData, args);
@@ -1007,97 +1047,92 @@ window.AlloyImage = $AI = window.psLib;
 
         //记录映射关系
         var Reflection = {
-            "灰度处理": "toGray",
-            "反色": "toReverse",
-            "灰度阈值": "toThresh",
-            "高斯模糊": "gaussBlur",
-            "亮度": "brightness",
-            "浮雕效果": "embossment",
-            "查找边缘": "borderline",
-            "色相/饱和度调节": "setHSI",
-            "马赛克": "mosaic",
-            "油画": "oilPainting",
-            "腐蚀": "corrode",
-            "锐化" : "sharp",
-            "添加杂色" : "noise",
-            "曲线" : "curve",
-            "暗角" : "darkCorner",
-            "喷点" : "dotted"
+            //调整
+            Alteration: {
+                "亮度": "brightness",
+                "色相/饱和度调节": "setHSI",
+                "曲线" : "curve"
+            },
+
+            //滤镜
+            Filter: {
+                "灰度处理": "toGray",
+                "反色": "toReverse",
+                "灰度阈值": "toThresh",
+                "高斯模糊": "gaussBlur",
+                "浮雕效果": "embossment",
+                "查找边缘": "borderline",
+                "马赛克": "mosaic",
+                "油画": "oilPainting",
+                "腐蚀": "corrode",
+                "锐化" : "sharp",
+                "添加杂色" : "noise",
+                "暗角" : "darkCorner",
+                "喷点" : "dotted"
+            },
+
+            ComEffect: {
+                "美肤" : "softenFace",
+                "素描" : "sketch",
+                "自然增强" : "softEnhancement",
+                "紫调" : "purpleStyle",
+                "柔焦" : "soften",
+                "复古" : "vintage",
+                "黑白" : "gray",
+                "仿lomo" : "lomo",
+                "亮白增强" : "strongEnhancement",
+                "灰白" : "strongGray",
+                "灰色" : "lightGray",
+                "暖秋" : "warmAutumn",
+                "木雕" : "carveStyle",
+                "粗糙" : "rough"
+            }
         };
 
-        var EasyReflection = {
-            "美肤" : "softenFace",
-            "素描" : "sketch",
-            "自然增强" : "softEnhancement",
-            "紫调" : "purpleStyle",
-            "柔焦" : "soften",
-            "复古" : "vintage",
-            "黑白" : "gray",
-            "仿lomo" : "lomo",
-            "亮白增强" : "strongEnhancement",
-            "灰白" : "strongGray",
-            "灰色" : "lightGray",
-            "暖秋" : "warmAutumn",
-            "木雕" : "carveStyle",
-            "粗糙" : "rough"
-        };
+        //转换映射关系 便于查找
+        var revertReflection = function(){
+            var result = {};
+
+            for(var i in Reflection){
+                //comEffect 组合效果不遍历
+                if(i == "ComEffect") continue;
+
+                for(var j in Reflection[i]){
+                    result[j] = i;
+                    result[Reflection[i][j]] = i;
+                }
+            }
+
+            return result;
+        }();
 
         var Config = {
 
             getModuleName: function(method){
-                return Reflection[method] || method;
+                var spaceName;
+
+                if(spaceName = revertReflection[method]){
+                    var actName = Reflection[spaceName][method] || method;
+                    return {
+                        spaceName: spaceName,
+                        actName: actName
+                    };
+
+                }else{
+                    P.destroySelf("AI_ERROR:调用AI不存在的方法" + method);
+                }
             },
 
+            //组合效果
             getEasyFun: function(effect){
-                return EasyReflection[effect] || effect;
+                return {
+                    spaceName: "ComEffect",
+                    actName: Reflection.ComEffect[effect] || effect
+                };
             }
         };
 
         return Config;
-
-    });
-
-})("psLib");
-/**
- * @author: Bin Wang
- * @description:    腐蚀 
- *
- */
-;(function(Ps){
-
-    window[Ps].module("corrode", function(P){
-
-        var M = {
-            process: function(imgData, arg){
-                var R = parseInt(arg[0]) || 3;
-                var data = imgData.data;
-                var width = imgData.width;
-                var height = imgData.height;
-                var xLength = R * 2 + 1;
-
-                //区块
-                for(var x = 0; x < width; x ++){
-
-                    for(var y = 0; y < height; y ++){
-                        
-                        var randomI = parseInt(Math.random() * R * 2) - R ;//区块随机代表
-                        var randomJ = parseInt(Math.random() * R * 2) - R;//区块随机代表
-                        var realI = y * width + x;
-                        var realJ = (y + randomI) * width + x + randomJ;
-
-                        for(var j = 0; j < 3; j ++){
-                            data[realI * 4 + j] = data[realJ * 4 + j];
-                        }
-
-                    }
-
-                }
-
-                return imgData;
-            }
-        };
-
-        return M;
 
     });
 
@@ -1137,82 +1172,6 @@ window.AlloyImage = $AI = window.psLib;
                     }
 
                 }
-
-                return imgData;
-            }
-        };
-
-        return M;
-
-    });
-
-})("psLib");
-/**
- * @author: Bin Wang
- * @description:     暗角
- *
- */
-;(function(Ps){
-
-    window[Ps].module("darkCorner", function(P){
-
-        var M = {
-            process: function(imgData,arg){
-                //暗角级别 分1-10级吧
-                var R = parseInt(arg[0]) || 3;
-
-                //暗角的形状
-                var type = arg[2] || "round";
-
-                //暗角最终的级别 0 - 255
-                var lastLevel = arg[1] || 30;
-
-                var data = imgData.data;
-                var width = imgData.width;
-                var height = imgData.height;
-                var xLength = R * 2 + 1;
-
-                //计算中心点
-                var middleX = width * 2 / 3;
-                var middleY = height * 1/ 2;
-                
-                //计算距中心点最长距离
-                var maxDistance = P.lib.dorsyMath.distance([middleX ,middleY]);
-                //开始产生暗角的距离
-                var startDistance = maxDistance * (1 - R / 10);
-
-                var f = function(x, p0, p1, p2, p3){
-
-                 //基于三次贝塞尔曲线 
-                     return p0 * Math.pow((1 - x), 3) + 3 * p1 * x * Math.pow((1 - x), 2) + 3 * p2 * x * x * (1 - x) + p3 * Math.pow(x, 3);
-               }
-
-                //计算当前点应增加的暗度
-                function calDark(x, y, p){
-                    //计算距中心点距离
-                    var distance = P.lib.dorsyMath.distance([x, y], [middleX, middleY]);
-                    var currBilv = (distance - startDistance) / (maxDistance - startDistance);
-                    if(currBilv < 0) currBilv = 0;
-
-                    //应该增加暗度
-                    return  f(currBilv, 0, 0.02, 0.3, 1) * p * lastLevel / 255;
-                }
-
-                //区块
-                for(var x = 0; x < width; x ++){
-
-                    for(var y = 0; y < height; y ++){
-                        
-                        var realI = y * width + x;
-                        for(var j = 0;j < 3;j ++){
-                            var dDarkness = calDark(x, y, data[realI * 4 + j]);
-                            data[realI * 4 + j] -= dDarkness;
-                        }
-
-                    }
-
-                }
-
 
                 return imgData;
             }
@@ -1841,84 +1800,6 @@ window.AlloyImage = $AI = window.psLib;
 
 /**
  * @author: Bin Wang
- * @description:  马赛克 
- *
- */
-;(function(Ps){
-
-    window[Ps].module("dotted",function(P){
-
-        var M = {
-            process: function(imgData,arg){//调节亮度对比度
-                //矩形半径
-                var R = parseInt(arg[0]) || 1;
-
-                //内小圆半径
-                var r = parseInt(arg[1]) || 1;
-
-                var data = imgData.data;
-                var width = imgData.width;
-                var height = imgData.height;
-                var xLength = R * 2 + 1;
-
-                //构造距离模板
-                var disTmlMatrix = [
-                ];
-
-                var r2 = r * r;
-                for(var x = -R; x < R; x ++){
-
-                    for(var y = -R; y < R; y ++){
-                        if((x * x + y * y) > r2){
-                            disTmlMatrix.push([x, y]);
-                        }
-                    }
-
-                }
-
-                var xyToIFun = P.lib.dorsyMath.xyToIFun(width);
-
-                //将大于距离外面的透明度置为0
-                for(var x = 0, n = parseInt(width / xLength); x < n; x ++){
-
-                    for(var y = 0, m = parseInt(height / xLength); y < m;y ++){
-                        var middleX = parseInt((x + 0.5) * xLength);
-                        var middleY = parseInt((y + 0.5) * xLength);
-
-                        for(var i = 0; i < disTmlMatrix.length; i ++){
-                            var dotX = middleX + disTmlMatrix[i][0];
-                            var dotY = middleY + disTmlMatrix[i][1];
-
-                            //data[(dotY * width + dotX) * 4 + 3] = 0;
-                            data[xyToIFun(dotX, dotY, 3)] = 225;
-                            data[xyToIFun(dotX, dotY, 2)] = 225;
-                            data[xyToIFun(dotX, dotY, 0)] = 225;
-                            data[xyToIFun(dotX, dotY, 1)] = 225;
-                        }
-                    }
-
-                }
-
-                /*
-                for(var x = 0; x < width; x ++){
-                    for(var y = 0; y < height; y ++){
-                        data[(y * width + x) * 4 + 3] = 0;
-                    }
-                }
-                */
-
-
-                return imgData;
-            }
-        };
-
-        return M;
-
-    });
-
-})("psLib");
-/**
- * @author: Bin Wang
  * @description:    腐蚀 
  *
  */
@@ -2025,379 +1906,6 @@ window.AlloyImage = $AI = window.psLib;
 })("psLib");
 /**
  * @author: Bin Wang
- * @description:  浮雕效果
- *
- */
-;(function(Ps){
-
-    window[Ps].module("embossment",function(P){
-
-        var M = {
-            process: function(imgData,arg){//调节亮度对比度
-                var data = imgData.data;
-                var width = imgData.width;
-                var height = imgData.height;
-
-                var outData = [];
-                for(var i = 0,n = data.length;i < n;i += 4){
-
-                    var ii = i / 4;
-                    var row = parseInt(ii / width);
-                    var col = ii % width;
-                    var A = ((row - 1) *  width + (col - 1)) * 4;
-                    var G = (row + 1) * width * 4 + (col + 1) * 4;
-
-                    if(row == 0 || col == 0) continue;
-                    for(var j = 0;j < 3;j ++){
-                        outData[i + j] = data[A + j] - data[G + j] + 127.5;
-                    }
-                    outData[i + 4] = data[i + 4];
-                }
-
-                for(var i = 0,n = data.length;i < n;i ++){
-                    data[i] = outData[i] || data[i];
-                }
-
-
-                return imgData;
-            }
-        };
-
-        return M;
-
-    });
-
-})("psLib");
-/**
- * @author: az@alloyTeam Bin Wang
- * @description: 高斯模糊
- *
- */
-;(function(Ps){
-
-    window[Ps].module("gaussBlur",function(P){
-
-        var M = {
-
-            /**
-             * 高斯模糊
-             * @param  {Array} pixes  pix array
-             * @param  {Number} width 图片的宽度
-             * @param  {Number} height 图片的高度
-             * @param  {Number} radius 取样区域半径, 正数, 可选, 默认为 3.0
-             * @param  {Number} sigma 标准方差, 可选, 默认取值为 radius / 3
-             * @return {Array}
-             */
-            process: function(imgData,radius, sigma) {
-                var pixes = imgData.data;
-                var width = imgData.width;
-                var height = imgData.height;
-                var gaussMatrix = [],
-                    gaussSum = 0,
-                    x, y,
-                    r, g, b, a,
-                    i, j, k, len;
-
-
-                radius = Math.floor(radius) || 3;
-                sigma = sigma || radius / 3;
-                
-                a = 1 / (Math.sqrt(2 * Math.PI) * sigma);
-                b = -1 / (2 * sigma * sigma);
-                //生成高斯矩阵
-                for (i = 0, x = -radius; x <= radius; x++, i++){
-                    g = a * Math.exp(b * x * x);
-                    gaussMatrix[i] = g;
-                    gaussSum += g;
-                
-                }
-                //归一化, 保证高斯矩阵的值在[0,1]之间
-                for (i = 0, len = gaussMatrix.length; i < len; i++) {
-                    gaussMatrix[i] /= gaussSum;
-                }
-                //x 方向一维高斯运算
-                for (y = 0; y < height; y++) {
-                    for (x = 0; x < width; x++) {
-                        r = g = b = a = 0;
-                        gaussSum = 0;
-                        for(j = -radius; j <= radius; j++){
-                            k = x + j;
-                            if(k >= 0 && k < width){//确保 k 没超出 x 的范围
-                                //r,g,b,a 四个一组
-                                i = (y * width + k) * 4;
-                                r += pixes[i] * gaussMatrix[j + radius];
-                                g += pixes[i + 1] * gaussMatrix[j + radius];
-                                b += pixes[i + 2] * gaussMatrix[j + radius];
-                                // a += pixes[i + 3] * gaussMatrix[j];
-                                gaussSum += gaussMatrix[j + radius];
-                            }
-                        }
-                        i = (y * width + x) * 4;
-                        // 除以 gaussSum 是为了消除处于边缘的像素, 高斯运算不足的问题
-                        // console.log(gaussSum)
-                        pixes[i] = r / gaussSum;
-                        pixes[i + 1] = g / gaussSum;
-                        pixes[i + 2] = b / gaussSum;
-                        // pixes[i + 3] = a ;
-                    }
-                }
-                //y 方向一维高斯运算
-                for (x = 0; x < width; x++) {
-                    for (y = 0; y < height; y++) {
-                        r = g = b = a = 0;
-                        gaussSum = 0;
-                        for(j = -radius; j <= radius; j++){
-                            k = y + j;
-                            if(k >= 0 && k < height){//确保 k 没超出 y 的范围
-                                i = (k * width + x) * 4;
-                                r += pixes[i] * gaussMatrix[j + radius];
-                                g += pixes[i + 1] * gaussMatrix[j + radius];
-                                b += pixes[i + 2] * gaussMatrix[j + radius];
-                                // a += pixes[i + 3] * gaussMatrix[j];
-                                gaussSum += gaussMatrix[j + radius];
-                            }
-                        }
-                        i = (y * width + x) * 4;
-                        pixes[i] = r / gaussSum;
-                        pixes[i + 1] = g / gaussSum;
-                        pixes[i + 2] = b / gaussSum;
-                        // pixes[i] = r ;
-                        // pixes[i + 1] = g ;
-                        // pixes[i + 2] = b ;
-                        // pixes[i + 3] = a ;
-                    }
-                }
-                //end
-                imgData.data = pixes;
-                return imgData;
-            }
-        };
-
-        return M;
-
-    });
-
-})("psLib");
-/**
- * @author: Bin Wang
- * @description:灰度扩展
- *
- */
-;(function(Ps){
-
-    window[Ps].module("ImageEnhance",function(P){
-
-        var M = {
-            process: function(imgData,arg1,arg2){
-                var lamta = arg || 0.5;
-                var data = imgData.data;
-                var width = imgData.width;
-                var height = imgData.height;
-                var p1 = arg1 || {x: 10,y: 10};
-                var p2 = arg2 || {x: 50,y: 40};
-
-                function transfer(d){
-                }
-
-                for(var i = 0,n = data.length;i < n;i += 4){
-                    
-                }
-
-                imgData.data = data;
-
-                return imgData;
-            }
-        };
-
-        return M;
-
-    });
-
-})("psLib");
-/**
- * @author: Bin Wang
- * @description: 查找边缘
- *
- */
-;(function(Ps){
-
-    window[Ps].module("borderline",function(P){
-
-        var M = {
-            process: function(imgData,arg){
-                var template1 = [
-                    -2,-4,-4,-4,-2,
-                    -4,0,8,0,-4,
-                    -4,8,24,8,-4,
-                    -4,0,8,0,-4,
-                    -2,-4,-4,-4,-2
-                ];
-                var template2 = [
-                        0,		1,		0,
-						1,		-4,		1,
-						0,		1,		0
-                ];
-                var template3 = [
-                ];
-                return P.lib.dorsyMath.applyMatrix(imgData,template2,250);
-            }
-        };
-
-        return M;
-
-    });
-
-})("psLib");
-/**
- * @author: Bin Wang
- * @description:  马赛克 
- *
- */
-;(function(Ps){
-
-    window[Ps].module("mosaic",function(P){
-
-        var M = {
-            process: function(imgData,arg){//调节亮度对比度
-                var R = parseInt(arg[0]) || 3;
-                var data = imgData.data;
-                var width = imgData.width;
-                var height = imgData.height;
-                var xLength = R * 2 + 1;
-
-                for(var x = 0,n = parseInt(width / xLength);x < n;x ++){
-
-                    for(var y = 0,m = parseInt(height / xLength);y < m;y ++){
-
-                        var average = [],sum = [0,0,0];
-                        for(var i = 0;i < xLength;i ++){
-
-                            for(var j = 0;j < xLength;j ++){
-                                var realI = (y * xLength + i) * width + x * xLength + j;
-                                sum[0] += data[realI * 4];
-                                sum[1] += data[realI * 4 + 1];
-                                sum[2] += data[realI * 4 + 2];
-                            }
-                        }
-                        average[0] = sum[0] / (xLength * xLength);
-                        average[1] = sum[1] / (xLength * xLength);
-                        average[2] = sum[2] / (xLength * xLength);
-
-                        for(var i = 0;i < xLength;i ++){
-
-                            for(var j = 0;j < xLength;j ++){
-                                var realI = (y * xLength + i) * width + x * xLength + j;
-                                data[realI * 4] = average[0];
-                                data[realI * 4 + 1] = average[1];
-                                data[realI * 4 + 2] = average[2];
-
-                            }
-                        }
-
-                    }
-
-                }
-
-
-                return imgData;
-            }
-        };
-
-        return M;
-
-    });
-
-})("psLib");
-/**
- * @author: Bin Wang
- * @description:   添加杂色 
- *
- */
-;(function(Ps){
-
-    window[Ps].module("noise",function(P){
-
-        var M = {
-            process: function(imgData,arg){
-                var R = parseInt(arg[0]) || 100;
-                var data = imgData.data;
-                var width = imgData.width;
-                var height = imgData.height;
-                var xLength = R * 2 + 1;
-
-                //区块
-                for(var x = 0;x < width;x ++){
-
-                    for(var y = 0;y < height;y ++){
-                        
-                        var realI = y * width + x;
-                        for(var j = 0;j < 3;j ++){
-                            var rand = parseInt(Math.random() * R * 2) - R;
-                            data[realI * 4 + j] += rand;
-                        }
-
-                    }
-
-                }
-
-
-                return imgData;
-            }
-        };
-
-        return M;
-
-    });
-
-})("psLib");
-/**
- * @author: Bin Wang
- * @description: 油画 
- *
- */
-;(function(Ps){
-
-    window[Ps].module("oilPainting",function(P){
-
-        var M = {
-            process: function(imgData,arg){
-                var R = parseInt(arg[0]) || 16;
-                var data = imgData.data;
-                var width = imgData.width;
-                var height = imgData.height;
-                var xLength = R * 2 + 1;
-
-                //区块
-                for(var x = 0;x < width;x ++){
-
-                    for(var y = 0;y < height;y ++){
-                        
-                        var realI = y * width + x;
-                        var gray = 0;
-                        for(var j = 0;j < 3;j ++){
-                            gray += data[realI * 4 + j];
-                        }
-                        gray = gray / 3;
-                        var every = parseInt(gray / R) * R;
-                        for(var j = 0;j < 3;j ++){
-                            data[realI * 4 + j] = every;
-                        }
-                    }
-
-                }
-
-
-                return imgData;
-            }
-        };
-
-        return M;
-
-    });
-
-})("psLib");
-/**
- * @author: Bin Wang
  * @description: 调整RGB 饱和和度  
  * H (-2*Math.PI , 2 * Math.PI)  S (-100,100) I (-100,100)
  * 着色原理  勾选着色后，所有的像素不管之前是什么色相，都变成当前设置的色相，
@@ -2428,76 +1936,6 @@ window.AlloyImage = $AI = window.psLib;
                     }
 
                 });
-
-                return imgData;
-            }
-        };
-
-        return M;
-
-    });
-
-})("psLib");
-/**
- * @author: Bin Wang
- * @description:锐化 
- *
- */
-;(function(Ps){
-
-    window[Ps].module("sharp",function(P){
-
-        var M = {
-            process: function(imgData,arg){
-                var lamta = arg[0] || 0.6;
-                var data = imgData.data;
-                var width = imgData.width;
-                var height = imgData.height;
-
-                for(var i = 0,n = data.length;i < n;i += 4){
-                    var ii = i / 4;
-                    var row = parseInt(ii / width);
-                    var col = ii % width;
-                    if(row == 0 || col == 0) continue;
-
-                    var A = ((row - 1) *  width + (col - 1)) * 4;
-                    var B = ((row - 1) * width + col) * 4;
-                    var E = (ii - 1) * 4;
-
-                    for(var j = 0;j < 3;j ++){
-                        var delta = data[i + j] - (data[B + j] + data[E + j] + data[A + j]) / 3;
-                        data[i + j] += delta * lamta;
-                    }
-                }
-
-                return imgData;
-            }
-        };
-
-        return M;
-
-    });
-
-})("psLib");
-/**
- * @author: Bin Wang
- * @description: 灰度处理
- *
- */
-;(function(Ps){
-
-    window[Ps].module("toGray",function(P){
-
-        var M = {
-            process: function(imgData){
-                var data = imgData.data;
-
-                for(var i = 0,n = data.length;i < n;i += 4){
-                    var gray = parseInt((data[i] + data[i + 1] + data[i + 2]) / 3);
-                    data[i + 2] = data[i + 1] = data[i] = gray;
-                }
-
-                imgData.data = data;
 
                 return imgData;
             }
@@ -2653,6 +2091,688 @@ window.AlloyImage = $AI = window.psLib;
                   var color = "rgb(" + parseInt(rgb.R) + "," + parseInt(rgb.G) + "," + parseInt(rgb.B) + ")";
                   return color;
                 }
+            },
+
+            toText: {
+                process: function(imgData, args){
+                    var data = imgData.data,
+                        width = imgData.width,
+                        height = imgData.height,
+                        averageG,
+
+                        //灰度串
+                        str = args[0] || ".:;!#@",
+
+                        //记录位置信息Arr
+                        positionArr = [],
+                        
+                        //结果字符
+                        resultStr = "";
+                        
+                        console.log(str);
+
+                    var dM = P.lib.dorsyMath;
+                    var xyToIFun = dM.xyToIFun(imgData.width);
+
+                    //创建div串
+                    var i, everyLevel = 255 / str.length, j;
+                    for(var x = 0; x < width; x += 1){
+                        for(var y = 0; y < height; y += 1){
+                            i = xyToIFun(x, y, 0);
+                            averageG = (data[i] + data[i + 1] + data[i + 2]) / 3;
+
+                            j = parseInt(averageG / everyLevel);
+
+                            resultStr += str[j];
+                        }
+
+                        resultStr += "<br />";
+                    }
+
+                    return resultStr;
+                }
+            }
+        };
+
+        return M;
+
+    });
+
+})("psLib");
+/**
+ * @author: Bin Wang
+ * @description:    腐蚀 
+ *
+ */
+;(function(Ps){
+
+    window[Ps].module("Filter.corrode", function(P){
+
+        var M = {
+            process: function(imgData, arg){
+                var R = parseInt(arg[0]) || 3;
+                var data = imgData.data;
+                var width = imgData.width;
+                var height = imgData.height;
+                var xLength = R * 2 + 1;
+
+                //区块
+                for(var x = 0; x < width; x ++){
+
+                    for(var y = 0; y < height; y ++){
+                        
+                        var randomI = parseInt(Math.random() * R * 2) - R ;//区块随机代表
+                        var randomJ = parseInt(Math.random() * R * 2) - R;//区块随机代表
+                        var realI = y * width + x;
+                        var realJ = (y + randomI) * width + x + randomJ;
+
+                        for(var j = 0; j < 3; j ++){
+                            data[realI * 4 + j] = data[realJ * 4 + j];
+                        }
+
+                    }
+
+                }
+
+                return imgData;
+            }
+        };
+
+        return M;
+
+    });
+
+})("psLib");
+/**
+ * @author: Bin Wang
+ * @description:     暗角
+ *
+ */
+;(function(Ps){
+
+    window[Ps].module("Filter.darkCorner", function(P){
+
+        var M = {
+            process: function(imgData,arg){
+                //暗角级别 分1-10级吧
+                var R = parseInt(arg[0]) || 3;
+
+                //暗角的形状
+                var type = arg[2] || "round";
+
+                //暗角最终的级别 0 - 255
+                var lastLevel = arg[1] || 30;
+
+                var data = imgData.data;
+                var width = imgData.width;
+                var height = imgData.height;
+                var xLength = R * 2 + 1;
+
+                //计算中心点
+                var middleX = width * 2 / 3;
+                var middleY = height * 1/ 2;
+                
+                //计算距中心点最长距离
+                var maxDistance = P.lib.dorsyMath.distance([middleX ,middleY]);
+                //开始产生暗角的距离
+                var startDistance = maxDistance * (1 - R / 10);
+
+                var f = function(x, p0, p1, p2, p3){
+
+                 //基于三次贝塞尔曲线 
+                     return p0 * Math.pow((1 - x), 3) + 3 * p1 * x * Math.pow((1 - x), 2) + 3 * p2 * x * x * (1 - x) + p3 * Math.pow(x, 3);
+               }
+
+                //计算当前点应增加的暗度
+                function calDark(x, y, p){
+                    //计算距中心点距离
+                    var distance = P.lib.dorsyMath.distance([x, y], [middleX, middleY]);
+                    var currBilv = (distance - startDistance) / (maxDistance - startDistance);
+                    if(currBilv < 0) currBilv = 0;
+
+                    //应该增加暗度
+                    return  f(currBilv, 0, 0.02, 0.3, 1) * p * lastLevel / 255;
+                }
+
+                //区块
+                for(var x = 0; x < width; x ++){
+
+                    for(var y = 0; y < height; y ++){
+                        
+                        var realI = y * width + x;
+                        for(var j = 0;j < 3;j ++){
+                            var dDarkness = calDark(x, y, data[realI * 4 + j]);
+                            data[realI * 4 + j] -= dDarkness;
+                        }
+
+                    }
+
+                }
+
+
+                return imgData;
+            }
+        };
+
+        return M;
+
+    });
+
+})("psLib");
+/**
+ * @author: Bin Wang
+ * @description:  马赛克 
+ *
+ */
+;(function(Ps){
+
+    window[Ps].module("Filter.dotted",function(P){
+
+        var M = {
+            process: function(imgData,arg){//调节亮度对比度
+                //矩形半径
+                var R = parseInt(arg[0]) || 1;
+
+                //内小圆半径
+                var r = parseInt(arg[1]) || 1;
+
+                var data = imgData.data;
+                var width = imgData.width;
+                var height = imgData.height;
+                var xLength = R * 2 + 1;
+
+                //构造距离模板
+                var disTmlMatrix = [
+                ];
+
+                var r2 = r * r;
+                for(var x = -R; x < R; x ++){
+
+                    for(var y = -R; y < R; y ++){
+                        if((x * x + y * y) > r2){
+                            disTmlMatrix.push([x, y]);
+                        }
+                    }
+
+                }
+
+                var xyToIFun = P.lib.dorsyMath.xyToIFun(width);
+
+                //将大于距离外面的透明度置为0
+                for(var x = 0, n = parseInt(width / xLength); x < n; x ++){
+
+                    for(var y = 0, m = parseInt(height / xLength); y < m;y ++){
+                        var middleX = parseInt((x + 0.5) * xLength);
+                        var middleY = parseInt((y + 0.5) * xLength);
+
+                        for(var i = 0; i < disTmlMatrix.length; i ++){
+                            var dotX = middleX + disTmlMatrix[i][0];
+                            var dotY = middleY + disTmlMatrix[i][1];
+
+                            //data[(dotY * width + dotX) * 4 + 3] = 0;
+                            data[xyToIFun(dotX, dotY, 3)] = 225;
+                            data[xyToIFun(dotX, dotY, 2)] = 225;
+                            data[xyToIFun(dotX, dotY, 0)] = 225;
+                            data[xyToIFun(dotX, dotY, 1)] = 225;
+                        }
+                    }
+
+                }
+
+                /*
+                for(var x = 0; x < width; x ++){
+                    for(var y = 0; y < height; y ++){
+                        data[(y * width + x) * 4 + 3] = 0;
+                    }
+                }
+                */
+
+
+                return imgData;
+            }
+        };
+
+        return M;
+
+    });
+
+})("psLib");
+/**
+ * @author: Bin Wang
+ * @description:  浮雕效果
+ *
+ */
+;(function(Ps){
+
+    window[Ps].module("Filter.embossment",function(P){
+
+        var M = {
+            process: function(imgData,arg){//调节亮度对比度
+                var data = imgData.data;
+                var width = imgData.width;
+                var height = imgData.height;
+
+                var outData = [];
+                for(var i = 0,n = data.length;i < n;i += 4){
+
+                    var ii = i / 4;
+                    var row = parseInt(ii / width);
+                    var col = ii % width;
+                    var A = ((row - 1) *  width + (col - 1)) * 4;
+                    var G = (row + 1) * width * 4 + (col + 1) * 4;
+
+                    if(row == 0 || col == 0) continue;
+                    for(var j = 0;j < 3;j ++){
+                        outData[i + j] = data[A + j] - data[G + j] + 127.5;
+                    }
+                    outData[i + 4] = data[i + 4];
+                }
+
+                for(var i = 0,n = data.length;i < n;i ++){
+                    data[i] = outData[i] || data[i];
+                }
+
+
+                return imgData;
+            }
+        };
+
+        return M;
+
+    });
+
+})("psLib");
+/**
+ * @author: az@alloyTeam Bin Wang
+ * @description: 高斯模糊
+ *
+ */
+;(function(Ps){
+
+    window[Ps].module("Filter.gaussBlur",function(P){
+
+        var M = {
+
+            /**
+             * 高斯模糊
+             * @param  {Array} pixes  pix array
+             * @param  {Number} width 图片的宽度
+             * @param  {Number} height 图片的高度
+             * @param  {Number} radius 取样区域半径, 正数, 可选, 默认为 3.0
+             * @param  {Number} sigma 标准方差, 可选, 默认取值为 radius / 3
+             * @return {Array}
+             */
+            process: function(imgData,radius, sigma) {
+                var pixes = imgData.data;
+                var width = imgData.width;
+                var height = imgData.height;
+                var gaussMatrix = [],
+                    gaussSum = 0,
+                    x, y,
+                    r, g, b, a,
+                    i, j, k, len;
+
+
+                radius = Math.floor(radius) || 3;
+                sigma = sigma || radius / 3;
+                
+                a = 1 / (Math.sqrt(2 * Math.PI) * sigma);
+                b = -1 / (2 * sigma * sigma);
+                //生成高斯矩阵
+                for (i = 0, x = -radius; x <= radius; x++, i++){
+                    g = a * Math.exp(b * x * x);
+                    gaussMatrix[i] = g;
+                    gaussSum += g;
+                
+                }
+                //归一化, 保证高斯矩阵的值在[0,1]之间
+                for (i = 0, len = gaussMatrix.length; i < len; i++) {
+                    gaussMatrix[i] /= gaussSum;
+                }
+                //x 方向一维高斯运算
+                for (y = 0; y < height; y++) {
+                    for (x = 0; x < width; x++) {
+                        r = g = b = a = 0;
+                        gaussSum = 0;
+                        for(j = -radius; j <= radius; j++){
+                            k = x + j;
+                            if(k >= 0 && k < width){//确保 k 没超出 x 的范围
+                                //r,g,b,a 四个一组
+                                i = (y * width + k) * 4;
+                                r += pixes[i] * gaussMatrix[j + radius];
+                                g += pixes[i + 1] * gaussMatrix[j + radius];
+                                b += pixes[i + 2] * gaussMatrix[j + radius];
+                                // a += pixes[i + 3] * gaussMatrix[j];
+                                gaussSum += gaussMatrix[j + radius];
+                            }
+                        }
+                        i = (y * width + x) * 4;
+                        // 除以 gaussSum 是为了消除处于边缘的像素, 高斯运算不足的问题
+                        // console.log(gaussSum)
+                        pixes[i] = r / gaussSum;
+                        pixes[i + 1] = g / gaussSum;
+                        pixes[i + 2] = b / gaussSum;
+                        // pixes[i + 3] = a ;
+                    }
+                }
+                //y 方向一维高斯运算
+                for (x = 0; x < width; x++) {
+                    for (y = 0; y < height; y++) {
+                        r = g = b = a = 0;
+                        gaussSum = 0;
+                        for(j = -radius; j <= radius; j++){
+                            k = y + j;
+                            if(k >= 0 && k < height){//确保 k 没超出 y 的范围
+                                i = (k * width + x) * 4;
+                                r += pixes[i] * gaussMatrix[j + radius];
+                                g += pixes[i + 1] * gaussMatrix[j + radius];
+                                b += pixes[i + 2] * gaussMatrix[j + radius];
+                                // a += pixes[i + 3] * gaussMatrix[j];
+                                gaussSum += gaussMatrix[j + radius];
+                            }
+                        }
+                        i = (y * width + x) * 4;
+                        pixes[i] = r / gaussSum;
+                        pixes[i + 1] = g / gaussSum;
+                        pixes[i + 2] = b / gaussSum;
+                        // pixes[i] = r ;
+                        // pixes[i + 1] = g ;
+                        // pixes[i + 2] = b ;
+                        // pixes[i + 3] = a ;
+                    }
+                }
+                //end
+                imgData.data = pixes;
+                return imgData;
+            }
+        };
+
+        return M;
+
+    });
+
+})("psLib");
+/**
+ * @author: Bin Wang
+ * @description:灰度扩展
+ *
+ */
+;(function(Ps){
+
+    window[Ps].module("Filter.ImageEnhance",function(P){
+
+        var M = {
+            process: function(imgData,arg1,arg2){
+                var lamta = arg || 0.5;
+                var data = imgData.data;
+                var width = imgData.width;
+                var height = imgData.height;
+                var p1 = arg1 || {x: 10,y: 10};
+                var p2 = arg2 || {x: 50,y: 40};
+
+                function transfer(d){
+                }
+
+                for(var i = 0,n = data.length;i < n;i += 4){
+                    
+                }
+
+                imgData.data = data;
+
+                return imgData;
+            }
+        };
+
+        return M;
+
+    });
+
+})("psLib");
+/**
+ * @author: Bin Wang
+ * @description: 查找边缘
+ *
+ */
+;(function(Ps){
+
+    window[Ps].module("Filter.borderline",function(P){
+
+        var M = {
+            process: function(imgData,arg){
+                var template1 = [
+                    -2,-4,-4,-4,-2,
+                    -4,0,8,0,-4,
+                    -4,8,24,8,-4,
+                    -4,0,8,0,-4,
+                    -2,-4,-4,-4,-2
+                ];
+                var template2 = [
+                        0,		1,		0,
+						1,		-4,		1,
+						0,		1,		0
+                ];
+                var template3 = [
+                ];
+                return P.lib.dorsyMath.applyMatrix(imgData,template2,250);
+            }
+        };
+
+        return M;
+
+    });
+
+})("psLib");
+/**
+ * @author: Bin Wang
+ * @description:  马赛克 
+ *
+ */
+;(function(Ps){
+
+    window[Ps].module("Filter.mosaic",function(P){
+
+        var M = {
+            process: function(imgData,arg){//调节亮度对比度
+                var R = parseInt(arg[0]) || 3;
+                var data = imgData.data;
+                var width = imgData.width;
+                var height = imgData.height;
+                var xLength = R * 2 + 1;
+
+                for(var x = 0,n = parseInt(width / xLength);x < n;x ++){
+
+                    for(var y = 0,m = parseInt(height / xLength);y < m;y ++){
+
+                        var average = [],sum = [0,0,0];
+                        for(var i = 0;i < xLength;i ++){
+
+                            for(var j = 0;j < xLength;j ++){
+                                var realI = (y * xLength + i) * width + x * xLength + j;
+                                sum[0] += data[realI * 4];
+                                sum[1] += data[realI * 4 + 1];
+                                sum[2] += data[realI * 4 + 2];
+                            }
+                        }
+                        average[0] = sum[0] / (xLength * xLength);
+                        average[1] = sum[1] / (xLength * xLength);
+                        average[2] = sum[2] / (xLength * xLength);
+
+                        for(var i = 0;i < xLength;i ++){
+
+                            for(var j = 0;j < xLength;j ++){
+                                var realI = (y * xLength + i) * width + x * xLength + j;
+                                data[realI * 4] = average[0];
+                                data[realI * 4 + 1] = average[1];
+                                data[realI * 4 + 2] = average[2];
+
+                            }
+                        }
+
+                    }
+
+                }
+
+
+                return imgData;
+            }
+        };
+
+        return M;
+
+    });
+
+})("psLib");
+/**
+ * @author: Bin Wang
+ * @description:   添加杂色 
+ *
+ */
+;(function(Ps){
+
+    window[Ps].module("Filter.noise",function(P){
+
+        var M = {
+            process: function(imgData,arg){
+                var R = parseInt(arg[0]) || 100;
+                var data = imgData.data;
+                var width = imgData.width;
+                var height = imgData.height;
+                var xLength = R * 2 + 1;
+
+                //区块
+                for(var x = 0;x < width;x ++){
+
+                    for(var y = 0;y < height;y ++){
+                        
+                        var realI = y * width + x;
+                        for(var j = 0;j < 3;j ++){
+                            var rand = parseInt(Math.random() * R * 2) - R;
+                            data[realI * 4 + j] += rand;
+                        }
+
+                    }
+
+                }
+
+
+                return imgData;
+            }
+        };
+
+        return M;
+
+    });
+
+})("psLib");
+/**
+ * @author: Bin Wang
+ * @description: 油画 
+ *
+ */
+;(function(Ps){
+
+    window[Ps].module("Filter.oilPainting",function(P){
+
+        var M = {
+            process: function(imgData,arg){
+                var R = parseInt(arg[0]) || 16;
+                var data = imgData.data;
+                var width = imgData.width;
+                var height = imgData.height;
+                var xLength = R * 2 + 1;
+
+                //区块
+                for(var x = 0;x < width;x ++){
+
+                    for(var y = 0;y < height;y ++){
+                        
+                        var realI = y * width + x;
+                        var gray = 0;
+                        for(var j = 0;j < 3;j ++){
+                            gray += data[realI * 4 + j];
+                        }
+                        gray = gray / 3;
+                        var every = parseInt(gray / R) * R;
+                        for(var j = 0;j < 3;j ++){
+                            data[realI * 4 + j] = every;
+                        }
+                    }
+
+                }
+
+
+                return imgData;
+            }
+        };
+
+        return M;
+
+    });
+
+})("psLib");
+/**
+ * @author: Bin Wang
+ * @description:锐化 
+ *
+ */
+;(function(Ps){
+
+    window[Ps].module("Filter.sharp",function(P){
+
+        var M = {
+            process: function(imgData,arg){
+                var lamta = arg[0] || 0.6;
+                var data = imgData.data;
+                var width = imgData.width;
+                var height = imgData.height;
+
+                for(var i = 0,n = data.length;i < n;i += 4){
+                    var ii = i / 4;
+                    var row = parseInt(ii / width);
+                    var col = ii % width;
+                    if(row == 0 || col == 0) continue;
+
+                    var A = ((row - 1) *  width + (col - 1)) * 4;
+                    var B = ((row - 1) * width + col) * 4;
+                    var E = (ii - 1) * 4;
+
+                    for(var j = 0;j < 3;j ++){
+                        var delta = data[i + j] - (data[B + j] + data[E + j] + data[A + j]) / 3;
+                        data[i + j] += delta * lamta;
+                    }
+                }
+
+                return imgData;
+            }
+        };
+
+        return M;
+
+    });
+
+})("psLib");
+/**
+ * @author: Bin Wang
+ * @description: 灰度处理
+ * @modify: 灰度算法改成加权平均值 (0.299, 0.578, 0.114)
+ *
+ */
+;(function(Ps){
+
+    window[Ps].module("Filter.toGray",function(P){
+
+        var M = {
+            process: function(imgData){
+                var data = imgData.data;
+
+                for(var i = 0,n = data.length;i < n;i += 4){
+                    var gray = parseInt((0.299 * data[i] + 0.578 * data[i + 1] + 0.114 * data[i + 2]));
+                    data[i + 2] = data[i + 1] = data[i] = gray;
+                }
+
+                imgData.data = data;
+
+                return imgData;
             }
         };
 
@@ -2668,7 +2788,7 @@ window.AlloyImage = $AI = window.psLib;
  */
 ;(function(Ps){
 
-    window[Ps].module("toReverse",function(P){
+    window[Ps].module("Filter.toReverse",function(P){
 
         var M = {
             process: function(imgData){
@@ -2698,11 +2818,11 @@ window.AlloyImage = $AI = window.psLib;
  */
 ;(function(Ps){
 
-    window[Ps].module("toThresh",function(P){
+    window[Ps].module("Filter.toThresh",function(P){
 
         var M = {
             process: function(imgData,arg){
-                imgData = P.lib.toGray.process(imgData);
+                imgData = P.reflect("toGray", imgData);
                 var data = imgData.data;
 
                 var arg = arg[0] || 128;

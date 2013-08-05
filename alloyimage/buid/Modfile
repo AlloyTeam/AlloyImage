@@ -2,7 +2,7 @@
 module.exports = {
     tasks:{
         cat:{
-            source:['../src/alloyimage.base.js',"../src/module/*.js"]
+            source:['../src/alloyimage.base.js',"../src/module/*.js", "../src/module/filter/*.js"]
             ,dest: '../combined/alloyimage.js'
         }
     },
