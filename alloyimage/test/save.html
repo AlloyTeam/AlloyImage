@@ -1,0 +1,27 @@
+<!DOCTYPE HTML>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title></title>
+</head>
+<body>
+<img id="pic" src="../res/img/7.jpg" alt="" />
+<div id="m"></div>
+<script type="text/javascript" src="../combined/alloyimage.js"></script>
+<script type="text/javascript">
+window.onload = function(){
+    var _startTime = + new Date();
+    var img = document.getElementById("pic");
+    var ai = $AI(img);
+    ai.act("toGray").show();
+    var t = ai.save("jpg");
+    img.src = t;
+
+    img.onclick = function(){
+      ai.saveFile();
+    };
+
+}
+</script>
+</body>
+</html>

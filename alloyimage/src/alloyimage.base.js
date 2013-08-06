@@ -536,7 +536,14 @@ try{
         },
 
         //返回一个合成后的图像 png base64
-        save: function(isFast, workerFlag){
+        save: function(type, workerFlag){
+            type = type || "png";
+            type = type.toLowerCase();
+
+            if(type == "jpg") type = "jpeg";
+
+            var mimeType = "image/" + type;
+
             if(workerFlag){
             }else{
                 if(this.useWorker){
@@ -549,7 +556,7 @@ try{
 
             if(! this.layers.length){
                 this.context.putImageData(this.imgData, 0, 0);
-                return this.canvas.toDataURL(); 
+                return this.canvas.toDataURL(mimeType); 
             }
 
 
@@ -575,6 +582,14 @@ try{
             this.context.putImageData(tempPsLib.imgData, 0, 0);
 
             return this.canvas.toDataURL(); 
+        },
+
+        //下载图片
+        saveFile: function(){
+            var fileData = this.save();
+            fileData = fileData.replace(/^data:image\/(?:(?:jpeg)|(?:png))/, "data:image/octet-stream");
+
+            window.location.href = fileData;
         },
 
         //绘制直方图

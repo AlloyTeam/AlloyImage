@@ -536,7 +536,14 @@ try{
         },
 
         //返回一个合成后的图像 png base64
-        save: function(isFast, workerFlag){
+        save: function(type, workerFlag){
+            type = type || "png";
+            type = type.toLowerCase();
+
+            if(type == "jpg") type = "jpeg";
+
+            var mimeType = "image/" + type;
+
             if(workerFlag){
             }else{
                 if(this.useWorker){
@@ -549,7 +556,7 @@ try{
 
             if(! this.layers.length){
                 this.context.putImageData(this.imgData, 0, 0);
-                return this.canvas.toDataURL(); 
+                return this.canvas.toDataURL(mimeType); 
             }
 
 
@@ -575,6 +582,14 @@ try{
             this.context.putImageData(tempPsLib.imgData, 0, 0);
 
             return this.canvas.toDataURL(); 
+        },
+
+        //下载图片
+        saveFile: function(){
+            var fileData = this.save();
+            fileData = fileData.replace(/^data:image\/(?:(?:jpeg)|(?:png))/, "data:image/octet-stream");
+
+            window.location.href = fileData;
         },
 
         //绘制直方图
@@ -1051,7 +1066,8 @@ window.AlloyImage = $AI = window.psLib;
             Alteration: {
                 "亮度": "brightness",
                 "色相/饱和度调节": "setHSI",
-                "曲线" : "curve"
+                "曲线" : "curve",
+                "gamma调节" : "gamma"
             },
 
             //滤镜
@@ -1068,7 +1084,10 @@ window.AlloyImage = $AI = window.psLib;
                 "锐化" : "sharp",
                 "添加杂色" : "noise",
                 "暗角" : "darkCorner",
-                "喷点" : "dotted"
+                "喷点" : "dotted",
+                "降噪" : "denoise",
+                "棕褐色" : "sepia",
+                "色调分离" : "posterize"
             },
 
             ComEffect: {
@@ -1538,15 +1557,22 @@ window.AlloyImage = $AI = window.psLib;
 
             //在(x,y)进行运算
             //rgbfun 在rgb三个上进行的操作 aFun在alpha进行的操作
+            //rgbFun:   function(r, g, b){
+            //      return [r, g, b]
+            //     
+            //}
             xyCal: function(imgData, x, y, rgbFun, aFun){
                 var xyToIFun  = this.xyToIFun(imgData.width);
-                for(var i = 0; i < 3; i ++){
-                    var j  = xyToIFun(x, y, i);
-                    imgData[j] = rgbFun(imgData[j]);
-                }
+                var j  = xyToIFun(x, y, 0);
+                var data = imgData.data;
+                var processedData = rgbFun(data[j], data[j + 1], data[j + 2]);
+
+                data[j] = processedData[0];
+                data[j + 1] = processedData[1];
+                data[j + 2] = processedData[2];
 
                 if(aFun){
-                    imgData[j + 1] = aFun(imgData[j + 1]);
+                    data[j + 3] = aFun(data[j + 3]);
                 }
 
             }
@@ -1906,6 +1932,50 @@ window.AlloyImage = $AI = window.psLib;
 })("psLib");
 /**
  * @author: Bin Wang
+ * @description: gamma调节
+ *
+ */
+;(function(Ps){
+
+    window[Ps].module("gamma",function(P){
+
+        var M = {
+            process: function(imgData, args){
+                var dM = P.lib.dorsyMath;
+                var data = imgData.data;
+                var width = imgData.width;
+                var height = imgData.height;
+
+                //gamma阶-100， 100
+                var gamma;
+
+                if(args[0] == undefined) gamma = 10;
+                else gamma = args[0];
+
+                var normalizedArg = ((gamma + 100) / 200) * 2;
+                
+                for(var x = 0; x < width; x ++){
+                    for(var y = 0; y < height; y ++){
+                        dM.xyCal(imgData, x, y, function(r, g, b){
+                            return [
+                                Math.pow(r, normalizedArg),
+                                Math.pow(g, normalizedArg),
+                                Math.pow(b, normalizedArg)
+                            ];
+                        });
+                    }
+                }
+                return imgData;
+            }
+        };
+
+        return M;
+
+    });
+
+})("psLib");
+/**
+ * @author: Bin Wang
  * @description: 调整RGB 饱和和度  
  * H (-2*Math.PI , 2 * Math.PI)  S (-100,100) I (-100,100)
  * 着色原理  勾选着色后，所有的像素不管之前是什么色相，都变成当前设置的色相，
@@ -2250,6 +2320,42 @@ window.AlloyImage = $AI = window.psLib;
                 }
 
 
+                return imgData;
+            }
+        };
+
+        return M;
+
+    });
+
+})("psLib");
+/**
+ * @author: Bin Wang
+ * @description:    降噪
+ *
+ */
+;(function(Ps){
+
+    window[Ps].module("Filter.denoise",function(P){
+
+        var M = {
+            process: function(imgData,arg){
+                var dM = P.lib.dorsyMath;
+                var data = imgData.data;
+                var width = imgData.width;
+                var height = imgData.height;
+                
+                for(var x = 0; x < width; x ++){
+                    for(var y = 0; y < height; y ++){
+                        dM.xyCal(imgData, x, y, function(r, g, b){
+                            return [
+                                r * 0.393 + g * 0.769 + b * 0.189,
+                                r * 0.349 + g * 0.686 + b * 0.168,
+                                r * 0.272 + g * 0.534 + b * 0.131
+                            ];
+                        });
+                    }
+                }
                 return imgData;
             }
         };
@@ -2701,6 +2807,85 @@ window.AlloyImage = $AI = window.psLib;
                 }
 
 
+                return imgData;
+            }
+        };
+
+        return M;
+
+    });
+
+})("psLib");
+/**
+ * @author: Bin Wang
+ * @description: 色调分离
+ *
+ */
+;(function(Ps){
+
+    window[Ps].module("Filter.posterize",function(P){
+
+        var M = {
+            process: function(imgData, args){
+                var dM = P.lib.dorsyMath;
+                var data = imgData.data;
+                var width = imgData.width;
+                var height = imgData.height;
+
+                //灰度阶数
+                //由原来的255阶映射为现在的阶数
+                var step = args[0] || 20;
+
+                step = step < 1 ? 1 : (step > 255 ? 255 : step);
+                var level = Math.floor(255 / step);
+                
+                for(var x = 0; x < width; x ++){
+                    for(var y = 0; y < height; y ++){
+                        dM.xyCal(imgData, x, y, function(r, g, b){
+                            return [
+                                Math.floor(r / level) * level,
+                                Math.floor(g / level) * level,
+                                Math.floor(b / level) * level
+                            ];
+                        });
+                    }
+                }
+                return imgData;
+            }
+        };
+
+        return M;
+
+    });
+
+})("psLib");
+/**
+ * @author: Bin Wang
+ * @description: 棕褐色
+ *
+ */
+;(function(Ps){
+
+    window[Ps].module("Filter.sepia",function(P){
+
+        var M = {
+            process: function(imgData){
+                var dM = P.lib.dorsyMath;
+                var data = imgData.data;
+                var width = imgData.width;
+                var height = imgData.height;
+                
+                for(var x = 0; x < width; x ++){
+                    for(var y = 0; y < height; y ++){
+                        dM.xyCal(imgData, x, y, function(r, g, b){
+                            return [
+                                r * 0.393 + g * 0.769 + b * 0.189,
+                                r * 0.349 + g * 0.686 + b * 0.168,
+                                r * 0.272 + g * 0.534 + b * 0.131
+                            ];
+                        });
+                    }
+                }
                 return imgData;
             }
         };

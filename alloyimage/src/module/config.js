@@ -13,7 +13,8 @@
             Alteration: {
                 "亮度": "brightness",
                 "色相/饱和度调节": "setHSI",
-                "曲线" : "curve"
+                "曲线" : "curve",
+                "gamma调节" : "gamma"
             },
 
             //滤镜
@@ -30,7 +31,10 @@
                 "锐化" : "sharp",
                 "添加杂色" : "noise",
                 "暗角" : "darkCorner",
-                "喷点" : "dotted"
+                "喷点" : "dotted",
+                "降噪" : "denoise",
+                "棕褐色" : "sepia",
+                "色调分离" : "posterize"
             },
 
             ComEffect: {

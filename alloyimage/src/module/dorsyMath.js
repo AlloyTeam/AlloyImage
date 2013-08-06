@@ -354,15 +354,22 @@
 
             //在(x,y)进行运算
             //rgbfun 在rgb三个上进行的操作 aFun在alpha进行的操作
+            //rgbFun:   function(r, g, b){
+            //      return [r, g, b]
+            //     
+            //}
             xyCal: function(imgData, x, y, rgbFun, aFun){
                 var xyToIFun  = this.xyToIFun(imgData.width);
-                for(var i = 0; i < 3; i ++){
-                    var j  = xyToIFun(x, y, i);
-                    imgData[j] = rgbFun(imgData[j]);
-                }
+                var j  = xyToIFun(x, y, 0);
+                var data = imgData.data;
+                var processedData = rgbFun(data[j], data[j + 1], data[j + 2]);
+
+                data[j] = processedData[0];
+                data[j + 1] = processedData[1];
+                data[j + 2] = processedData[2];
 
                 if(aFun){
-                    imgData[j + 1] = aFun(imgData[j + 1]);
+                    data[j + 3] = aFun(data[j + 3]);
                 }
 
             }
