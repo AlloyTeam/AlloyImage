@@ -255,6 +255,11 @@ try{
         P.name = name || "alloyimage.js";
     };
 
+    //获取配置信息
+    window[Ps].getConfig = function(){
+        return P.lib.config.getConfig();
+    };
+
     //定义使用worker,需要给出alloyimage所在路径
     window[Ps].useWorker = function(path){
         

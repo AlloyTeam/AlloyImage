@@ -95,6 +95,10 @@
                     spaceName: "ComEffect",
                     actName: Reflection.ComEffect[effect] || effect
                 };
+            },
+
+            getConfig: function(){
+                return Reflection;
             }
         };
 
