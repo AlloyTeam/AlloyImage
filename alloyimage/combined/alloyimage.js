@@ -681,6 +681,63 @@ try{
             }
         },
 
+        //变换Matrix
+        transform: function(matrix){
+            var ctx = this.ctxContext;
+            ctx.putImageData(this.imgData, 0, 0);
+
+            var tempCtx = document.createElement("canvas").getContext("2d");
+            tempCtx.canvas.width = this.canvas.width;
+            tempCtx.canvas.height = this.canvas.height;
+
+            tempCtx.transform.apply(tempCtx, matrix);
+            tempCtx.drawImage(ctx.canvas, 0, 0);
+
+            this.imgData = tempCtx.getImageData(0, 0, this.canvas.width, this.canvas.height);
+
+            return this;
+        },
+
+        scale: function(x, y){
+            var y = y || x;
+            return this.transform([x, 0, 0, y, 0, 0]);
+        },
+
+        //旋转 度
+        rotate: function(deg){
+            //转为弧度
+            var r = deg / 180 * Math.PI;
+            var matrix = [
+                Math.cos(r), Math.sin(r), -Math.sin(r), Math.cos(r), 0, 0
+            ];
+
+            return this.transform(matrix);
+        },
+
+        //平移
+        moveTo: function(x, y){
+            x = x || 0;
+            y = y || 0;
+
+            return this.transform([1, 0, 0, 1, x, y]);
+        },
+
+        //裁切
+        clip: function(sx, sy, w, h){
+            // @todo 多图层挂接支持
+            
+            //将图像信息放置于临时canvas上
+            this.ctxContext.putImageData(this.imgData, 0, 0);
+
+            //取到相关矩阵的图像信息
+            this.imgData = this.ctxContext.getImageData(sx, sy, w, h);
+
+            this.context.canvas.width = w;
+            this.context.canvas.height = h;
+
+            return this;
+        },
+
         //图像的工具方法 不会返回AI本身
         Tools: function(args){
             return P.tools(this.imgData, arguments);

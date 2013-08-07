@@ -1,0 +1,30 @@
+<!DOCTYPE HTML>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title></title>
+</head>
+<body>
+<script type="text/javascript" src="../combined/alloyimage.js"></script>
+<script type="text/javascript">
+var img = new Image();
+img.src = "../res/img/1.jpg";
+document.body.appendChild(img);
+
+img.onload = function(){
+  var ps = $AI(500, 500);
+  var ps2 = $AI(this);
+
+  //ps2.moveTo(0, 0).rotate(10).show();
+
+  ps.add(ps2.ps("素描"));
+
+  ps.rotate(20).clip(0, 0, 200, 200).show();
+  
+
+};
+
+</script>
+	
+</body>
+</html>
