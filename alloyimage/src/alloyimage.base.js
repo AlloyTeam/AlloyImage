@@ -115,11 +115,8 @@ try{
 
             switch(spaceName){
                 case "Filter":
-                    return this.lib[spaceName][actName].process(imgData, args);
-                    //break;
-
                 case "Alteration":
-                    return this.lib[actName].process(imgData, args);
+                    return this.lib[spaceName][actName].process(imgData, args);
                     //break;
 
                 case "ComEffect":

@@ -5,7 +5,7 @@
  */
 ;(function(Ps){
 
-    window[Ps].module("curve", function(P){
+    window[Ps].module("Alteration.curve", function(P){
 
         var M = {
             process: function(imgData, arg){

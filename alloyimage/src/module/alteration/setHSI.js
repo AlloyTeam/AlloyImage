@@ -8,7 +8,7 @@
  */
 ;(function(Ps){
 
-    window[Ps].module("setHSI",function(P){
+    window[Ps].module("Alteration.setHSI",function(P){
 
         var M = {
             process: function(imgData,arg){//调节亮度对比度

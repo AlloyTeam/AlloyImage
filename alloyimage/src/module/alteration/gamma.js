@@ -5,7 +5,7 @@
  */
 ;(function(Ps){
 
-    window[Ps].module("gamma",function(P){
+    window[Ps].module("Alteration.gamma",function(P){
 
         var M = {
             process: function(imgData, args){

@@ -5,7 +5,7 @@
  */
 ;(function(Ps){
 
-    window[Ps].module("brightness",function(P){
+    window[Ps].module("Alteration.brightness",function(P){
 
         var M = {
             //调节亮度对比度

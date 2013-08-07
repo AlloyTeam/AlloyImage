@@ -115,11 +115,8 @@ try{
 
             switch(spaceName){
                 case "Filter":
-                    return this.lib[spaceName][actName].process(imgData, args);
-                    //break;
-
                 case "Alteration":
-                    return this.lib[actName].process(imgData, args);
+                    return this.lib[spaceName][actName].process(imgData, args);
                     //break;
 
                 case "ComEffect":
@@ -948,39 +945,6 @@ window.AlloyImage = $AI = window.psLib;
 })("psLib");
 /**
  * @author: Bin Wang
- * @description: 调整亮度对比度
- *
- */
-;(function(Ps){
-
-    window[Ps].module("brightness",function(P){
-
-        var M = {
-            //调节亮度对比度
-            process: function(imgData, args){
-                var data = imgData.data;
-                var brightness = args[0] / 50;// -1,1
-                var arg2 = args[1] || 0;
-                var c = arg2 / 50;// -1,1
-                var k = Math.tan((45 + 44 * c) * Math.PI / 180);
-
-                for(var i = 0,n = data.length;i < n;i += 4){
-                    for(var j = 0;j < 3;j ++){
-                        data[i + j] = (data[i + j] - 127.5 * (1 - brightness)) * k + 127.5 * (1 + brightness);
-                    }
-                }
-
-                return imgData;
-            }
-        };
-
-        return M;
-
-    });
-
-})("psLib");
-/**
- * @author: Bin Wang
  * @description: 查找边缘
  *
  */
@@ -1152,51 +1116,6 @@ window.AlloyImage = $AI = window.psLib;
         };
 
         return Config;
-
-    });
-
-})("psLib");
-/**
- * @author: Bin Wang
- * @description:    曲线 
- *
- */
-;(function(Ps){
-
-    window[Ps].module("curve", function(P){
-
-        var M = {
-            process: function(imgData, arg){
-                /*
-                 * arg   arg[0] = [3,3] ,arg[1]  = [2,2]
-                 * */
-
-                //获得插值函数
-                var f = P.lib.dorsyMath.lagrange(arg[0], arg[1]);
-                var data = imgData.data;
-                var width = imgData.width;
-                var height = imgData.height;
-
-                //区块
-                for(var x = 0; x < width; x ++){
-
-                    for(var y = 0; y < height; y ++){
-                        
-                        var realI = y * width + x;
-
-                        for(var j = 0; j < 3; j ++){
-                            data[realI * 4 + j] = f(data[realI * 4 + j]);
-                        }
-
-                    }
-
-                }
-
-                return imgData;
-            }
-        };
-
-        return M;
 
     });
 
@@ -1932,92 +1851,6 @@ window.AlloyImage = $AI = window.psLib;
 })("psLib");
 /**
  * @author: Bin Wang
- * @description: gamma调节
- *
- */
-;(function(Ps){
-
-    window[Ps].module("gamma",function(P){
-
-        var M = {
-            process: function(imgData, args){
-                var dM = P.lib.dorsyMath;
-                var data = imgData.data;
-                var width = imgData.width;
-                var height = imgData.height;
-
-                //gamma阶-100， 100
-                var gamma;
-
-                if(args[0] == undefined) gamma = 10;
-                else gamma = args[0];
-
-                var normalizedArg = ((gamma + 100) / 200) * 2;
-                
-                for(var x = 0; x < width; x ++){
-                    for(var y = 0; y < height; y ++){
-                        dM.xyCal(imgData, x, y, function(r, g, b){
-                            return [
-                                Math.pow(r, normalizedArg),
-                                Math.pow(g, normalizedArg),
-                                Math.pow(b, normalizedArg)
-                            ];
-                        });
-                    }
-                }
-                return imgData;
-            }
-        };
-
-        return M;
-
-    });
-
-})("psLib");
-/**
- * @author: Bin Wang
- * @description: 调整RGB 饱和和度  
- * H (-2*Math.PI , 2 * Math.PI)  S (-100,100) I (-100,100)
- * 着色原理  勾选着色后，所有的像素不管之前是什么色相，都变成当前设置的色相，
- * 然后饱和度变成现在设置的饱和度，但保持明度为原来的基础上加上设置的明度
- *
- */
-;(function(Ps){
-
-    window[Ps].module("setHSI",function(P){
-
-        var M = {
-            process: function(imgData,arg){//调节亮度对比度
-                arg[0] = arg[0] / 180 * Math.PI;
-                arg[1] = arg[1] / 100 || 0;
-                arg[2] = arg[2] / 100 * 255 || 0;
-                arg[3] = arg[3] || false;//着色
-
-                P.lib.dorsyMath.applyInHSI(imgData,function(i){
-
-                    if(arg[3]){
-                        i.H = arg[0];
-                        i.S = arg[1];
-                        i.I += arg[2];
-                    }else{
-                        i.H += arg[0];
-                        i.S += arg[1];
-                        i.I += arg[2];
-                    }
-
-                });
-
-                return imgData;
-            }
-        };
-
-        return M;
-
-    });
-
-})("psLib");
-/**
- * @author: Bin Wang
  * @description: 图像工具方法 不会返回AI本身，会得到图像的一些特征
  *
  */
@@ -2201,6 +2034,170 @@ window.AlloyImage = $AI = window.psLib;
 
                     return resultStr;
                 }
+            }
+        };
+
+        return M;
+
+    });
+
+})("psLib");
+/**
+ * @author: Bin Wang
+ * @description: 调整亮度对比度
+ *
+ */
+;(function(Ps){
+
+    window[Ps].module("Alteration.brightness",function(P){
+
+        var M = {
+            //调节亮度对比度
+            process: function(imgData, args){
+                var data = imgData.data;
+                var brightness = args[0] / 50;// -1,1
+                var arg2 = args[1] || 0;
+                var c = arg2 / 50;// -1,1
+                var k = Math.tan((45 + 44 * c) * Math.PI / 180);
+
+                for(var i = 0,n = data.length;i < n;i += 4){
+                    for(var j = 0;j < 3;j ++){
+                        data[i + j] = (data[i + j] - 127.5 * (1 - brightness)) * k + 127.5 * (1 + brightness);
+                    }
+                }
+
+                return imgData;
+            }
+        };
+
+        return M;
+
+    });
+
+})("psLib");
+/**
+ * @author: Bin Wang
+ * @description:    曲线 
+ *
+ */
+;(function(Ps){
+
+    window[Ps].module("Alteration.curve", function(P){
+
+        var M = {
+            process: function(imgData, arg){
+                /*
+                 * arg   arg[0] = [3,3] ,arg[1]  = [2,2]
+                 * */
+
+                //获得插值函数
+                var f = P.lib.dorsyMath.lagrange(arg[0], arg[1]);
+                var data = imgData.data;
+                var width = imgData.width;
+                var height = imgData.height;
+
+                //区块
+                for(var x = 0; x < width; x ++){
+
+                    for(var y = 0; y < height; y ++){
+                        
+                        var realI = y * width + x;
+
+                        for(var j = 0; j < 3; j ++){
+                            data[realI * 4 + j] = f(data[realI * 4 + j]);
+                        }
+
+                    }
+
+                }
+
+                return imgData;
+            }
+        };
+
+        return M;
+
+    });
+
+})("psLib");
+/**
+ * @author: Bin Wang
+ * @description: gamma调节
+ *
+ */
+;(function(Ps){
+
+    window[Ps].module("Alteration.gamma",function(P){
+
+        var M = {
+            process: function(imgData, args){
+                var dM = P.lib.dorsyMath;
+                var data = imgData.data;
+                var width = imgData.width;
+                var height = imgData.height;
+
+                //gamma阶-100， 100
+                var gamma;
+
+                if(args[0] == undefined) gamma = 10;
+                else gamma = args[0];
+
+                var normalizedArg = ((gamma + 100) / 200) * 2;
+                
+                for(var x = 0; x < width; x ++){
+                    for(var y = 0; y < height; y ++){
+                        dM.xyCal(imgData, x, y, function(r, g, b){
+                            return [
+                                Math.pow(r, normalizedArg),
+                                Math.pow(g, normalizedArg),
+                                Math.pow(b, normalizedArg)
+                            ];
+                        });
+                    }
+                }
+                return imgData;
+            }
+        };
+
+        return M;
+
+    });
+
+})("psLib");
+/**
+ * @author: Bin Wang
+ * @description: 调整RGB 饱和和度  
+ * H (-2*Math.PI , 2 * Math.PI)  S (-100,100) I (-100,100)
+ * 着色原理  勾选着色后，所有的像素不管之前是什么色相，都变成当前设置的色相，
+ * 然后饱和度变成现在设置的饱和度，但保持明度为原来的基础上加上设置的明度
+ *
+ */
+;(function(Ps){
+
+    window[Ps].module("Alteration.setHSI",function(P){
+
+        var M = {
+            process: function(imgData,arg){//调节亮度对比度
+                arg[0] = arg[0] / 180 * Math.PI;
+                arg[1] = arg[1] / 100 || 0;
+                arg[2] = arg[2] / 100 * 255 || 0;
+                arg[3] = arg[3] || false;//着色
+
+                P.lib.dorsyMath.applyInHSI(imgData,function(i){
+
+                    if(arg[3]){
+                        i.H = arg[0];
+                        i.S = arg[1];
+                        i.I += arg[2];
+                    }else{
+                        i.H += arg[0];
+                        i.S += arg[1];
+                        i.I += arg[2];
+                    }
+
+                });
+
+                return imgData;
             }
         };
 
