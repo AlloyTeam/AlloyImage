@@ -487,7 +487,7 @@ try{
 
             }else{
                 //做映射转发
-                this.imgData = P.add(this.imgData, psLibObj.imgData, method, alpha, dx, dy, isFast, channel);
+                P.add(this.imgData, psLibObj.imgData, method, alpha, dx, dy, isFast, channel);
             }
 
             return this;
@@ -797,6 +797,7 @@ window.AlloyImage = $AI = window.psLib;
                     height = lowerData.height,
                     upperLength = u.length,
                     upperWidth = upperData.width,
+                    upperHeight = upperData.height;
 
                     indexOfArr = [
                         channelString.indexOf("0") > -1,
@@ -813,25 +814,74 @@ window.AlloyImage = $AI = window.psLib;
 
                 var ii, row, col, uRow, uCol, uIi, uI;
 
-                for(var i = 0, n = l.length; i < n; i += everyJump){
+                //计算重叠部分x ,y范围
+                var xMin, yMin, xMax, yMax;
 
-                    ii = i / 4;
+                var uXMin = dx;
+                var uXMax = dx + upperWidth;
+                var uYMin = dy;
+                var uYMax = dy + upperHeight;
+
+                if(uXMin > width){
+                    return;
+                }else if(uXMin < 0){
+                    uXMin = 0;
+                }
+
+                if(uXMax < 0){
+                    return;
+                }else if(uXMax > width){
+                    uXMax = width;
+                }
+
+                if(uYMin > height){
+                    return;
+                }else if(uYMin < 0){
+                    uYMin = 0;
+                }
+
+                if(uYMax < 0){
+                    return;
+                }else if(uYMax > height){
+                    uYMax = height;
+                }
+
+                
+                var currRow, upperY, upperRow;
+                for(var y = uYMin; y < uYMax; y ++){
+                    currRow = y * width;
+                    upperY = y - dy;
+                    upperRow = upperY * upperWidth;
+
+                    for(var x = uXMin; x < uXMax; x ++){
+                    //计算此时对应的upperX,Y
+                        var upperX = x - dx;
+
+                        //计算此时的i
+                        var i = (currRow + x) * 4;
+
+                        //计算此时的upperI
+                        var uI = (upperRow + upperX) * 4;
+
+                //for(var i = 0, n = l.length; i < n; i += everyJump){
+
+                    //ii = i / 4;
 
                     //得到当前点的坐标 y分量
-                    row = parseInt(ii / width); 
-                    col = ii % width;
+                    //row = ~~(ii / width); 
+                    //col = ii % width;
 
-                    uRow = row - dy;
-                    uCol = col - dx;
+                    //uRow = row - dy;
+                    //uCol = col - dx;
 
-                    uIi = uRow * upperWidth + uCol;
-                    uI = uIi * 4;
+                    //uIi = uRow * upperWidth + uCol;
+                    //uI = uIi * 4;
 
-                    if(uI >= 0 && uI < (upperLength - 4) && uCol < upperWidth && uCol >= 0){
+                    //if(uI >= 0 && uI < (upperLength - 4) && uCol < upperWidth && uCol >= 0){
 
                         //l[i + 3] = u[uI + 3];//透明度
-                        for(var j = 0;j < 3;j ++){
-
+                        for(var j = 0; j < 3; j ++){
+                            
                             //若此点透明则不计算
                             if(u[uI + 3] == 0) break;
                             else l[i + 3] = u[uI + 3];
@@ -860,14 +910,14 @@ window.AlloyImage = $AI = window.psLib;
 
                                 case "正片叠底":
                                     if(indexOfArr[j]){
-                                        result = parseInt((l[i + j] * u[uI + j]) / 255);
+                                        result = ~~((l[i + j] * u[uI + j]) / 255);
                                         l[i + j] = (1 - alpha) * l[i + j] + (alpha) * result;
                                     }
                                     break;
 
                                 case "滤色" :
                                     if(indexOfArr[j]){
-                                        result = parseInt(255 - (255 - l[i + j]) * (255 - u[uI + j]) / 255);
+                                        result = ~~(255 - (255 - l[i + j]) * (255 - u[uI + j]) / 255);
                                         l[i + j] = (1 - alpha) * l[i + j] + (alpha) * result;
                                     }
                                     break;
@@ -990,11 +1040,11 @@ window.AlloyImage = $AI = window.psLib;
                                         result = u[uI + j];
                                         l[i + j] = (1 - alpha) * l[i + j] + (alpha) * result;
                                     }
-                            }
-                        }
-                    }
+                            }//end switch
+                        }//end for
+                    }//end y
                     
-                }
+                }//end x
 
                 return lowerData;
             }
@@ -2110,158 +2160,30 @@ window.AlloyImage = $AI = window.psLib;
 })("psLib");
 /**
  * @author: Bin Wang
- * @description: 调整亮度对比度
+ * @description:灰度扩展
  *
  */
 ;(function(Ps){
 
-    window[Ps].module("Alteration.brightness",function(P){
+    window[Ps].module("Filter.ImageEnhance",function(P){
 
         var M = {
-            //调节亮度对比度
-            process: function(imgData, args){
+            process: function(imgData,arg1,arg2){
+                var lamta = arg || 0.5;
                 var data = imgData.data;
-                var brightness = args[0] / 50;// -1,1
-                var arg2 = args[1] || 0;
-                var c = arg2 / 50;// -1,1
-                var k = Math.tan((45 + 44 * c) * Math.PI / 180);
+                var width = imgData.width;
+                var height = imgData.height;
+                var p1 = arg1 || {x: 10,y: 10};
+                var p2 = arg2 || {x: 50,y: 40};
+
+                function transfer(d){
+                }
 
                 for(var i = 0,n = data.length;i < n;i += 4){
-                    for(var j = 0;j < 3;j ++){
-                        data[i + j] = (data[i + j] - 127.5 * (1 - brightness)) * k + 127.5 * (1 + brightness);
-                    }
+                    
                 }
 
-                return imgData;
-            }
-        };
-
-        return M;
-
-    });
-
-})("psLib");
-/**
- * @author: Bin Wang
- * @description:    曲线 
- *
- */
-;(function(Ps){
-
-    window[Ps].module("Alteration.curve", function(P){
-
-        var M = {
-            process: function(imgData, arg){
-                /*
-                 * arg   arg[0] = [3,3] ,arg[1]  = [2,2]
-                 * */
-
-                //获得插值函数
-                var f = P.lib.dorsyMath.lagrange(arg[0], arg[1]);
-                var data = imgData.data;
-                var width = imgData.width;
-                var height = imgData.height;
-
-                //区块
-                for(var x = 0; x < width; x ++){
-
-                    for(var y = 0; y < height; y ++){
-                        
-                        var realI = y * width + x;
-
-                        for(var j = 0; j < 3; j ++){
-                            data[realI * 4 + j] = f(data[realI * 4 + j]);
-                        }
-
-                    }
-
-                }
-
-                return imgData;
-            }
-        };
-
-        return M;
-
-    });
-
-})("psLib");
-/**
- * @author: Bin Wang
- * @description: gamma调节
- *
- */
-;(function(Ps){
-
-    window[Ps].module("Alteration.gamma",function(P){
-
-        var M = {
-            process: function(imgData, args){
-                var dM = P.lib.dorsyMath;
-                var data = imgData.data;
-                var width = imgData.width;
-                var height = imgData.height;
-
-                //gamma阶-100， 100
-                var gamma;
-
-                if(args[0] == undefined) gamma = 10;
-                else gamma = args[0];
-
-                var normalizedArg = ((gamma + 100) / 200) * 2;
-                
-                for(var x = 0; x < width; x ++){
-                    for(var y = 0; y < height; y ++){
-                        dM.xyCal(imgData, x, y, function(r, g, b){
-                            return [
-                                Math.pow(r, normalizedArg),
-                                Math.pow(g, normalizedArg),
-                                Math.pow(b, normalizedArg)
-                            ];
-                        });
-                    }
-                }
-                return imgData;
-            }
-        };
-
-        return M;
-
-    });
-
-})("psLib");
-/**
- * @author: Bin Wang
- * @description: 调整RGB 饱和和度  
- * H (-2*Math.PI , 2 * Math.PI)  S (-100,100) I (-100,100)
- * 着色原理  勾选着色后，所有的像素不管之前是什么色相，都变成当前设置的色相，
- * 然后饱和度变成现在设置的饱和度，但保持明度为原来的基础上加上设置的明度
- *
- */
-;(function(Ps){
-
-    window[Ps].module("Alteration.setHSI",function(P){
-
-        var M = {
-            process: function(imgData,arg){//调节亮度对比度
-                arg[0] = arg[0] / 180 * Math.PI;
-                arg[1] = arg[1] / 100 || 0;
-                arg[2] = arg[2] / 100 * 255 || 0;
-                arg[3] = arg[3] || false;//着色
-
-                P.lib.dorsyMath.applyInHSI(imgData,function(i){
-
-                    if(arg[3]){
-                        i.H = arg[0];
-                        i.S = arg[1];
-                        i.I += arg[2];
-                    }else{
-                        i.H += arg[0];
-                        i.S += arg[1];
-                        i.I += arg[2];
-                    }
-
-                });
+                imgData.data = data;
 
                 return imgData;
             }
@@ -2383,42 +2305,6 @@ window.AlloyImage = $AI = window.psLib;
                 }
 
 
-                return imgData;
-            }
-        };
-
-        return M;
-
-    });
-
-})("psLib");
-/**
- * @author: Bin Wang
- * @description:    降噪
- *
- */
-;(function(Ps){
-
-    window[Ps].module("Filter.denoise",function(P){
-
-        var M = {
-            process: function(imgData,arg){
-                var dM = P.lib.dorsyMath;
-                var data = imgData.data;
-                var width = imgData.width;
-                var height = imgData.height;
-                
-                for(var x = 0; x < width; x ++){
-                    for(var y = 0; y < height; y ++){
-                        dM.xyCal(imgData, x, y, function(r, g, b){
-                            return [
-                                r * 0.393 + g * 0.769 + b * 0.189,
-                                r * 0.349 + g * 0.686 + b * 0.168,
-                                r * 0.272 + g * 0.534 + b * 0.131
-                            ];
-                        });
-                    }
-                }
                 return imgData;
             }
         };
@@ -2652,42 +2538,6 @@ window.AlloyImage = $AI = window.psLib;
                 }
                 //end
                 imgData.data = pixes;
-                return imgData;
-            }
-        };
-
-        return M;
-
-    });
-
-})("psLib");
-/**
- * @author: Bin Wang
- * @description:灰度扩展
- *
- */
-;(function(Ps){
-
-    window[Ps].module("Filter.ImageEnhance",function(P){
-
-        var M = {
-            process: function(imgData,arg1,arg2){
-                var lamta = arg || 0.5;
-                var data = imgData.data;
-                var width = imgData.width;
-                var height = imgData.height;
-                var p1 = arg1 || {x: 10,y: 10};
-                var p2 = arg2 || {x: 50,y: 40};
-
-                function transfer(d){
-                }
-
-                for(var i = 0,n = data.length;i < n;i += 4){
-                    
-                }
-
-                imgData.data = data;
-
                 return imgData;
             }
         };
@@ -3081,6 +2931,170 @@ window.AlloyImage = $AI = window.psLib;
                 }
 
                 imgData.data = data;
+
+                return imgData;
+            }
+        };
+
+        return M;
+
+    });
+
+})("psLib");
+/**
+ * @author: Bin Wang
+ * @description: 调整亮度对比度
+ *
+ */
+;(function(Ps){
+
+    window[Ps].module("Alteration.brightness",function(P){
+
+        var M = {
+            //调节亮度对比度
+            process: function(imgData, args){
+                var data = imgData.data;
+                var brightness = args[0] / 50;// -1,1
+                var arg2 = args[1] || 0;
+                var c = arg2 / 50;// -1,1
+                var k = Math.tan((45 + 44 * c) * Math.PI / 180);
+
+                for(var i = 0,n = data.length;i < n;i += 4){
+                    for(var j = 0;j < 3;j ++){
+                        data[i + j] = (data[i + j] - 127.5 * (1 - brightness)) * k + 127.5 * (1 + brightness);
+                    }
+                }
+
+                return imgData;
+            }
+        };
+
+        return M;
+
+    });
+
+})("psLib");
+/**
+ * @author: Bin Wang
+ * @description:    曲线 
+ *
+ */
+;(function(Ps){
+
+    window[Ps].module("Alteration.curve", function(P){
+
+        var M = {
+            process: function(imgData, arg){
+                /*
+                 * arg   arg[0] = [3,3] ,arg[1]  = [2,2]
+                 * */
+
+                //获得插值函数
+                var f = P.lib.dorsyMath.lagrange(arg[0], arg[1]);
+                var data = imgData.data;
+                var width = imgData.width;
+                var height = imgData.height;
+
+                //区块
+                for(var x = 0; x < width; x ++){
+
+                    for(var y = 0; y < height; y ++){
+                        
+                        var realI = y * width + x;
+
+                        for(var j = 0; j < 3; j ++){
+                            data[realI * 4 + j] = f(data[realI * 4 + j]);
+                        }
+
+                    }
+
+                }
+
+                return imgData;
+            }
+        };
+
+        return M;
+
+    });
+
+})("psLib");
+/**
+ * @author: Bin Wang
+ * @description: gamma调节
+ *
+ */
+;(function(Ps){
+
+    window[Ps].module("Alteration.gamma",function(P){
+
+        var M = {
+            process: function(imgData, args){
+                var dM = P.lib.dorsyMath;
+                var data = imgData.data;
+                var width = imgData.width;
+                var height = imgData.height;
+
+                //gamma阶-100， 100
+                var gamma;
+
+                if(args[0] == undefined) gamma = 10;
+                else gamma = args[0];
+
+                var normalizedArg = ((gamma + 100) / 200) * 2;
+                
+                for(var x = 0; x < width; x ++){
+                    for(var y = 0; y < height; y ++){
+                        dM.xyCal(imgData, x, y, function(r, g, b){
+                            return [
+                                Math.pow(r, normalizedArg),
+                                Math.pow(g, normalizedArg),
+                                Math.pow(b, normalizedArg)
+                            ];
+                        });
+                    }
+                }
+                return imgData;
+            }
+        };
+
+        return M;
+
+    });
+
+})("psLib");
+/**
+ * @author: Bin Wang
+ * @description: 调整RGB 饱和和度  
+ * H (-2*Math.PI , 2 * Math.PI)  S (-100,100) I (-100,100)
+ * 着色原理  勾选着色后，所有的像素不管之前是什么色相，都变成当前设置的色相，
+ * 然后饱和度变成现在设置的饱和度，但保持明度为原来的基础上加上设置的明度
+ *
+ */
+;(function(Ps){
+
+    window[Ps].module("Alteration.setHSI",function(P){
+
+        var M = {
+            process: function(imgData,arg){//调节亮度对比度
+                arg[0] = arg[0] / 180 * Math.PI;
+                arg[1] = arg[1] / 100 || 0;
+                arg[2] = arg[2] / 100 * 255 || 0;
+                arg[3] = arg[3] || false;//着色
+
+                P.lib.dorsyMath.applyInHSI(imgData,function(i){
+
+                    if(arg[3]){
+                        i.H = arg[0];
+                        i.S = arg[1];
+                        i.I += arg[2];
+                    }else{
+                        i.H += arg[0];
+                        i.S += arg[1];
+                        i.I += arg[2];
+                    }
+
+                });
 
                 return imgData;
             }

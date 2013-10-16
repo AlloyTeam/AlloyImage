@@ -3,11 +3,20 @@ $isCom = $_GET['c'];
 
 $files = scandir("../src/module/");
 $contents = file_get_contents("../src/alloyimage.base.js");
-foreach($files as $file){
-    if(preg_match("/[^\.]+\.js$/",$file)){
-        $contents .= file_get_contents("../src/module/".$file);
+
+function comfiles($filesDir){
+    global $contents;
+    $files = scandir($filesDir);
+    foreach($files as $file){
+        if(preg_match("/[^\.]+\.js$/",$file)){
+            $contents .= file_get_contents($filesDir.$file);
+        }
     }
 }
+comfiles("../src/module/");
+comfiles("../src/module/filter/");
+comfiles("../src/module/alteration/");
+
 $wfile = fopen("../combined/alloyimage.js","w+");
 if(fwrite($wfile,$contents)){
     echo "combined OK <br />";

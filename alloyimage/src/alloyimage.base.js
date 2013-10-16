@@ -487,7 +487,7 @@ try{
 
             }else{
                 //做映射转发
-                this.imgData = P.add(this.imgData, psLibObj.imgData, method, alpha, dx, dy, isFast, channel);
+                P.add(this.imgData, psLibObj.imgData, method, alpha, dx, dy, isFast, channel);
             }
 
             return this;
