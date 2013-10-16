@@ -14,7 +14,8 @@
                 "亮度": "brightness",
                 "色相/饱和度调节": "setHSI",
                 "曲线" : "curve",
-                "gamma调节" : "gamma"
+                "gamma调节" : "gamma",
+                "可选颜色": "selectableColor"
             },
 
             //滤镜

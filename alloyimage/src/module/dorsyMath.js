@@ -364,9 +364,11 @@
                 var data = imgData.data;
                 var processedData = rgbFun(data[j], data[j + 1], data[j + 2]);
 
-                data[j] = processedData[0];
-                data[j + 1] = processedData[1];
-                data[j + 2] = processedData[2];
+                if(processedData){
+                    data[j] = processedData[0];
+                    data[j + 1] = processedData[1];
+                    data[j + 2] = processedData[2];
+                }
 
                 if(aFun){
                     data[j + 3] = aFun(data[j + 3]);
