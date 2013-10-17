@@ -8,9 +8,13 @@
 <div style="height: 100px;background: rgb(186, 130, 166);"></div>
 <script type="text/javascript" src="../combined/alloyimage.js"></script>	
 <script type="text/javascript">
-var red = $AI(100, 200, "rgb(186, 130, 166)").show();
+var img = new Image();
+img.src = "../res/img/10.jpg";
+img.onload = function(){
+  var red = $AI(this);
 
-//red.act("可选颜色", "red", 0.27, - 0.51, - 0.65).show();
+  red.act("可选颜色", "blue", -1, 0.91, 0.62, 0, 0).show();
+};
 </script>
 </body>
 </html>

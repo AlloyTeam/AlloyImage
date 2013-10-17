@@ -20,7 +20,7 @@
                 var K = arg[4];
 
                 //是否相对
-                var isRelative = arg[5] || 1;
+                var isRelative = arg[5] || 0;
 
                 var maxColorMap = {
                     red: "R",
@@ -81,16 +81,34 @@
 
                                     for(var i = 0; i < 3; i ++){
                                         //可减少到的量
-                                        var lowLimit = colorArr[i] - ~~ (limit * (colorArr[i] / 255));
+                                        var lowLimitDelta = ~~ (limit * (colorArr[i] / 255));
+                                        var lowLimit = colorArr[i] - lowLimitDelta;
 
                                         //可增加到的量
-                                        var upLimit = colorArr[i] + ~~ (limit * (1 - colorArr[i] / 255));
+                                        var upLimitDelta =  ~~ (limit * (1 - colorArr[i] / 255));
+                                        var upLimit = colorArr[i] + upLimitDelta;
 
-                                        //现在量
-                                        var realUpLimit = limit * - alterNum[i] + colorArr[i];
+                                        //相对调节
+                                        if(isRelative){
+                                            //如果分量大于128  减少量=增加量
+                                            if(colorArr[i] > 128){
+                                                lowLimitDelta = upLimitDelta;
+                                            }
 
-                                        if(realUpLimit > upLimit) realUpLimit = upLimit;
-                                        if(realUpLimit < lowLimit) realUpLimit = lowLimit;
+                                            //> 0表明在减少
+                                            if(alterNum[i] > 0){
+                                                var realUpLimit = colorArr[i] - alterNum[i] * lowLimitDelta; 
+                                            }else{
+                                                var realUpLimit = colorArr[i] - alterNum[i] * upLimitDelta; 
+                                            }
+                                        }else{
+
+                                            //现在量
+                                            var realUpLimit = limit * - alterNum[i] + colorArr[i];
+
+                                            if(realUpLimit > upLimit) realUpLimit = upLimit;
+                                            if(realUpLimit < lowLimit) realUpLimit = lowLimit;
+                                        }
 
                                         resultArr[i] = realUpLimit;
                                     }

@@ -116,6 +116,8 @@ try{
             switch(spaceName){
                 case "Filter":
                 case "Alteration":
+
+                    actName == 'selectableColor' && console.log(imgData);
                     return this.lib[spaceName][actName].process(imgData, args);
                     //break;
 
