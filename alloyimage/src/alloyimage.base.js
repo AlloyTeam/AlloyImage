@@ -331,7 +331,6 @@ try{
                 //做一次转发映射
                 P.reflect(method, this.imgData, args);
 
-                console.log(this.imgData.data[0], this.imgData.data[1], this.imgData.data[2]);
             }
             
             return this;

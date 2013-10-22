@@ -5,18 +5,31 @@
 	<title></title>
 </head>
 <body>
-<div style="height: 100px;background: rgb(186, 130, 166);"></div>
 <script type="text/javascript" src="../combined/alloyimage.js"></script>	
 <script type="text/javascript">
 var img = new Image();
-img.src = "../res/img/10.jpg";
+img.src = "../res/img/13.jpg";
 img.onload = function(){
-  var red = $AI(200, 200, 'rgb(100, 80, 60)');
   var red = $AI(this);
 
+  red.clone().ps("暖秋").show();
+
   //red.act("可选颜色", "青色", -0.53, -0.86, -0.16, 0.65, 0).show();
-  red.act("setHSI", 200, 0, 0, 0, "R").show(); 
+  red.act("setHSI", -32, 0, 0, 0, "G") 
+     .act("可选颜色", "黄色", -0.67, 0.35, 0, 0, 1)
+     .act("可选颜色", "绿色", -0.7, 0.3, 0, 0, 1)
+     .act("可选颜色", "青色", -0.58, 0.56, 0.2, 0, 1)
+     .act("可选颜色", "中性色", -0.11, 0.05, 0, 0, 1)
+     .act("可选颜色", "黄色", -0.42, 0.23, 0, 0, 1)
+     //.act("可选颜色", "黑色", -0.04, 0.05, -0.1, 0, 1)
+     .act("曲线", [0, 255], [40, 255], "R")
+     .act("曲线", [0, 255], [10, 250], "G")
+     .act("曲线", [0, 255], [0, 240], "B")
+
+     .show();
 };
+
+document.body.appendChild(img);
 </script>
 </body>
 </html>
