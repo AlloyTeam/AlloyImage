@@ -11,9 +11,10 @@
 var img = new Image();
 img.src = "../res/img/10.jpg";
 img.onload = function(){
+  var red = $AI(200, 200, 'rgb(100, 80, 60)');
   var red = $AI(this);
 
-  red.act("可选颜色", "blue", -1, 0.91, 0.62, 0, 0).show();
+  red.act("可选颜色", "青色", -0.53, -0.86, -0.16, 0.65, 0).show();
 };
 </script>
 </body>

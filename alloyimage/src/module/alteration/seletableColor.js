@@ -78,40 +78,78 @@
 
                                     var middleValue = R + G + B - Math.max(R, G, B) - Math.min(R, G, B);
                                     limit = colorObj[maxColor] - middleValue;
+                                }else if(minColorMap[color]){
+                                    var minColor = minColorMap[color];
 
-                                    for(var i = 0; i < 3; i ++){
-                                        //可减少到的量
-                                        var lowLimitDelta = ~~ (limit * (colorArr[i] / 255));
-                                        var lowLimit = colorArr[i] - lowLimitDelta;
+                                    var middleValue = R + G + B - Math.max(R, G, B) - Math.min(R, G, B);
+                                    limit = middleValue - colorObj[minColor]  ;
+                                }else if(color == "black" || color == "黑色"){
+                                    limit = ~~ (127.5 - Math.max(R, G, B)) * 2;
+                                }else if(color == "white" || color == "白色"){
+                                    limit = ~~ (Math.min(R, G, B) - 127.5) * 2;
+                                }else if(color == "中性色"){
+                                    limit = 255 - (Math.abs(Math.max(R, G, B) - 127.5) + Math.abs(Math.min(R, G, B) - 127.5));
+                                }else{
+                                    return;
+                                }
 
-                                        //可增加到的量
-                                        var upLimitDelta =  ~~ (limit * (1 - colorArr[i] / 255));
-                                        var upLimit = colorArr[i] + upLimitDelta;
+                                for(var i = 0; i < 3; i ++){
+                                    //可减少到的量
+                                    var lowLimitDelta = ~~ (limit * (colorArr[i] / 255));
+                                    var lowLimit = colorArr[i] - lowLimitDelta;
 
-                                        //相对调节
-                                        if(isRelative){
-                                            //如果分量大于128  减少量=增加量
-                                            if(colorArr[i] > 128){
-                                                lowLimitDelta = upLimitDelta;
-                                            }
+                                    //可增加到的量
+                                    var upLimitDelta =  ~~ (limit * (1 - colorArr[i] / 255));
+                                    var upLimit = colorArr[i] + upLimitDelta;
 
-                                            //> 0表明在减少
-                                            if(alterNum[i] > 0){
-                                                var realUpLimit = colorArr[i] - alterNum[i] * lowLimitDelta; 
-                                            }else{
-                                                var realUpLimit = colorArr[i] - alterNum[i] * upLimitDelta; 
-                                            }
-                                        }else{
+                                    //将黑色算进去 得到影响百分比因子
+                                    var factor = (alterNum[i] + K + alterNum[i] * K);
 
-                                            //现在量
-                                            var realUpLimit = limit * - alterNum[i] + colorArr[i];
-
-                                            if(realUpLimit > upLimit) realUpLimit = upLimit;
-                                            if(realUpLimit < lowLimit) realUpLimit = lowLimit;
+                                    //相对调节
+                                    if(isRelative){
+                                        //如果分量大于128  减少量=增加量
+                                        if(colorArr[i] > 128){
+                                            lowLimitDelta = upLimitDelta;
                                         }
 
-                                        resultArr[i] = realUpLimit;
+                                        //先算出黑色导致的原始增量
+                                        if(K > 0){
+                                            var realUpLimit = colorArr[i] - K * lowLimitDelta; 
+                                        }else{
+                                            var realUpLimit = colorArr[i] - K * upLimitDelta; 
+                                        }
+
+                                        //标准化
+                                        if(realUpLimit > upLimit) realUpLimit = upLimit;
+                                        if(realUpLimit < lowLimit) realUpLimit = lowLimit;
+
+                                        upLimitDelta = upLimit - realUpLimit;
+                                        lowLimitDelta = realUpLimit - lowLimit;
+
+                                        if(K < 0){
+                                            lowLimitDelta = upLimitDelta;
+                                        }else{
+                                        }
+
+                                        //> 0表明在减少
+                                        if(alterNum[i] > 0){
+                                            realUpLimit -= alterNum[i] * lowLimitDelta; 
+                                        }else{
+                                            realUpLimit -= alterNum[i] * upLimitDelta; 
+                                        }
+
+
+                                    }else{
+
+                                        //现在量
+                                        var realUpLimit = limit * - factor + colorArr[i];
+
                                     }
+
+                                    if(realUpLimit > upLimit) realUpLimit = upLimit;
+                                    if(realUpLimit < lowLimit) realUpLimit = lowLimit;
+                                    
+                                    resultArr[i] = realUpLimit;
                                 }
 
                                 return resultArr;

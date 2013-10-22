@@ -117,7 +117,6 @@ try{
                 case "Filter":
                 case "Alteration":
 
-                    actName == 'selectableColor' && console.log(imgData);
                     return this.lib[spaceName][actName].process(imgData, args);
                     //break;
 
@@ -331,6 +330,8 @@ try{
             }else{
                 //做一次转发映射
                 P.reflect(method, this.imgData, args);
+
+                console.log(this.imgData.data[0], this.imgData.data[1], this.imgData.data[2]);
             }
             
             return this;
