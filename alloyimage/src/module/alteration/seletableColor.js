@@ -154,13 +154,14 @@
 
                                 return resultArr;
                             }
-                        });
-                    }
-                }
-                    
+                        });//end xyCal
+                    }//end forY
+                }//end forX
 
-            }
-        };
+                return imgData;
+
+            }//end process Method
+        };//end M defination
 
         return M;
     });
