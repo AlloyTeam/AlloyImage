@@ -16,8 +16,22 @@
                 arg[1] = arg[1] / 100 || 0;
                 arg[2] = arg[2] / 100 * 255 || 0;
                 arg[3] = arg[3] || false;//着色
+                
+                //调节通道
+                var channel = arg[4];
+                if(!(/[RGBCMY]+/.test(channel))){
+                    channel = "RGBCMY";
+                }
+                
+                var letters = channel.split("");
+                var indexOf = {};
 
-                P.lib.dorsyMath.applyInHSI(imgData,function(i){
+                for(var i = 0; i < letters.length; i ++){
+                    indexOf[letters[i]] = 1;
+                }
+
+                P.lib.dorsyMath.applyInHSI(imgData,function(i, color){
+                    if(! indexOf[color]) return;
 
                     if(arg[3]){
                         i.H = arg[0];

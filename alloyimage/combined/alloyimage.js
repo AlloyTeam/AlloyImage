@@ -800,7 +800,7 @@ window.AlloyImage = $AI = window.psLib;
                     height = lowerData.height,
                     upperLength = u.length,
                     upperWidth = upperData.width,
-                    upperHeight = upperData.height;
+                    upperHeight = upperData.height,
 
                     indexOfArr = [
                         channelString.indexOf("0") > -1,
@@ -1543,17 +1543,28 @@ window.AlloyImage = $AI = window.psLib;
                 };
             },
 
-            applyInHSI: function(imgData,func){//在hsi空间上应用func
+            applyInHSI: function(imgData, func){//在hsi空间上应用func
                 /*
                  * function(i){
                  *      i.H += 3;
                  * }
                  * H (-2*Math.PI , 2 * Math.PI)  S (-1,1) I (-255,255)
                  * */
+                var colorMap = ["R", "Y", "G", "C", "B", "M"];
                 var data = imgData.data;
-                for(var i = 0,n = data.length;i < n;i += 4){
-                    var hsiObj = this.RGBToHSI(data[i],data[i + 1],data[i + 2]);
-                    func(hsiObj);
+                
+                var d30 = Math.PI / 6;
+                var d60 = Math.PI / 3;
+                for(var i = 0, n = data.length; i < n; i += 4){
+                    var hsiObj = this.RGBToHSI(data[i], data[i + 1], data[i + 2]);
+
+                    //得到颜色属性
+                    var h = hsiObj.H + d30;
+                    var color = ~~ (h / d60);
+                    var rColor = colorMap[color];
+
+                    func(hsiObj, rColor);
+
                     if(hsiObj.S > 1) hsiObj.S = 1;
                     if(hsiObj.S < 0) hsiObj.S = 0;
 
@@ -3001,6 +3012,20 @@ window.AlloyImage = $AI = window.psLib;
                 var width = imgData.width;
                 var height = imgData.height;
 
+                //调节通道
+                var channel = arg[2];
+                if(!(/[RGB]+/.test(channel))){
+                    channel = "RGB";
+                }
+                
+                var channelString = channel.replace("R","0").replace("G","1").replace("B","2");
+                
+                var indexOfArr = [
+                    channelString.indexOf("0") > -1,
+                    channelString.indexOf("1") > -1,
+                    channelString.indexOf("2") > -1
+                ];
+
                 //区块
                 for(var x = 0; x < width; x ++){
 
@@ -3009,6 +3034,7 @@ window.AlloyImage = $AI = window.psLib;
                         var realI = y * width + x;
 
                         for(var j = 0; j < 3; j ++){
+                            if(! indexOfArr[j]) continue;
                             data[realI * 4 + j] = f(data[realI * 4 + j]);
                         }
 
@@ -3255,8 +3281,22 @@ window.AlloyImage = $AI = window.psLib;
                 arg[1] = arg[1] / 100 || 0;
                 arg[2] = arg[2] / 100 * 255 || 0;
                 arg[3] = arg[3] || false;//着色
+                
+                //调节通道
+                var channel = arg[4];
+                if(!(/[RGBCMY]+/.test(channel))){
+                    channel = "RGBCMY";
+                }
+                
+                var letters = channel.split("");
+                var indexOf = {};
 
-                P.lib.dorsyMath.applyInHSI(imgData,function(i){
+                for(var i = 0; i < letters.length; i ++){
+                    indexOf[letters[i]] = 1;
+                }
+
+                P.lib.dorsyMath.applyInHSI(imgData,function(i, color){
+                    if(! indexOf[color]) return;
 
                     if(arg[3]){
                         i.H = arg[0];

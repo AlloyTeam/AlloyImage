@@ -31,7 +31,7 @@
                     height = lowerData.height,
                     upperLength = u.length,
                     upperWidth = upperData.width,
-                    upperHeight = upperData.height;
+                    upperHeight = upperData.height,
 
                     indexOfArr = [
                         channelString.indexOf("0") > -1,

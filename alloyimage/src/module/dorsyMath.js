@@ -301,17 +301,28 @@
                 };
             },
 
-            applyInHSI: function(imgData,func){//在hsi空间上应用func
+            applyInHSI: function(imgData, func){//在hsi空间上应用func
                 /*
                  * function(i){
                  *      i.H += 3;
                  * }
                  * H (-2*Math.PI , 2 * Math.PI)  S (-1,1) I (-255,255)
                  * */
+                var colorMap = ["R", "Y", "G", "C", "B", "M"];
                 var data = imgData.data;
-                for(var i = 0,n = data.length;i < n;i += 4){
-                    var hsiObj = this.RGBToHSI(data[i],data[i + 1],data[i + 2]);
-                    func(hsiObj);
+                
+                var d30 = Math.PI / 6;
+                var d60 = Math.PI / 3;
+                for(var i = 0, n = data.length; i < n; i += 4){
+                    var hsiObj = this.RGBToHSI(data[i], data[i + 1], data[i + 2]);
+
+                    //得到颜色属性
+                    var h = hsiObj.H + d30;
+                    var color = ~~ (h / d60);
+                    var rColor = colorMap[color];
+
+                    func(hsiObj, rColor);
+
                     if(hsiObj.S > 1) hsiObj.S = 1;
                     if(hsiObj.S < 0) hsiObj.S = 0;
 

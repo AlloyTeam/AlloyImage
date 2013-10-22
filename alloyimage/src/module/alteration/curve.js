@@ -19,6 +19,20 @@
                 var width = imgData.width;
                 var height = imgData.height;
 
+                //调节通道
+                var channel = arg[2];
+                if(!(/[RGB]+/.test(channel))){
+                    channel = "RGB";
+                }
+                
+                var channelString = channel.replace("R","0").replace("G","1").replace("B","2");
+                
+                var indexOfArr = [
+                    channelString.indexOf("0") > -1,
+                    channelString.indexOf("1") > -1,
+                    channelString.indexOf("2") > -1
+                ];
+
                 //区块
                 for(var x = 0; x < width; x ++){
 
@@ -27,6 +41,7 @@
                         var realI = y * width + x;
 
                         for(var j = 0; j < 3; j ++){
+                            if(! indexOfArr[j]) continue;
                             data[realI * 4 + j] = f(data[realI * 4 + j]);
                         }
 
