@@ -250,7 +250,13 @@
                 var theta = ((R - G + R - B) / 2) / Math.sqrt((R - G) * (R - G) + (R - B) * (G - B)) || 0;
                 theta = Math.acos(theta);
                 var H = B > G ? (2 * Math.PI - theta) : theta;
-                var S = 1 - 3 * Math.min(R,G,B) / (R + G + B);
+
+                if(R + G + B > 0){
+                    var S = 1 - 3 * Math.min(R,G,B) / (R + G + B);
+                }else{
+                    var S = 0;
+                }
+
                 var I = (R + G + B) / 3;
 
                 if(H > 2 * Math.PI) H = 2 * Math.PI;
@@ -321,7 +327,7 @@
                     var color = ~~ (h / d60);
                     var rColor = colorMap[color];
 
-                    func(hsiObj, rColor);
+                    func(hsiObj, rColor, data[i + 3]);
 
                     if(hsiObj.S > 1) hsiObj.S = 1;
                     if(hsiObj.S < 0) hsiObj.S = 0;

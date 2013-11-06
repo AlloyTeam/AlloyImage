@@ -10,11 +10,12 @@
 <script type="text/javascript">
 function getColor(num){
   var img = new Image();
-  img.src = "../res/img/" + num + ".jpg";
+  img.src = "../res/img/" + num + ".png";
 
   img.onload = function(){
     var ai = $AI(this);
     var color = ai.Tools.getColor();
+    alert(color);
     ai.show();
     $AI(200, 200, color).show();
   };
@@ -32,8 +33,7 @@ function getText(num){
   };
 }
 
-//getColor(12);
-getText(5);
+getColor(14);
 </script>
 </body>
 </html>

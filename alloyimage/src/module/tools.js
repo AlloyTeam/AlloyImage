@@ -24,15 +24,17 @@
                   var result = [];
 
                   //在HSI空间应用
-                  dM.applyInHSI(imgData, function(obj){
-                    n = parseInt(obj.H / every);
+                  dM.applyInHSI(imgData, function(obj, rColor, alpha){
+                    if(alpha > 128){
+                        n = parseInt(obj.H / every);
 
-                    if(result[n]){
-                    }else{
-                        result[n] = [];
+                        if(result[n]){
+                        }else{
+                            result[n] = [];
+                        }
+
+                        result[n].push([obj.S, obj.I]);
                     }
-
-                    result[n].push([obj.S, obj.I]);
 
                   });
 

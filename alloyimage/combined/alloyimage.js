@@ -229,9 +229,11 @@ try{
             //mix P.lib.Tools method to $AI.Tools
             if(P.lib.Tools){
                 for(var i in P.lib.Tools){
-                    this.Tools[i] = function(args){
-                        return _this.Tools(i, args);
-                    };
+                    this.Tools[i] = (function(i){
+                        return function(args){
+                            return _this.Tools(i, args);
+                        };
+                    })(i);
                 }
             }
             
@@ -1146,7 +1148,7 @@ window.AlloyImage = $AI = window.psLib;
                 "色相/饱和度调节": "setHSI",
                 "曲线" : "curve",
                 "gamma调节" : "gamma",
-                "可选颜色": "selectableColor"
+                "可选颜色": "selectiveColor"
             },
 
             //滤镜
@@ -1491,7 +1493,13 @@ window.AlloyImage = $AI = window.psLib;
                 var theta = ((R - G + R - B) / 2) / Math.sqrt((R - G) * (R - G) + (R - B) * (G - B)) || 0;
                 theta = Math.acos(theta);
                 var H = B > G ? (2 * Math.PI - theta) : theta;
-                var S = 1 - 3 * Math.min(R,G,B) / (R + G + B);
+
+                if(R + G + B > 0){
+                    var S = 1 - 3 * Math.min(R,G,B) / (R + G + B);
+                }else{
+                    var S = 0;
+                }
+
                 var I = (R + G + B) / 3;
 
                 if(H > 2 * Math.PI) H = 2 * Math.PI;
@@ -1562,7 +1570,7 @@ window.AlloyImage = $AI = window.psLib;
                     var color = ~~ (h / d60);
                     var rColor = colorMap[color];
 
-                    func(hsiObj, rColor);
+                    func(hsiObj, rColor, data[i + 3]);
 
                     if(hsiObj.S > 1) hsiObj.S = 1;
                     if(hsiObj.S < 0) hsiObj.S = 0;
@@ -2007,15 +2015,17 @@ window.AlloyImage = $AI = window.psLib;
                   var result = [];
 
                   //在HSI空间应用
-                  dM.applyInHSI(imgData, function(obj){
-                    n = parseInt(obj.H / every);
+                  dM.applyInHSI(imgData, function(obj, rColor, alpha){
+                    if(alpha > 128){
+                        n = parseInt(obj.H / every);
 
-                    if(result[n]){
-                    }else{
-                        result[n] = [];
+                        if(result[n]){
+                        }else{
+                            result[n] = [];
+                        }
+
+                        result[n].push([obj.S, obj.I]);
                     }
-
-                    result[n].push([obj.S, obj.I]);
 
                   });
 
@@ -3102,7 +3112,7 @@ window.AlloyImage = $AI = window.psLib;
  */
 ;(function(Ps){
 
-    window[Ps].module("Alteration.selectableColor",function(P){
+    window[Ps].module("Alteration.selectiveColor",function(P){
 
         var M = {
             process: function(imgData, arg){//调节亮度对比度
@@ -3180,9 +3190,9 @@ window.AlloyImage = $AI = window.psLib;
                                     var middleValue = R + G + B - Math.max(R, G, B) - Math.min(R, G, B);
                                     limit = middleValue - colorObj[minColor]  ;
                                 }else if(color == "black" || color == "黑色"){
-                                    limit = ~~ (127.5 - Math.max(R, G, B)) * 2;
+                                    limit = parseInt(127.5 - Math.max(R, G, B)) * 2;
                                 }else if(color == "white" || color == "白色"){
-                                    limit = ~~ (Math.min(R, G, B) - 127.5) * 2;
+                                    limit = parseInt(Math.min(R, G, B) - 127.5) * 2;
                                 }else if(color == "中性色"){
                                     limit = 255 - (Math.abs(Math.max(R, G, B) - 127.5) + Math.abs(Math.min(R, G, B) - 127.5));
                                 }else{
@@ -3191,11 +3201,11 @@ window.AlloyImage = $AI = window.psLib;
 
                                 for(var i = 0; i < 3; i ++){
                                     //可减少到的量
-                                    var lowLimitDelta = ~~ (limit * (colorArr[i] / 255));
+                                    var lowLimitDelta = parseInt(limit * (colorArr[i] / 255));
                                     var lowLimit = colorArr[i] - lowLimitDelta;
 
                                     //可增加到的量
-                                    var upLimitDelta =  ~~ (limit * (1 - colorArr[i] / 255));
+                                    var upLimitDelta =  parseInt(limit * (1 - colorArr[i] / 255));
                                     var upLimit = colorArr[i] + upLimitDelta;
 
                                     //将黑色算进去 得到影响百分比因子

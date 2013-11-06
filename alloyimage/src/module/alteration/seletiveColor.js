@@ -6,7 +6,7 @@
  */
 ;(function(Ps){
 
-    window[Ps].module("Alteration.selectableColor",function(P){
+    window[Ps].module("Alteration.selectiveColor",function(P){
 
         var M = {
             process: function(imgData, arg){//调节亮度对比度
@@ -84,9 +84,9 @@
                                     var middleValue = R + G + B - Math.max(R, G, B) - Math.min(R, G, B);
                                     limit = middleValue - colorObj[minColor]  ;
                                 }else if(color == "black" || color == "黑色"){
-                                    limit = ~~ (127.5 - Math.max(R, G, B)) * 2;
+                                    limit = parseInt(127.5 - Math.max(R, G, B)) * 2;
                                 }else if(color == "white" || color == "白色"){
-                                    limit = ~~ (Math.min(R, G, B) - 127.5) * 2;
+                                    limit = parseInt(Math.min(R, G, B) - 127.5) * 2;
                                 }else if(color == "中性色"){
                                     limit = 255 - (Math.abs(Math.max(R, G, B) - 127.5) + Math.abs(Math.min(R, G, B) - 127.5));
                                 }else{
@@ -95,11 +95,11 @@
 
                                 for(var i = 0; i < 3; i ++){
                                     //可减少到的量
-                                    var lowLimitDelta = ~~ (limit * (colorArr[i] / 255));
+                                    var lowLimitDelta = parseInt(limit * (colorArr[i] / 255));
                                     var lowLimit = colorArr[i] - lowLimitDelta;
 
                                     //可增加到的量
-                                    var upLimitDelta =  ~~ (limit * (1 - colorArr[i] / 255));
+                                    var upLimitDelta =  parseInt(limit * (1 - colorArr[i] / 255));
                                     var upLimit = colorArr[i] + upLimitDelta;
 
                                     //将黑色算进去 得到影响百分比因子

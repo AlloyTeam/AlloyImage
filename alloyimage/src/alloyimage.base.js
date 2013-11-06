@@ -229,9 +229,11 @@ try{
             //mix P.lib.Tools method to $AI.Tools
             if(P.lib.Tools){
                 for(var i in P.lib.Tools){
-                    this.Tools[i] = function(args){
-                        return _this.Tools(i, args);
-                    };
+                    this.Tools[i] = (function(i){
+                        return function(args){
+                            return _this.Tools(i, args);
+                        };
+                    })(i);
                 }
             }
             
