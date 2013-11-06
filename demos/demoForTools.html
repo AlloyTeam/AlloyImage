@@ -1,0 +1,51 @@
+<!DOCTYPE HTML>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title></title>
+  <style type="text/css">
+.IconBg{
+  width: 200px;
+  height: 80px;
+  background: red;
+  line-height: 80px;
+  text-align:center;
+  margin-bottom: 10px;
+}
+.IconBg img{
+  width: 80px;
+  vertical-align: middle;
+}
+  </style>
+</head>
+<body>
+
+<div id='bgColor' class="IconBg">
+  <img src='icon/musicLogo.png' class="icon" />
+</div>
+
+<div id='bgColor' class="IconBg">
+  <img src='icon/sougou.png' class="icon" />
+</div>
+
+<div id='bgColor' class="IconBg">
+  <img src='icon/itunes.png' class="icon" />
+</div>
+
+<script type="text/javascript" src="alloyimage.js"></script>
+<script type="text/javascript">
+document.body.onload = function(){
+  var icons = document.querySelectorAll('.icon');
+  for(var i = 0; i < icons.length; i ++){
+    var img = icons[i];
+
+    var layer = $AI(img);
+    var color = layer.Tools("getColor");
+
+    icons[i].parentNode.style.background =  color;
+  }
+
+};
+</script>	
+</body>
+</html>
