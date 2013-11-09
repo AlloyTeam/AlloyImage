@@ -1,0 +1,52 @@
+<!DOCTYPE HTML>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title></title>
+  <style type="text/css">
+img{
+  display: none;
+}
+div canvas{
+  width: 300px;
+}
+  </style>
+</head>
+<body>
+<img src="pic/20131109104333.jpg" style="display:block;float:left;width: 300px;" alt="" />
+<div id='au'></div>
+<img src="pic/aum1.png" id='aum1' />
+<img src="pic/aum2.png" id='aum2' />
+<img src="pic/aumfooter.png" id='aumfooter' />
+
+伞颜色<input id='color1' type="range" max=360 min=-360 value=10 step='0.1' style='width: 400px' /><br />
+伞把<input id='color2' type="range" max=360 min=-360 value=10 style="width:400px" />
+
+<script type="text/javascript" src="alloyimage.js"></script>
+<script type="text/javascript">
+var $ = function(id){
+  return document.getElementById(id);
+};
+window.onload = function(){
+  var aum = $AI(500, 430, "#fff");
+  
+  var aum1 = $AI($('aum1'));
+  var aum2 = $AI($('aum2'));
+  var aumfooter = $AI($('aumfooter'));
+
+  aum.add(aum2, 188, 14, "变暗").addLayer(aumfooter, 131, 338, "变暗").addLayer(aum1, 0, 30);
+  aum.show("#au");
+
+  $('color1').onchange = function(){
+     aum1.view("setHSI", this.value, 50, 0, 1);
+     aum.show("#au");
+  };
+  $('color2').onchange = function(){
+     aumfooter.view("setHSI", this.value, 40, 10, 1);
+     aum.show("#au");
+  };
+
+};
+</script>
+</body>
+</html>
