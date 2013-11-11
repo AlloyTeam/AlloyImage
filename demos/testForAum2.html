@@ -37,14 +37,19 @@ window.onload = function(){
   aum.add(aum2, 188, 14, "变暗").addLayer(aumfooter, 131, 338, "变暗").addLayer(aum1, 0, 30);
   aum.show("#au");
 
-  $('color1').onmouseup = function(){
+  function do0(){
      aum1.view("setHSI", this.value, 50, 0, 1);
      aum.show("#au");
   };
-  $('color2').onmouseup = function(){
+  function do1(){
      aumfooter.view("setHSI", this.value, 40, 10, 1);
      aum.show("#au");
   };
+
+  $('color1').onmouseup = do0;
+  $('color1').ontouchend = do0;
+  $('color2').onmouseup = do1; 
+  $('color2').ontouchend = do1; 
 
 };
 </script>
