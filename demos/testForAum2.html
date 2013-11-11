@@ -37,11 +37,11 @@ window.onload = function(){
   aum.add(aum2, 188, 14, "变暗").addLayer(aumfooter, 131, 338, "变暗").addLayer(aum1, 0, 30);
   aum.show("#au");
 
-  $('color1').onchange = function(){
+  $('color1').onmouseup = function(){
      aum1.view("setHSI", this.value, 50, 0, 1);
      aum.show("#au");
   };
-  $('color2').onchange = function(){
+  $('color2').onmouseup = function(){
      aumfooter.view("setHSI", this.value, 40, 10, 1);
      aum.show("#au");
   };
