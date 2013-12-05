@@ -356,8 +356,11 @@ try{
             var n = layers.length;
             if(layers[n - 1] && layers[n - 1][0].type == 1){
                 this.imgData = layers[n - 1][0].imgData;
-                delete layers[n - 1];
+
+                layers.pop();
             }
+
+            return this;
         },
 
         //取消view的结果执行
@@ -365,8 +368,10 @@ try{
             var layers = this.layers;
             var n = layers.length;
             if(layers[n - 1] && layers[n - 1][0].type == 1){
-                delete layers[n - 1];
+                layers.pop();
             }
+
+            return this;
         },
 
         //显示对象 isFast用于快速显示
@@ -432,7 +437,7 @@ try{
 
             if(img){
                 img.onload = function(){};
-                img.src = this.save(0, workerFlag);
+                img.src = this.save("png", workerFlag);
             }
 
             return this;
@@ -541,6 +546,8 @@ try{
         save: function(type, workerFlag){
             type = type || "png";
             type = type.toLowerCase();
+
+            var isFast = 0;
 
             if(type == "jpg") type = "jpeg";
 

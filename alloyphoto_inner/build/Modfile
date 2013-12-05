@@ -1,0 +1,29 @@
+module.exports = {
+
+    tasks:{
+        cat: {
+               source: ["../src/alloyphoto.base.js", "../src/*.js"],
+               dest: "../release/alloyphoto.js"
+         },
+
+        min:{
+            js: {
+                source: "../release/alloyphoto.js",
+                dest: "../release/",
+                suffix: null
+            }
+        },
+
+        compile: {
+           html:{
+                src: "../test/index.html",
+                dest: "../release/index.html",
+                target: "dist"
+            }
+         }
+
+    },
+    targets:{
+        dist: "cat min"
+    }
+};

@@ -101,8 +101,8 @@
                 if(arg){
 
                     if(isNaN(arg)){
-                        var m = /(\d+)\*/.exec(arg)[1];
-                        var n = /\*(\d+)/.exec(arg)[1];
+                        var m = /(\d+)\s*\*/.exec(arg)[1];
+                        var n = /\*\s*(\d+)/.exec(arg)[1];
                     }else{
                         m = arg;
                         n = arg2;

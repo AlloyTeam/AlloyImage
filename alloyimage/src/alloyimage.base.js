@@ -691,18 +691,82 @@ try{
         },
 
         //变换Matrix
-        transform: function(matrix){
+        //x0, y0坐标原点
+        transform: function(matrix, x0, y0){
+            //获取dorsyMath接口
+            var dM = window[Ps].dorsyMath();
+
             var ctx = this.ctxContext;
             ctx.putImageData(this.imgData, 0, 0);
 
+            //建立一个空的临时canvas
             var tempCtx = document.createElement("canvas").getContext("2d");
-            tempCtx.canvas.width = this.canvas.width;
-            tempCtx.canvas.height = this.canvas.height;
 
+            //计算变换后的canvas宽度
+            //原则  所有的变换不会记录平移带来的变的换，但会记录下平移导致的原点的平移，以叠加图层的时候减去这些平移造成的影响
+            //意味着图层自身所有的变换都不会丢失自己的图像信息 但会原点位置发生变化
+            //这样做会节省很大的无图像空间
+
+            //计算原有点变换后的点
+            var originPoint = [
+                new dM.Matrix([0, 0], "1*2"),
+                new dM.Matrix([0, this.canvas.height], "1*2"),
+                new dM.Matrix([this.canvas.width, 0], "1 * 2"),
+                new dM.Matrix([this.canvas.width, this.canvas.height], "1*2")
+            ];
+
+            var transformedPoint = [];
+            var transformMatrix = new dM.Matrix(matrix, "2*2");
+
+            for(var i = 0; i < originPoint.length; i ++){
+                transformedPoint.push(originPoint[i].mutiply(transformMatrix));
+            }
+
+            console.log(transformedPoint);
+
+            var maxX = Math.max(
+                transformedPoint[0].data[0][0],
+                transformedPoint[1].data[0][0],
+                transformedPoint[2].data[0][0],
+                transformedPoint[3].data[0][0]
+            );
+
+            var minX = Math.min(
+                transformedPoint[0].data[0][0],
+                transformedPoint[1].data[0][0],
+                transformedPoint[2].data[0][0],
+                transformedPoint[3].data[0][0]
+            );
+
+            var maxY = Math.max(
+                transformedPoint[0].data[0][1],
+                transformedPoint[1].data[0][1],
+                transformedPoint[2].data[0][1],
+                transformedPoint[3].data[0][1]
+            );
+
+            var minY = Math.min(
+                transformedPoint[0].data[0][1],
+                transformedPoint[1].data[0][1],
+                transformedPoint[2].data[0][1],
+                transformedPoint[3].data[0][1]
+            );
+
+            var width = ~~ (maxX - minX);
+            var height = ~~ (maxY - minY);
+
+            tempCtx.canvas.width = width;
+            tempCtx.canvas.height = height;
+
+            //将原点平移使图像显示出来 但图像的原点会发生变化
+            tempCtx.translate(- minX, - minY);
             tempCtx.transform.apply(tempCtx, matrix);
             tempCtx.drawImage(ctx.canvas, 0, 0);
 
-            this.imgData = tempCtx.getImageData(0, 0, this.canvas.width, this.canvas.height);
+            this.canvas.width = width;
+            this.canvas.height = height;
+
+            this.imgData = tempCtx.getImageData(0, 0, width, height);
 
             return this;
         },
@@ -767,4 +831,4 @@ try{
 
 })("psLib");
 
-window.AlloyImage = $AI = window.psLib;
+window.AlloyImage = window.$AI = window.psLib;

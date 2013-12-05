@@ -12,15 +12,8 @@ img.src = "../res/img/1.jpg";
 document.body.appendChild(img);
 
 img.onload = function(){
-  var ps = $AI(500, 500);
-  var ps2 = $AI(this);
-
-  //ps2.moveTo(0, 0).rotate(10).show();
-
-  ps.add(ps2.ps("素描"));
-
-  ps.rotate(20).clip(0, 0, 200, 200).show();
-  
+   var layer = $AI(700, 700);
+   var ps = $AI(this);
 
 };
 

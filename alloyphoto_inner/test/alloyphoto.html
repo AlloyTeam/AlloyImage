@@ -1,0 +1,28 @@
+<!DOCTYPE HTML>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>alloyphoto嵌入版测试</title>
+</head>
+<body>
+<div id="p">sadfsadfasdfasdfasdfasdfa</div>
+<img src="../img/4.jpg" alt="" id="m" class="img" />
+<img src="../img/4.jpg" alt="" id="p" class="img" />
+<script type="text/javascript" src="../js/alloyimage.js"></script>
+<script type="text/javascript" src="../js/alloyphoto.loader.js"></script>
+<script type="text/javascript">
+window.onload = function(){
+  //$AI.useWorker("../js/alloyimage.js");
+  //$AP.setPath("../js/alloyimage.js");
+  //$AP().ps("#img");
+  $AP.watch("img");
+  $AP.complete(function(data){
+      var t = new Image();
+      t.src = data;
+      document.body.appendChild(t);
+  });
+};
+</script>
+	
+</body>
+</html>
