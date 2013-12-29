@@ -69,8 +69,8 @@ cd AlloyPhoto && mod dist
 #### AlloyImage 1.0
 
 ### 目录结构
---build  构建目录  一些项目的构建工具
---combined  中间构建合成的项目代码，用于测试和发布
+>--build  构建目录  一些项目的构建工具
+>>--combined  中间构建合成的项目代码，用于测试和发布
 --demo      demo文件
 --doc       目录文档
 --release   已发布的文件版本
