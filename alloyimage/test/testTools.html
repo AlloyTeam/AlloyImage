@@ -8,6 +8,7 @@
 <div id="t"></div>
 <script type="text/javascript" src="../combined/alloyimage.js"></script>	
 <script type="text/javascript">
+/*
 function getColor(num){
   var img = new Image();
   img.src = "../res/img/" + num + ".png";
@@ -34,6 +35,16 @@ function getText(num){
 }
 
 getColor(14);
+*/
+
+var f = $AI(600, 200, "#ccc").ctx(function(){
+    this.fillStyle = "red";
+    this.font = "100px Arial";
+    this.fillText("AlloyImage", 0, 100);
+    this.drawImage(this.canvas, 0, 0);
+    }).scale(0.2).rotate(-90).show();
+
+    document.getElementById("t").innerHTML = f.Tools.toText();
 </script>
 </body>
 </html>

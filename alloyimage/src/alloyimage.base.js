@@ -48,6 +48,9 @@ try{
         //模块池
         lib: [],
 
+        //外部定义的ps效果
+        definedPs: {},
+
         //初始化准备
         init: function(){
             this.require("config");
@@ -133,7 +136,7 @@ try{
         //组合效果映射器
         reflectEasy: function(effect){
             var fun = this.lib.config.getEasyFun(effect).actName;
-            return this.lib.easy.getFun(fun);
+            return this.definedPs[effect] || this.lib.easy.getFun(fun);
         },
 
         //合并一个图层到对象
@@ -159,6 +162,10 @@ try{
             }else{
                 throw new Error("AI_ERROR: 不存在的工具方法_" + actMethod);
             }
+        },
+
+        definePs: function(name, func){
+            this.definedPs[name] = func;
         }
     };
 
@@ -182,6 +189,15 @@ try{
                 context.fillStyle = height;
                 context.fillRect(0, 0, img, width);
 
+            }else if(typeof img == "string"){
+                var tmpImg = new Image();
+                tmpImg.onload = function(){
+                    canvas.width = parseInt(this.width);
+                    canvas.height = parseInt(this.height);
+
+                    context.drawImage(this, 0, 0, this.width, this.height);
+                };
+                tmpImg.src = img;
             }else{
                 canvas.width = parseInt(img.width);
                 canvas.height = parseInt(img.height);
@@ -261,6 +277,11 @@ try{
     //获取配置信息
     window[Ps].getConfig = function(){
         return P.lib.config.getConfig();
+    };
+
+    //定义组合效果代码
+    window[Ps].define = function(name, func){
+        P.definePs(name, func);
     };
 
     //定义使用worker,需要给出alloyimage所在路径
@@ -414,7 +435,14 @@ try{
             this.context.putImageData(this.tempPsLib.imgData, 0, 0);
 
             if(selector){
-                document.querySelector(selector).appendChild(this.canvas);
+                if(typeof selector == "string"){
+                    var el = document.querySelector(selector);
+                    el.innerHTML = "";
+                    el.appendChild(this.canvas);
+                }else{
+                    selector.innerHTML = "";
+                    selector.appendChild(this.canvas);
+                }
             }else{
                 document.body.appendChild(this.canvas);
             }
@@ -647,13 +675,11 @@ try{
         //组合效果
         ps: function(effect){
             var fun = P.reflectEasy(effect);
-            var _this = this;
-
-            _this = fun.call(_this);
+            var psedPic = fun.call(this, this.canvas);
 
             this.logTime("组合效果" + effect);
 
-            return _this;
+            return psedPic;
         },
 
         //记录运行时间

@@ -1,0 +1,26 @@
+<!DOCTYPE HTML>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title></title>
+</head>
+<body>
+<script type="text/javascript" src="../combined/alloyimage.js"></script>
+<script type="text/javascript">
+var img = new Image();
+img.src = "../res/img/1.jpg";
+document.body.appendChild(img);
+
+
+$AI.define("scale", function(img){
+    return this.scale(2);
+    });
+
+img.onload = function(){
+  var layer = $AI(700, 700);
+  var ps = $AI(this).ps("scale").show();
+};
+
+</script>
+</body>
+</html>
