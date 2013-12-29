@@ -70,14 +70,14 @@ cd AlloyPhoto && mod dist
 
 ### 目录结构
 >--build  构建目录  一些项目的构建工具
->>--combined  中间构建合成的项目代码，用于测试和发布
---demo      demo文件
---doc       目录文档
---release   已发布的文件版本
---res       一些测试用的静态资源
---src       项目JS源码
-    alloyimage.base.js   core文件 base文件
-    --module             模块文件
-        --alteration     调节模块
-        --filter         滤镜插件
---test      测试文件
+>--combined  中间构建合成的项目代码，用于测试和发布
+>--demo      demo文件
+>--doc       目录文档
+>--release   已发布的文件版本
+>--res       一些测试用的静态资源
+>--src       项目JS源码
+>>    alloyimage.base.js   core文件 base文件
+>>    --module             模块文件
+>>        --alteration     调节模块
+>>        --filter         滤镜插件
+>--test      测试文件
