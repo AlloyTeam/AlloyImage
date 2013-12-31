@@ -231,6 +231,10 @@ try{
             this.ctxCanvas = ctxCanvas;
             this.ctxContext = canvas.getContext("2d");
 
+            //设置对象的宽高
+            this.width = this.canvas.width;
+            this.height = this.canvas.height;
+
             //默认使用worker进行处理
             this.useWorker = P.useWorker;
 
@@ -437,10 +441,8 @@ try{
             if(selector){
                 if(typeof selector == "string"){
                     var el = document.querySelector(selector);
-                    el.innerHTML = "";
                     el.appendChild(this.canvas);
                 }else{
-                    selector.innerHTML = "";
                     selector.appendChild(this.canvas);
                 }
             }else{
@@ -448,6 +450,19 @@ try{
             }
 
             return this;
+        },
+
+        //替换到某元素里
+        replaceChild: function(selector){
+            var el;
+            if(typeof selector == "string"){
+                el = document.querySelector(selector);
+            }else{
+                el = selector;
+            }
+
+            el.innerHTML = "";
+            return this.show(el);
         },
 
         //替换原来的图片
@@ -748,8 +763,6 @@ try{
                 transformedPoint.push(originPoint[i].mutiply(transformMatrix));
             }
 
-            console.log(transformedPoint);
-
             var maxX = Math.max(
                 transformedPoint[0].data[0][0],
                 transformedPoint[1].data[0][0],
@@ -792,6 +805,9 @@ try{
             this.canvas.width = width;
             this.canvas.height = height;
 
+            this.width = width;
+            this.height = height;
+
             this.imgData = tempCtx.getImageData(0, 0, width, height);
 
             return this;
@@ -800,6 +816,29 @@ try{
         scale: function(x, y){
             var y = y || x;
             return this.transform([x, 0, 0, y, 0, 0]);
+        },
+
+        //缩放到宽度和高度
+        scaleTo: function(w, h){
+            var width = this.width;
+            var height = this.height;
+
+            var scaleSizeX, scaleSizeY;
+
+            if(! h){
+                h = w * height / width;
+            }
+
+            if(! w){
+                w = h * (width / height);
+            }
+
+            if(w & h){
+                scaleSizeX = w / width;
+                scaleSizeY = h / height;
+
+                return this.scale(scaleSizeX, scaleSizeY);
+            }
         },
 
         //旋转 度
