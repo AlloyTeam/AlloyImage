@@ -325,7 +325,7 @@
                     //得到颜色属性
                     var h = hsiObj.H + d30;
                     var color = ~~ (h / d60);
-                    var rColor = colorMap[color];
+                    var rColor = colorMap[color % 6];
 
                     func(hsiObj, rColor, data[i + 3]);
 

@@ -689,17 +689,21 @@ try{
 
         //组合效果
         ps: function(effect){
+            if(effect == "原图" || effect == "origin" || effect == ""){
+                return this;
+            }
+
             var fun = P.reflectEasy(effect);
             var psedPic = fun.call(this, this.canvas);
 
-            this.logTime("组合效果" + effect);
+            //this.logTime("组合效果" + effect);
 
             return psedPic;
         },
 
         //记录运行时间
         logTime: function(msg){
-            console.log(msg + ": " + (+ new Date() - this.startTime) / 1000 + "s");
+            //console.log(msg + ": " + (+ new Date() - this.startTime) / 1000 + "s");
         },
 
         //调用原生canvas.context接口
