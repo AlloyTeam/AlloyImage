@@ -92,3 +92,10 @@ cd AlloyPhoto && mod dist
 >>        --filter         滤镜插件
 >--test      测试文件
 
+### 这些产品使用了AlloyImage
+
+[AlloyDesigner](http://alloyteam.github.io/AlloyDesigner/)
+
+[AlloyClip](https://github.com/AlloyTeam/AlloyClip)
+
+[AlloyPhoto](https://github.com/AlloyTeam/AlloyPhoto)
