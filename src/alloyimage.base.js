@@ -189,6 +189,8 @@ try{
                 context.fillStyle = height;
                 context.fillRect(0, 0, img, width);
 
+                this.srcImg = "";
+
             }else if(typeof img == "string"){
                 var tmpImg = new Image();
                 tmpImg.onload = function(){
@@ -208,6 +210,8 @@ try{
 
                 if(!isNaN(imgWidth)) context.drawImage(img, 0, 0, imgWidth, imgHeight);
                 else context.drawImage(img, 0, 0);
+
+                this.srcImg = img;
 
             }
 
@@ -340,6 +344,21 @@ try{
 
     //原型对象
     window[Ps].prototype = {
+        set width(w){
+            this.canvas.width = w;
+        },
+
+        set height(h){
+            this.canvas.height = h;
+        },
+
+        get width(){
+            return this.canvas.width;
+        },
+
+        get height(){
+            return this.canvas.height;
+        },
 
         //动作
         act: function(method, arg){
@@ -824,6 +843,7 @@ try{
 
         //缩放到宽度和高度
         scaleTo: function(w, h){
+            var _this = this;
             var width = this.width;
             var height = this.height;
 
@@ -837,11 +857,42 @@ try{
                 w = h * (width / height);
             }
 
-            if(w & h){
-                scaleSizeX = w / width;
-                scaleSizeY = h / height;
+            //这里的代码在iphone上会导致倾斜
+            if(0 && this.srcImg){
+                var img = new Image();
+                img.width = w;
+                img.height = h;
 
-                return this.scale(scaleSizeX, scaleSizeY);
+                document.body.appendChild(img);
+
+                img.style.width = w + "px";
+                img.style.height = ~~ h + "px";
+
+                img.src = this.srcImg.src;
+
+
+                var newAIObj = window[Ps](img, w, h);
+
+                document.body.removeChild(img);
+                img = null;
+
+                setTimeout(function(){
+                    if(_this.canvas.parentNode){
+                        _this.canvas.parentNode.replaceChild(newAIObj.canvas, _this.canvas);
+                        newAIObj.show();
+                    }
+                }, 10);
+
+                return newAIObj;
+
+            }else{
+
+                if(w && h){
+                    scaleSizeX = w / width;
+                    scaleSizeY = h / height;
+
+                    return this.scale(scaleSizeX, scaleSizeY);
+                }
             }
         },
 
