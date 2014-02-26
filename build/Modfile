@@ -4,9 +4,14 @@ module.exports = {
         cat:{
             source:['../src/alloyimage.base.js',"../src/module/*.js", "../src/module/alteration/*.js", "../src/module/filter/*.js"]
             ,dest: '../combined/alloyimage.js'
-        }
+        },
+        
+        min: {
+                src: '../combined/alloyimage.js',
+                dest: '../combined/'
+     }
     },
     targets:{
-        dist: "cat"
+        dist: "cat min"
     }
 };
