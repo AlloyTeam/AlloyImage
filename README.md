@@ -62,6 +62,89 @@ cd AlloyPhoto && mod dist
 9. 增加可选颜色调节
 10. 曲线命令支持通道调节
 
+
+##### 新增API 1.2以上
+
+>###save
+将合成图片保存成base64格式字符串<br />
+base64String save(String filetype [, Number comRatio]);<br /><br />
+{filtytype}  图片格式类型，支持png,jpg,gif等<br />
+{comRatio}  对于jpg格式的图片，图片压缩比率或者图片质量，0 - 1的小数<br /><br />
+返回  base64的字符串
+
+示例
+```javascript
+var string = AlloyImage(img).save('jpg', 0.8);
+```
+
+
+>###scaleTo
+将图层或合成图像缩放到指定宽高<br />
+AIObj scaleTo(Number width, Nubmer height);<br /><br />
+{width} 宽度<br />
+{height} 高度<br />
+如果不指定某一参数，则使用等比缩放
+<br /><br />
+返回 AIObj
+
+示例
+```javascript
+//将图层缩放放到100px * 100px
+AlloyImage(img).scaleTo(100, 100).show();
+
+//将图层等比缩放到高50px
+AlloyImage(img).scaleTo(null, 100).show();
+```
+>###scale
+将图层或合成图像缩放指定倍数<br />
+AIObj scaleTo(Number xRatio, Nubmer yRatio);<br /><br />
+{xRatio} 横向缩放倍数<br />
+{yRatio} 纵向缩放倍数<br />
+如果不指定某一参数，则使用等比缩放
+<br /><br />
+返回 AIObj
+
+示例
+```javascript
+//将图层缩放放2 * 2倍
+AlloyImage(img).scale(2, 2).show();
+
+//将图层等比缩放3倍
+AlloyImage(img).scaleTo(3).show();
+```
+>###rotate
+将图层或合成图像旋转一定的角度<br />
+AIObj rotate(Numbe degree);<br /><br />
+{degree} 顺时旋转角度，以度为单位<br />
+<br /><br />
+返回 AIObj
+
+示例
+```javascript
+//将图层旋转30度
+AlloyImage(img).rotate(30).show();
+
+```
+
+>###clip
+将图层或合成图像裁剪<br />
+AIObj rotate(Numbe x0, Number y0, Number width, Number height);<br /><br />
+{x0} 起始横坐标<br />
+{y0} 起始纵坐标<br />
+{width} 裁剪图像宽度<br />
+{height} 裁剪图像高度<br />
+<br /><br />
+返回 AIObj
+
+示例
+```javascript
+//将图层从(30, 30)开始裁剪宽100px高100px的图像，并获取图像base64代码
+var imgString = AlloyImage(img).clip(30, 30, 100, 100).save('jpg', 0.8);
+
+```
+
+
+
 #### AlloyImage 1.1
 1. 优化代码，组合效果处理性能提升80%
 2. 添加木雕组合效果
@@ -99,3 +182,4 @@ cd AlloyPhoto && mod dist
 [AlloyClip](https://github.com/AlloyTeam/AlloyClip)
 
 [AlloyPhoto](https://github.com/AlloyTeam/AlloyPhoto)
+
