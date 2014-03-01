@@ -68,7 +68,7 @@ cd AlloyPhoto && mod dist
 >###save
 将合成图片保存成base64格式字符串<br />
 base64String save(String filetype [, Number comRatio]);<br /><br />
-{filtytype}  图片格式类型，支持png,jpg,gif等<br />
+{filetype}  图片格式类型，支持png,jpg,gif等<br />
 {comRatio}  对于jpg格式的图片，图片压缩比率或者图片质量，0 - 1的小数<br /><br />
 返回  base64的字符串
 
@@ -76,6 +76,22 @@ base64String save(String filetype [, Number comRatio]);<br /><br />
 ```javascript
 var string = AlloyImage(img).save('jpg', 0.8);
 ```
+>###saveFile
+将合成图片下载到本地<br />
+void saveFile(String fileName[, Number comRatio]);<br /><br />
+{fileName}  图片文件名，如果不带后缀，默认为png格式<br />
+{comRatio}  对于jpg格式的图片，图片压缩比率或者图片质量，0 - 1的小数<br /><br />
+返回  空
+
+示例
+```javascript
+img.onclick = function(){
+        AlloyImage(this).saveFile('处理后图像.jpg', 0.8);
+}
+```
+
+>###download
+功能与使用同saveFile
 
 
 >###scaleTo
@@ -97,7 +113,7 @@ AlloyImage(img).scaleTo(null, 100).show();
 ```
 >###scale
 将图层或合成图像缩放指定倍数<br />
-AIObj scaleTo(Number xRatio, Nubmer yRatio);<br /><br />
+AIObj scale(Number xRatio, Nubmer yRatio);<br /><br />
 {xRatio} 横向缩放倍数<br />
 {yRatio} 纵向缩放倍数<br />
 如果不指定某一参数，则使用等比缩放
@@ -110,7 +126,7 @@ AIObj scaleTo(Number xRatio, Nubmer yRatio);<br /><br />
 AlloyImage(img).scale(2, 2).show();
 
 //将图层等比缩放3倍
-AlloyImage(img).scaleTo(3).show();
+AlloyImage(img).scale(3).show();
 ```
 >###rotate
 将图层或合成图像旋转一定的角度<br />

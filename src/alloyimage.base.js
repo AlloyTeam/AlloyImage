@@ -657,11 +657,44 @@ try{
         },
 
         //下载图片
-        saveFile: function(){
-            var fileData = this.save();
-            fileData = fileData.replace(/^data:image\/(?:(?:jpeg)|(?:png))/, "data:image/octet-stream");
+        saveFile: function(fileName, comRatio){
+            fileName = fileName || "AlloyImage合成图像.jpg";
+            comRatio = comRatio || 1;
 
-            window.location.href = fileData;
+            var formatReg = /.*.(jpg|png|gif|jpeg)$/g;
+            var format = "png";
+
+            if(formatReg.test(fileName)){
+                formatReg.lastIndex = 0;
+                format = formatReg.exec(fileName)[1];
+            }else{
+                fileName += ".png";
+            }
+
+            var fileData = this.save(format, comRatio);
+
+            var a = document.createElement('a');
+            a.href = fileData;
+            a.download = fileName;
+
+            var e = document.createEvent("HTMLEvents");
+            e.initEvent("click", false, false);
+
+            a.dispatchEvent(e);
+
+        },
+
+        download: function(fileName, comRatio){
+            this.saveFile(fileName, comRatio);
+        },
+
+        saveAsDataURL: function(){
+        },
+
+        saveAsBlob: function(){
+        },
+
+        saveAsBuffer: function(){
         },
 
         //绘制直方图
