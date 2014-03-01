@@ -14,11 +14,11 @@ window.onload = function(){
     var img = document.getElementById("pic");
     var ai = $AI(img);
     ai.act("toGray").show();
-    var t = ai.save("jpg");
+    var t = ai.save("jpg", 0.001);
     img.src = t;
 
     img.onclick = function(){
-      ai.saveFile();
+      alert(ai.save('jpg', 0.1).length);;
     };
 
 }

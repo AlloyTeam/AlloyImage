@@ -498,7 +498,7 @@ try{
 
             if(img){
                 img.onload = function(){};
-                img.src = this.save(0, workerFlag);
+                img.src = this.save(0, 1, workerFlag);
             }
 
             return this;
@@ -604,9 +604,12 @@ try{
         },
 
         //返回一个合成后的图像 png base64
-        save: function(type, workerFlag){
+        //comRatio为压缩质量
+        save: function(type, comRatio, workerFlag){
             type = type || "png";
             type = type.toLowerCase();
+
+            comRatio = comRatio || 0.8;
 
             if(type == "jpg") type = "jpeg";
 
@@ -622,9 +625,10 @@ try{
                 }
             }
 
+            //如果没有挂接图片 直接返回
             if(! this.layers.length){
                 this.context.putImageData(this.imgData, 0, 0);
-                return this.canvas.toDataURL(mimeType); 
+                return this.canvas.toDataURL(mimeType, comRatio); 
             }
 
 
@@ -649,7 +653,7 @@ try{
             //以临时对象data显示
             this.context.putImageData(tempPsLib.imgData, 0, 0);
 
-            return this.canvas.toDataURL(); 
+            return this.canvas.toDataURL(mimeType, comRatio); 
         },
 
         //下载图片
