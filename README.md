@@ -75,8 +75,12 @@ cd AlloyPhoto && mod dist
 {width} 缩放的宽度 可选<br />
 {height} 缩放的高度 可选<br />
 如果width 或height一个为null，则使用等比缩放，如果都没有，使用img宽度
-
 tips: 在IOS下请使用width参数来缩放相册中的图片，IOS下不使用缩放，图片太大可能无法绘制到Canvas上<br />
+
+示例
+```javascript
+var ps = $AI(img, 600).save('jpg', 0.6);
+```
 
 >###save
 将合成图片保存成base64格式字符串<br />
