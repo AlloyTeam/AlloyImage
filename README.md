@@ -49,6 +49,8 @@ cd AlloyPhoto && mod dist
 构建成功后会在 `./js/combined`目录下生成`alloyimage.js`文件
 
 ### 变更历史
+#### AlloyImage 1.2开发版代码 获取
+> 在release目录下获取开发版
 
 #### AlloyImage 1.2 开发中
 1. 更改代码架构，分离Filter
@@ -61,9 +63,20 @@ cd AlloyPhoto && mod dist
 8. 添加仿射变换（缩放、平移、旋转）、裁切
 9. 增加可选颜色调节
 10. 曲线命令支持通道调节
+11. 优化IOS下性能，修复变形的bug
 
 
 ##### 新增API 1.2以上
+
+>###$AI 或 AlloyImage
+初始化一个AlloyImage对象<br />
+增加新的参数适配 AIObj $AI(HTMLImageObj img[, Number width, Number height]);<br />
+{img} 图片元素<br />
+{width} 缩放的宽度 可选<br />
+{height} 缩放的高度 可选<br />
+如果width 或height一个为null，则使用等比缩放，如果都没有，使用img宽度
+
+tips: 在IOS下请使用width参数来缩放相册中的图片，IOS下不使用缩放，图片太大可能无法绘制到Canvas上<br />
 
 >###save
 将合成图片保存成base64格式字符串<br />
