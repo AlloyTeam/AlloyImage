@@ -1,0 +1,49 @@
+<!DOCTYPE HTML>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title></title>
+</head>
+<meta name="viewport" content="width=device-width,target-densitydpi=high-dpi,initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
+<body>
+<input id="f" type="file" />
+
+<script type="text/javascript" src="alloyimage-1.2b.js">
+</script>	
+<script type="text/javascript">
+var f = document.getElementById('f');
+
+f.onchange = function(e){
+  var file = e.target.files[0];
+
+  var fileReader = new FileReader();
+
+  fileReader.onload = function(){
+    var fileReaded = this.result;
+
+    var image = new Image();
+    image.onload = function(){
+      $AI(this, 500)
+ .act("brightness",5,4)
+            .act("setHSI",-5,5,0)
+            .act("gaussBlur",1).show();
+
+    try{
+    }catch(e){
+      alert(e);
+    }
+    };
+
+    image.src = fileReaded;
+
+  };
+
+  fileReader.onerror = function(e){
+    alert(e);
+  };
+
+  fileReader.readAsDataURL(file);
+};
+</script>
+</body>
+</html>
