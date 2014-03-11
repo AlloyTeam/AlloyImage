@@ -41,6 +41,22 @@ try{
 
 ;(function(Ps){
 
+    var device = function(){
+        if(window.navigator){
+            var ua = window.navigator.userAgent;
+
+            if(/Android|android/.test(ua)){
+                return 'android';
+            }else if(/iPhone|iPad|iPod/.test(ua)){
+                return 'ios';
+            }else{
+                return 'other';
+            }
+        }else{
+            return "sandBox";
+        }
+    }();
+
     //被所有对象引用的一个对象,静态对象,主处理模块
     //主处理模块要求与DOM操作无关
     var P = {
@@ -179,7 +195,7 @@ try{
 
             var canvas = document.createElement("canvas");
             var context = canvas.getContext("2d");
-            
+
             //var l = psLib(20,30);构造适配
             if(!isNaN(img)){
 
@@ -201,15 +217,33 @@ try{
                 };
                 tmpImg.src = img;
             }else{
-                canvas.width = parseInt(img.width);
-                canvas.height = parseInt(img.height);
+                var dw = width, dh = height;
 
-                var computedStyle = getComputedStyle(img);
-                imgWidth = parseInt(computedStyle.getPropertyValue("width"));
-                imgHeight = parseInt(computedStyle.getPropertyValue("height"));
+                var sw = img.width, sh = img.height;
+                var ratio = sw / sh;
 
-                if(!isNaN(imgWidth)) context.drawImage(img, 0, 0, imgWidth, imgHeight);
-                else context.drawImage(img, 0, 0);
+                if(width || height){
+                    if(! height){
+                        dh = ~~ (dw / ratio);
+                    }else if(! width){
+                        dw = dh * ratio;
+                    }
+                }else{
+                    dw = sw;
+                    dh = sh;
+                }
+
+                canvas.width = dw;
+                canvas.height = dh;
+
+                if(! isNaN(dw)){
+                    if(device == "ios"){
+                        P.lib.Fix.drawImageIOS(context, img, dw, dh);
+                    }else{
+                        context.drawImage(img, 0, 0, dw, dh);
+                    }
+
+                }else context.drawImage(img, 0, 0);
 
                 this.srcImg = img;
 
