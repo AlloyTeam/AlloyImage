@@ -1,3 +1,17 @@
+[AlloyImage](http://alloyteam.github.com/AlloyImage/) - A Professional Web Image Processing Lib based on HTML5
+==========================
+### Fetures
+#### Poweful & Professional
+1. Multi-Layers
+2. Contains 17 blend modes, compatible with Photoshop
+3. a lot of basic filters
+4. a lot of basic image alterations like curves, selective colors, etc. 
+5. a lot of combined effect like lomo, sketch, etc.
+
+#### Easy to use
+1. process images much simpler with easy-to-use APIs
+
+
 [AlloyImage](http://alloyteam.github.com/AlloyPhoto/) - 基于HTML5技术的专业图像处理库
 ===========================
 
@@ -215,4 +229,5 @@ var imgString = AlloyImage(img).clip(30, 30, 100, 100).save('jpg', 0.8);
 [AlloyClip](https://github.com/AlloyTeam/AlloyClip)
 
 [AlloyPhoto](https://github.com/AlloyTeam/AlloyPhoto)
+
 
