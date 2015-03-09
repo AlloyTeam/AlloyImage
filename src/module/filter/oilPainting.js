@@ -8,7 +8,8 @@
     window[Ps].module("Filter.oilPainting",function(P){
 
         var M = {
-            process: function(imgData,arg){
+            process: function(imgData, arg, mode){
+                var startTime = (new Date()).getTime();
                 var R = parseInt(arg[0]) || 16;
                 var data = imgData.data;
                 var width = imgData.width;
@@ -34,7 +35,7 @@
 
                 }
 
-
+                console.log("oilPainting" + ((new Date()).getTime() - startTime));
                 return imgData;
             }
         };

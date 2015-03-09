@@ -1,3 +1,6 @@
+AlloyImage Optimized by WebCL - 基于HTML5技术的专业图像处理库
+===========================
+
 [AlloyImage](http://alloyteam.github.com/AlloyImage/) - A Professional Web Image Processing Lib based on HTML5
 ==========================
 ### Fetures
@@ -16,6 +19,10 @@
 ===========================
 
 ### 功能特性
+It's original open sourced by Tencent at [AlloyImage](https://github.com/AlloyTeam/AlloyImage).
+Here, we optimize this library with WebCL technology. It would improve the performance greatly.
+
+If you want to try optimized AlloyImage, please try our open sourced [Chromium w/ WebCL APIs](https://github.com/junmin-zhu/chromium).
 
 ####强大功能
 1. 基于多图层操作             -- 一个图层的处理不影响其他图层
@@ -63,6 +70,16 @@ cd AlloyPhoto && mod dist
 构建成功后会在 `./js/combined`目录下生成`alloyimage.js`文件
 
 ### 变更历史
+#### AlloyImage optimized by WebCL
+1. Include the common WebCL module.
+2. Add alteration/curve.cl and alternation/setHSI.cl effect
+3. Add filter/darkCorner.cl, filter/embossment.cl, filter/gaussBlurX.cl,
+   filter/gaussBlurY.cl, filter/lapOfGauss.cl effect
+4. Support run w/ WebCL and w/o WebCL.
+5. Add two APIs for psLib, setWebCLDevice and setWebCLFallbackEnabled.
+   setWebCLDevice: choose which backend (CPU or GPU) for running WebCL.
+   setWebCLFallbackEnabled: whether fallback to JavaScript mode when fail to execute with WebCL.
+
 #### AlloyImage 1.2开发版代码 获取
 > 在release目录下获取开发版
 

@@ -8,7 +8,7 @@
     window[Ps].module("Filter.sepia",function(P){
 
         var M = {
-            process: function(imgData){
+            process: function(imgData, mode){
                 var dM = P.lib.dorsyMath;
                 var data = imgData.data;
                 var width = imgData.width;

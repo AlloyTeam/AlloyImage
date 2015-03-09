@@ -8,7 +8,8 @@
     window[Ps].module("Alteration.gamma",function(P){
 
         var M = {
-            process: function(imgData, args){
+            process: function(imgData, args, mode){
+                var startTime = (new Date()).getTime();
                 var dM = P.lib.dorsyMath;
                 var data = imgData.data;
                 var width = imgData.width;
@@ -33,6 +34,7 @@
                         });
                     }
                 }
+                console.log("gamma" + ((new Date()).getTime() - startTime));
                 return imgData;
             }
         };

@@ -64,6 +64,15 @@ try{
         //模块池
         lib: [],
 
+        //使用WebCL
+        useWebCL: typeof(webcl) != "undefined" || typeof(WebCL) != "undefined",
+
+        //选择device作为WebCL后端，如：CPU, GPU, DEFAULT
+        webclDevice: "DEFAULT",
+
+        //当使用WebCL处理图像失败时，是否尝试回退到一般模式进行处理
+        enableWebCLFallback: true,
+
         //外部定义的ps效果
         definedPs: {},
 
@@ -88,15 +97,24 @@ try{
                 //递归出口
                 if(count == moduleArr.length - 1){
                     obj[attr] = func.call(null, _this);
-
                     return;
                 }
 
                 obj[attr] ? addModule(obj[attr]) : addModule(obj[attr] = {});
             }
-
             addModule(this.lib);
+            if (name == "webcl" && this.useWebCL)
+                this.initWebCL(this.webclDevice);
+        },
 
+        //初始化WebCL
+        initWebCL: function(deviceType) {
+            console.log(deviceType);
+            if (document.addEventListener){
+                document.addEventListener('load', this.lib.webcl.init(deviceType));
+            } else {
+                document.attachEvent('onload', this.lib.webcl.init(deviceType));
+            }
         },
 
         //加载文件
@@ -131,16 +149,35 @@ try{
 
             var spaceName = moduleName.spaceName;
             var actName = moduleName.actName;
-
             switch(spaceName){
                 case "Filter":
                 case "Alteration":
 
-                    return this.lib[spaceName][actName].process(imgData, args);
+                    if (this.useWebCL && this.enableWebCLFallback) {
+                        try {
+                            return this.lib[spaceName][actName].process(imgData, args, true);
+                        } catch (e) {
+                            console.log(e);
+                            console.log("AI_WARNING: failed to process the image with WebCL, falling back");
+                            return this.lib[spaceName][actName].process(imgData, args, false);
+                        }
+                    } else {
+                        return this.lib[spaceName][actName].process(imgData, args, this.useWebCL);
+                    }
                     //break;
 
                 case "ComEffect":
-                    return this.lib[actName].process(imgData, args);
+                    if (this.useWebCL && this.enableWebCLFallback) {
+                        try {
+                            return this.lib[actName].process(imgData, args, true);
+                        } catch (e) {
+                            console.log(e);
+                            console.log("AI_WARNING: failed to process the image with WebCL, falling back");
+                            return this.lib[actName].process(imgData, args, false);
+                        }
+                    } else {
+                        return this.lib[actName].process(imgData, args, this.useWebCL);
+                    }
                     //break;
 
                 default:
@@ -172,9 +209,8 @@ try{
         //args[0]代表处理方法，args[1...]代表参数
         tools: function(imgData, args){
             var actMethod = Array.prototype.shift.call(args);
-
             if(this.lib.Tools[actMethod]){
-                return this.lib.Tools[actMethod].process(imgData, args);
+                return this.lib.Tools[actMethod].process(imgData, args, this.useWebCL);
             }else{
                 throw new Error("AI_ERROR: 不存在的工具方法_" + actMethod);
             }
@@ -188,7 +224,6 @@ try{
     //返回外部接口
     window[Ps] = function(img, width, height){
         var _this = this;
-
         if(this instanceof window[Ps]){
             //记录时间 time trace
             this.startTime = + new Date();
@@ -276,6 +311,18 @@ try{
             //默认使用worker进行处理
             this.useWorker = P.useWorker;
 
+            //加载图片到WebCL
+            this.webcl = P.lib.webcl;
+
+            if (P.useWebCL){
+                try {
+                    this.webcl.loadData(this.imgData);
+                } catch (e) {
+                    console.log(e);
+                    console.log("AI_WARNING: WebCL module failed to load image data");
+                }
+            }
+
             //初始化readyState为ready,readyState表明处理就绪
             this.readyState = 1;
 
@@ -294,7 +341,7 @@ try{
                     })(i);
                 }
             }
-            
+
         }else{
 
             //返回自身构造对象
@@ -314,6 +361,37 @@ try{
 
     window[Ps].setName = function(name){
         P.name = name || "alloyimage.js";
+    };
+
+    //决定是否使用webcl, 以及用什么后端
+    //如果输入为空，则不用webcl
+    //如果是CPU， 则用CPU设备作为后端
+    //如果是GPU， 则用GPU设备作为后端
+    //返回设置是否生效。
+    window[Ps].setWebCLDevice = function(device){
+        if (device == "") {
+            P.useWebCL = false;
+        } else {
+            P.webclDevice = device;
+            try {
+                P.useWebCL = (typeof(webcl) != "undefined" || typeof(WebCL) != "undefined") &&
+                             P.lib.webcl.init(device);
+            } catch (e) {
+                console.log(e);
+                console.log("AI_WARNING: failed to set WebCL device, WebCL will not be used");
+                P.useWebCL = false;
+            }
+        }
+        return P.useWebCL;
+    };
+
+    //当使用WebCL处理图像失败时，是否尝试回退到一般模式进行处理
+    window[Ps].setWebCLFallbackEnabled = function(mode){
+        if (typeof(mode) == "boolean") {
+            P.enableWebCLFallback = mode;
+        } else {
+            throw "setWebCLFallbackEnabled: invalid argument type";
+        }
     };
 
     //获取配置信息
@@ -612,10 +690,16 @@ try{
                 }
             }
             */
-
             var tempPsLib = new window[Ps](this.canvas.width, this.canvas.height);
             tempPsLib.context.putImageData(this.imgData, 0, 0);
             tempPsLib.imgData = tempPsLib.context.getImageData(0, 0, this.canvas.width, this.canvas.height);
+            if (P.useWebCL) { // clone function always stands for ps effect start, need load Image
+                try {
+                    tempPsLib.webcl.loadData(tempPsLib.imgData);
+                } catch (e) {
+                    console.log(e);
+                }
+            }
             /*
             tempPsLib.add(this);
             */
@@ -807,6 +891,8 @@ try{
             func.call(ctx);
             this.imgData = ctx.getImageData(0, 0, this.canvas.width, this.canvas.height);
 
+            if (P.useWebCL)
+                this.webcl.loadData(this.imgData);
             return this;
         },
 
@@ -904,6 +990,9 @@ try{
 
             this.imgData = tempCtx.getImageData(0, 0, width, height);
 
+            if (P.useWebCL)
+                this.webcl.loadData(this.imgData);
+
             return this;
         },
 
@@ -999,6 +1088,9 @@ try{
             this.context.canvas.width = w;
             this.context.canvas.height = h;
 
+            if (P.useWebCL)
+                this.webcl.loadData(this.imgData);
+
             return this;
         },
 
@@ -1019,7 +1111,6 @@ try{
             this.dorsyWorker.startWorker();
         }
     }
-
 })("psLib");
 
 window.AlloyImage = window.$AI = window.psLib;

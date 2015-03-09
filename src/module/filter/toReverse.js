@@ -8,9 +8,9 @@
     window[Ps].module("Filter.toReverse",function(P){
 
         var M = {
-            process: function(imgData){
+            process: function(imgData, mode){
+                var startTime = (new Date()).getTime();
                 var data = imgData.data;
-
                 for(var i = 0,n = data.length;i < n;i += 4){
                     data[i] = 255 - data[i];
                     data[i + 1] = 255 - data[i + 1];
@@ -18,7 +18,7 @@
                 }
 
                 imgData.data = data;
-
+                console.log("toReverse" + ((new Date()).getTime() - startTime));
                 return imgData;
             }
         };

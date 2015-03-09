@@ -8,7 +8,8 @@
     window[Ps].module("Filter.posterize",function(P){
 
         var M = {
-            process: function(imgData, args){
+            process: function(imgData, args, mode){
+                var endTime = (new Date()).getTime() - startTime;
                 var dM = P.lib.dorsyMath;
                 var data = imgData.data;
                 var width = imgData.width;
@@ -32,6 +33,7 @@
                         });
                     }
                 }
+                console.log("posterize" + ((new Date()).getTime() - startTime));
                 return imgData;
             }
         };

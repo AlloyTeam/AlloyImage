@@ -11,6 +11,7 @@
 
             //isFast用于快速，适用于中间处理
             add: function(lowerData, upperData, method, alpha, dx, dy, isFast, channel){
+                var startTime = (new Date()).getTime();
                 var l = lowerData.data,
                     u = upperData.data,
                 
@@ -279,7 +280,7 @@
                     }//end y
                     
                 }//end x
-
+                console.log(method + ((new Date()).getTime() - startTime));
                 return lowerData;
             }
         };

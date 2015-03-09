@@ -8,7 +8,8 @@
     window[Ps].module("Filter.noise",function(P){
 
         var M = {
-            process: function(imgData,arg){
+            process: function(imgData, arg, mode){
+                var startTime = (new Date()).getTime();
                 var R = parseInt(arg[0]) || 100;
                 var data = imgData.data;
                 var width = imgData.width;
@@ -30,7 +31,7 @@
 
                 }
 
-
+                console.log("noise" + ((new Date()).getTime() - startTime));
                 return imgData;
             }
         };

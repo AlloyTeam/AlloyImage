@@ -8,7 +8,7 @@
     window[Ps].module("Filter.ImageEnhance",function(P){
 
         var M = {
-            process: function(imgData,arg1,arg2){
+            process: function(imgData, arg1, arg2, mode){
                 var lamta = arg || 0.5;
                 var data = imgData.data;
                 var width = imgData.width;

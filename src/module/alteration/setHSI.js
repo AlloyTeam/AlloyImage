@@ -11,7 +11,19 @@
     window[Ps].module("Alteration.setHSI",function(P){
 
         var M = {
-            process: function(imgData,arg){//调节亮度对比度
+            process: function(imgData, arg, mode){//调节亮度对比度
+               if (typeof(arguments[arguments.length-1]) == "boolean")
+                   mode = arguments[arguments.length-1];
+               else
+                   return;
+               if (mode)
+                   this.processCL(imgData, arg);
+               else
+                   this.processJS(imgData, arg);
+            },
+
+            processJS: function(imgData, arg){
+                var startTime = (new Date()).getTime();
                 arg[0] = arg[0] / 180 * Math.PI;
                 arg[1] = arg[1] / 100 || 0;
                 arg[2] = arg[2] / 100 * 255 || 0;
@@ -44,7 +56,46 @@
                     }
 
                 });
+                console.log("setHSIJS: " + ((new Date()).getTime() - startTime));
+                return imgData;
+            },
 
+            processCL: function(imgData,arg){//调节亮度对比度
+                var startTime = (new Date()).getTime();
+                arg[0] = arg[0] / 180 * Math.PI;
+                arg[1] = arg[1] / 100 || 0;
+                arg[2] = arg[2] / 100 * 255 || 0;
+                arg[3] = arg[3] || 0;//着色
+                
+                //调节通道
+                var channel = arg[4];
+                if(!(/[RGBCMY]+/.test(channel))){
+                    channel = "RGBCMY";
+                }
+                
+                var indexOf = [
+                    channel.indexOf("R") > -1 | 0,
+                    channel.indexOf("Y") > -1 | 0,
+                    channel.indexOf("G") > -1 | 0,
+                    channel.indexOf("C") > -1 | 0,
+                    channel.indexOf("B") > -1 | 0,
+                    channel.indexOf("M") > -1 | 0
+                ];
+
+                if (arg[3])
+                    arg[3] = 1;
+                console.log(indexOf[1]); 
+                var result = P.lib.webcl.run("setHSI",
+                                             [new Float32Array([arg[0]]),
+                                              new Float32Array([arg[1]]),
+                                              new Float32Array([arg[2]]),
+                                              new Float32Array([arg[3]]),
+                                              P.lib.webcl.convertArrayToBuffer(indexOf, "int")
+                                             ]).getResult();
+                for (var i = 0; i < result.length; i++) {
+                    imgData.data[i] = result[i];
+                }
+                console.log("setHSICL: " + ((new Date()).getTime() - startTime));
                 return imgData;
             }
         };

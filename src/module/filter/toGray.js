@@ -9,16 +9,16 @@
     window[Ps].module("Filter.toGray",function(P){
 
         var M = {
-            process: function(imgData){
+            process: function(imgData, mode){
+                var startTime = (new Date()).getTime();
                 var data = imgData.data;
-
                 for(var i = 0,n = data.length;i < n;i += 4){
                     var gray = parseInt((0.299 * data[i] + 0.578 * data[i + 1] + 0.114 * data[i + 2]));
                     data[i + 2] = data[i + 1] = data[i] = gray;
                 }
 
                 imgData.data = data;
-
+                console.log("toGray" + ((new Date()).getTime() - startTime));
                 return imgData;
             }
         };

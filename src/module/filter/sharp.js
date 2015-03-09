@@ -8,7 +8,8 @@
     window[Ps].module("Filter.sharp",function(P){
 
         var M = {
-            process: function(imgData,arg){
+            process: function(imgData, arg, mode){
+                var startTime = (new Date()).getTime();
                 var lamta = arg[0] || 0.6;
                 var data = imgData.data;
                 var width = imgData.width;
@@ -29,7 +30,7 @@
                         data[i + j] += delta * lamta;
                     }
                 }
-
+                console.log("sharp" + ((new Date()).getTime() - startTime));
                 return imgData;
             }
         };

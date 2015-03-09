@@ -6,7 +6,7 @@
   <script type="text/javascript" src="../combined/alloyimage.js"></script>
 </head>
 <body>
-<img src="../res/img/9.jpg" width="300" alt="" id='test' />
+<img src="../res/img/2.jpg" width="300" alt="" id='test' />
 <div class="p"></div>
 <script type="text/javascript">
 var img = document.getElementById("test");
@@ -21,11 +21,14 @@ img.onload = function(){
 //psLib(img).act("油画",100).show(".p");
   //psLib(this).act("添加杂色").show();
 
-  var p = psLib(200, 300, "red");
-  p.act("暗角", 10, 200).show();
+  //var p = psLib(200, 300, "red");
+  //p.act("暗角", 10, 200).show();
+  var p2 = psLib(img);
+  p2.act("高斯模糊", 4).show();
+  //p2.act("暗角", 10, 200).show();
   //psLib(this).ps("柔焦").show();
-  psLib(this).ps("仿lomo").act("暗角", 3, 200).show();
-  psLib(this).ps("仿lomo").show();
+  //psLib(this).ps("仿lomo").act("暗角", 3, 200).show();
+  //psLib(this).ps("仿lomo").show();
   /*
   p.ps("美肤").show();
   psLib(this).ps("素描").show();

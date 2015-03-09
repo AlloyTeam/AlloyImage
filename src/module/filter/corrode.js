@@ -8,7 +8,8 @@
     window[Ps].module("Filter.corrode", function(P){
 
         var M = {
-            process: function(imgData, arg){
+            process: function(imgData, arg, mode){
+                var startTime = (new Date()).getTime();
                 var R = parseInt(arg[0]) || 3;
                 var data = imgData.data;
                 var width = imgData.width;
@@ -32,7 +33,7 @@
                     }
 
                 }
-
+                console.log("corrode" + ((new Date()).getTime() - startTime));
                 return imgData;
             }
         };

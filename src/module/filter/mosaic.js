@@ -8,7 +8,8 @@
     window[Ps].module("Filter.mosaic",function(P){
 
         var M = {
-            process: function(imgData,arg){//调节亮度对比度
+            process: function(imgData, arg, mode){//调节亮度对比度
+                var startTime = (new Date()).getTime();
                 var R = parseInt(arg[0]) || 3;
                 var data = imgData.data;
                 var width = imgData.width;
@@ -48,7 +49,7 @@
 
                 }
 
-
+                console.log("mosaic" + ((new Date()).getTime() - startTime));
                 return imgData;
             }
         };

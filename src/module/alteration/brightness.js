@@ -9,7 +9,7 @@
 
         var M = {
             //调节亮度对比度
-            process: function(imgData, args){
+            process: function(imgData, args, mode){
                 var data = imgData.data;
                 var brightness = args[0] / 50;// -1,1
                 var arg2 = args[1] || 0;

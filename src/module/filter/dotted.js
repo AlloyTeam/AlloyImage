@@ -8,7 +8,8 @@
     window[Ps].module("Filter.dotted",function(P){
 
         var M = {
-            process: function(imgData,arg){//调节亮度对比度
+            process: function(imgData, arg, mode){//调节亮度对比度
+                var startTime = (new Date()).getTime();
                 //矩形半径
                 var R = parseInt(arg[0]) || 1;
 
@@ -66,7 +67,7 @@
                 }
                 */
 
-
+                console.log("dotted" + ((new Date()).getTime() - startTime));
                 return imgData;
             }
         };

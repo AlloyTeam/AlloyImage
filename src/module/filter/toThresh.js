@@ -8,7 +8,7 @@
     window[Ps].module("Filter.toThresh",function(P){
 
         var M = {
-            process: function(imgData,arg){
+            process: function(imgData, arg, mode){
                 imgData = P.reflect("toGray", imgData);
                 var data = imgData.data;
 
