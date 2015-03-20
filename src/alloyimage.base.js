@@ -451,6 +451,34 @@ try{
             }
         },
 
+        complileLayers: function(){
+           //如果其上无其他挂载图层，加快处理
+            if(this.layers.length == 0){
+                this.tempPsLib = {
+                    imgData: this.imgData
+                };
+            }else{
+
+                //创建一个临时的psLib对象，防止因为合并显示对本身imgData影响
+                var tempPsLib = new window[Ps](this.canvas.width, this.canvas.height);
+                tempPsLib.add(this, "正常", 0, 0, isFast);
+                this.tempPsLib = tempPsLib;
+
+                //将挂接到本对象上的图层对象 一起合并到临时的psLib对象上去 用于显示合并的结果，不会影响每个图层，包括本图层
+                for(var i = 0; i < this.layers.length; i ++){
+                    var tA = this.layers[i];
+                    var layers = tA[0].layers;
+                    var currLayer = tA[0];
+
+                    if(layers[layers.length - 1] && layers[layers.length - 1][0].type == 1) currLayer = layers[layers.length - 1][0];
+                    tempPsLib.add(currLayer, tA[1], tA[2], tA[3], isFast);
+                }
+
+                //this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
+
+            }
+        },
+
         //显示对象 isFast用于快速显示
         show: function(selector, isFast, flag){
             
@@ -462,6 +490,9 @@ try{
                 }
             }
 
+            this.complileLayers();
+
+            /*
             //如果其上无其他挂载图层，加快处理
             if(this.layers.length == 0){
                 this.tempPsLib = {
@@ -487,6 +518,7 @@ try{
                 this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
 
             }
+            */
 
             //以临时对象data显示
             this.context.putImageData(this.tempPsLib.imgData, 0, 0);
@@ -732,8 +764,20 @@ try{
         },
 
         //绘制直方图
-        drawRect: function(selector){
+        drawRect: function(selector, channel){
             var canvas;
+
+            if(! channel){
+                channel = 'RGB';
+            }
+
+            var channelString = (channel || '').replace("R","0").replace("G","1").replace("B","2");
+
+            var indexOfArr = [
+                channelString.indexOf("0") > -1,
+                channelString.indexOf("1") > -1,
+                channelString.indexOf("2") > -1
+            ];
 
             if(canvas = document.getElementById("imgRect")){
             }else{
@@ -747,34 +791,76 @@ try{
             var context = canvas.getContext("2d");
             context.clearRect(0, 0, canvas.width, canvas.height);
 
-            var result = [];
+            var result = [[], [], []];
+
+            this.complileLayers();
+
             var data = this.tempPsLib.imgData.data;
+            var width = this.tempPsLib.imgData.width;
+            var height = this.tempPsLib.imgData.height;
 
-            for(var i = 0, n = data.length; i < n; i ++){
-               if(!result[data[i]]){
-                    result[data[i]] = 1;
-               }else{
-                    result[data[i]] ++;
-               }
+            if(channelString){
+                for(var y = 0; y < height; y ++){
+                    for(var x = 0; x < width; x ++){
+                        var i = y * width + x;
+                        var dot0 = i * 4;
+                        
+                        for(var j = 0; j < 3; j ++){
+                            if(indexOfArr[j]){
+                                if(! result[j][data[dot0 + j]]){
+                                    result[j][data[dot0 + j]] =  1;
+                                }else{
+                                    result[j][data[dot0 + j]] ++;
+                                }
+                            }
+                        }
+                    }
+                }
+            }else{
+
+                for(var i = 0, n = data.length; i < n; i ++){
+                   if(! result[data[i]]){
+                        result[data[i]] = 1;
+                   }else{
+                        result[data[i]] ++;
+                   }
+                }
             }
 
-            context.beginPath();
-            context.moveTo(0, canvas.height);
+            var draw = function(result, color){
+                context.beginPath();
+                context.moveTo(0, canvas.height);
 
-            var max = 0;
+                var max = 0;
 
-            for(var i = 0; i < 255; i ++){
-                if(result[i] > max) max = result[i];
+                for(var i = 0; i < 255; i ++){
+                    if(result[i] > max) max = result[i];
+                }
+
+                for(var i = 0; i < 255; i ++){
+                    var currY = result[i] || 0;
+                    currY = canvas.height - currY / max * 0.8 * canvas.height;
+                    context.lineTo(i / 256 * canvas.width, currY); 
+                }
+                
+                context.lineTo(canvas.width + 10, canvas.height);
+                context.closePath();
+
+                context.fillStyle = color;
+                context.fill();
+
             }
 
-            for(var i = 0; i < 255; i ++){
-                var currY = result[i] || 0;
-                currY = canvas.height - currY / max * 0.8 * canvas.height;
-                context.lineTo(i / 256 * canvas.width, currY, 1, 1); 
+            if(channelString){
+                var colorMap = ['red', 'green', 'blue'];
+                for(var i = 0; i < result.length; i ++){
+                    if(result[i].length){
+                        draw(result[i], colorMap[i]);
+                    }
+                }
+            }else{
+                draw(result, 'black');
             }
-            
-            context.lineTo(canvas.width + 10, canvas.height);
-            context.fill();
         },
 
         //组合效果
