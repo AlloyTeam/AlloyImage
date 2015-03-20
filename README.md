@@ -176,6 +176,20 @@ var imgString = AlloyImage(img).clip(30, 30, 100, 100).save('jpg', 0.8);
 
 ```
 
+>###drawRect
+画出合成像的直方图<br />
+void drawRect(String seletor, String channel);<br /><br />
+{seletor} 直方图绘制的wrapper<br />
+{channel} 要绘制的通道， 比如 'RG', 'GB', 默认为'RGB'
+<br /><br />
+返回 空
+
+示例
+```javascript
+var imgString = AlloyImage(img).drawRect('#p');
+
+```
+
 
 
 #### AlloyImage 1.1
