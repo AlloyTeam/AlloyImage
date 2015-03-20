@@ -11,7 +11,9 @@ Array.prototype.del = function(arr){
 
     //对数组重新排序
     //Sort array
-    arr.sort();
+    arr.sort(function(a, b){
+        return a - b;
+    });
 
     //复制数组，防止污染
     //Clone array in case of being modified
