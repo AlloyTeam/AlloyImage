@@ -109,6 +109,7 @@ img.onclick = function(){
 
 >###download
 功能与使用同saveFile
+<br />
 
 
 >###transform
@@ -121,6 +122,7 @@ AIObj transform(Array Matrix); <br /><br />
 //将图层垂直翻转
 AlloyImage(img).transform([1, 0, 0, -1, 0, 0]).show();
 ```
+<br />
 
 
 >###scaleTo
