@@ -1,0 +1,66 @@
+<!DOCTYPE HTML>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title></title>
+</head>
+<body>
+<button onclick="setColor(1)">颜色1</button>
+<button onclick="setColor(2)">颜色2</button>
+
+<button onclick="noColor()">去色</button>
+<button onclick="setFX()">反相</button>
+
+<button onclick="originEf()">原图</button>
+
+<button onclick="save()">保存</button>
+<button onclick="undo()">撤销</button>
+
+
+<script type="text/javascript" src="../combined/alloyimage.js"></script>
+<script type="text/javascript">
+var img = new Image();
+
+img.onload = function(){
+   var layer = $AI(this);
+
+   layer.show();
+
+   window.layer = layer;
+};
+img.src = "../res/img/1.jpg";
+document.body.appendChild(img);
+
+var setColor = function(flag){
+  if(flag === 1){
+      layer.view("setHSI", 30, 10, 0).show();
+  }else{
+      layer.view("setHSI", -30, 10, 0).show();
+  }
+};
+
+var noColor = function(){
+      layer.view("toGray").show();
+};
+
+var setFX = function(){
+      layer.view("toReverse").show();
+};
+
+var save = function(){
+    layer.doView();
+};
+
+var undo = function(){
+    layer.undoView().show();
+};
+
+var originEf = function(){
+    layer.cancel().show();
+};
+
+
+</script>
+	
+</body>
+</html>

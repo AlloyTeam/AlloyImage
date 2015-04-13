@@ -11,7 +11,9 @@ Array.prototype.del = function(arr){
 
     //对数组重新排序
     //Sort array
-    arr.sort();
+    arr.sort(function(a, b){
+        return a - b;
+    });
 
     //复制数组，防止污染
     //Clone array in case of being modified
@@ -417,22 +419,76 @@ try{
         },
 
         //预览模式 ，所有的再操作全部基于原点，不会改变本图层的效果，直到act会去除这部分图层
+        // view一般只是对单图层来说的
+        // 暂时只考虑单图层
         view: function(method, arg1, arg2, arg3, arg4){
-            var n = this.layers.length;
-
-            //克隆本图层对象
-            var newLayer = this.clone();
-            //标记本图层的种类为预览的已合并的图层
-            newLayer.type = 1;
-
-            if(this.layers[n - 1] && this.layers[n - 1][0].type === 1){
+            if(! method){
                 this.cancel();
+            }else{
+                var n = this.layers.length;
+
+                if(this.layers[n - 1] && this.layers[n - 1][0].type === 1){
+                    this.cancel();
+                }
+
+                var newLayer;
+                for(var i = this.layers.length - 1; i > -1; i --){
+                    var layer = this.layers[i];
+
+                    if(layer[0].type === 2){
+                        newLayer = layer[0].clone();
+
+                        break;
+                    }
+                }
+
+                if(! newLayer){
+                    //克隆本图层对象
+                    newLayer = this.clone();
+                }
+
+                //标记本图层的种类为预览的已合并的图层
+                newLayer.type = 1;
+
+                //挂接克隆图层副本到对象
+                this.addLayer(newLayer, "正常", 0, 0);
+
+                newLayer.act(method, arg1, arg2, arg3, arg4);
             }
 
-            //挂接克隆图层副本到对象
-            this.addLayer(newLayer, "正常", 0, 0);
+            return this;
+        },
 
-            newLayer.act(method, arg1, arg2, arg3, arg4);
+        // 暂时保存view的执行结果
+        // 与excute区别是可以撤销 复原
+        doView: function(){
+            var n = this.layers.length;
+
+            if(this.layers[n - 1] && this.layers[n - 1][0].type === 2){
+                return this;
+            }
+
+            if(this.layers[n - 1] && this.layers[n - 1][0].type === 1){
+                // 保存图层
+                this.layers[n - 1][0].type = 2;
+            }
+
+            return this;
+        },
+
+        // 撤销至上次的状态
+        undoView: function(){
+            this.cancel();
+
+            for(var i = this.layers.length - 1; i > -1; i --){
+                var layer = this.layers[i];
+
+                if(layer[0].type === 2){
+                    layer[0].type = 1;
+
+                    break;
+                }
+            }
 
             return this;
         },
@@ -445,6 +501,8 @@ try{
                 this.imgData = layers[n - 1][0].imgData;
                 delete layers[n - 1];
             }
+
+            return this;
         },
 
         //取消view的结果执行
@@ -454,6 +512,8 @@ try{
             if(layers[n - 1] && layers[n - 1][0].type == 1){
                 layers.pop();
             }
+
+            return this;
         },
 
         complileLayers: function(isFast){
@@ -637,6 +697,7 @@ try{
             return this;
         },
 
+        // 克隆只对单图层有效
         clone: function(workerFlag){
 
             /*
@@ -933,7 +994,7 @@ try{
             //意味着图层自身所有的变换都不会丢失自己的图像信息 但会原点位置发生变化
             //这样做会节省很大的无图像空间
 
-            //计算原有点变换后的点
+            // 记录原始图像的四顶点坐标
             var originPoint = [
                 new dM.Matrix([0, 0], "1*2"),
                 new dM.Matrix([0, this.canvas.height], "1*2"),
@@ -942,8 +1003,10 @@ try{
             ];
 
             var transformedPoint = [];
+            // 构建一个新的2*2矩阵用来盛放变换之后的四顶点坐标
             var transformMatrix = new dM.Matrix(matrix, "2*2");
-
+            
+            //计算原有点变换后的点
             for(var i = 0; i < originPoint.length; i ++){
                 transformedPoint.push(originPoint[i].mutiply(transformMatrix));
             }
@@ -1565,7 +1628,7 @@ window.AlloyImage = window.$AI = window.psLib;
                     };
 
                 }else{
-                    P.destroySelf("AI_ERROR:调用AI不存在的方法" + method);
+                    throw new Error("AI_ERROR:调用AI不存在的方法" + method);
                 }
             },
 

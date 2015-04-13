@@ -109,8 +109,8 @@ img.onclick = function(){
 
 >###download
 功能与使用同saveFile
-<br />
 
+&nbsp;
 
 >###transform
 进行仿射变换<br />
@@ -122,9 +122,8 @@ AIObj transform(Array Matrix); <br /><br />
 //将图层垂直翻转
 AlloyImage(img).transform([1, 0, 0, -1, 0, 0]).show();
 ```
-<br />
 
-
+&nbsp;
 >###scaleTo
 将图层或合成图像缩放到指定宽高<br />
 AIObj scaleTo(Number width, Nubmer height);<br /><br />
@@ -204,6 +203,44 @@ var imgString = AlloyImage(img).drawRect('#p');
 
 ```
 
+##预览、撤销、重做
+>###doView
+保存view的中间结果，下次使用view将会根据上次doView之前的结果进行处理，与undoView结合，可进行撤销操作<br />
+AIObj doView();<br />
+返回 AIObj<br />
+示例参照undoView方法
+
+&nbsp;
+
+>###undoView
+撤销上次view的执行结果
+AIObj undoView();
+返回 AIObj
+
+示例
+```javascript
+var layer = $AI(img);
+layer.view("setHSI", 10, 0, 0).show();
+
+// 再次调节 这次还是基于原图调节
+layer.view("setHSI", -10, 0, 0).show();
+
+//调节好了 保存这次结果
+layer.doView();
+
+// 基于上次的调节结果进行计算
+layer.view("brightness", 10, 0, 0).show();
+
+// 不满意 撤销亮度调节操作
+layer.undoView().show();
+
+// 回到最原始的图像
+layer.undoView().show();
+
+```
+
+
+
 
 
 #### AlloyImage 1.1
@@ -243,4 +280,3 @@ var imgString = AlloyImage(img).drawRect('#p');
 [AlloyClip](https://github.com/AlloyTeam/AlloyClip)
 
 [AlloyPhoto](https://github.com/AlloyTeam/AlloyPhoto)
-

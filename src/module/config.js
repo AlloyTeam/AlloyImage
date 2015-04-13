@@ -86,7 +86,7 @@
                     };
 
                 }else{
-                    P.destroySelf("AI_ERROR:调用AI不存在的方法" + method);
+                    throw new Error("AI_ERROR:调用AI不存在的方法" + method);
                 }
             },
 
