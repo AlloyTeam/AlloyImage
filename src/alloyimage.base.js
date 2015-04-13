@@ -418,15 +418,20 @@ try{
 
         //预览模式 ，所有的再操作全部基于原点，不会改变本图层的效果，直到act会去除这部分图层
         view: function(method, arg1, arg2, arg3, arg4){
+            var n = this.layers.length;
 
             //克隆本图层对象
             var newLayer = this.clone();
-
             //标记本图层的种类为预览的已合并的图层
             newLayer.type = 1;
 
+            if(this.layers[n - 1] && this.layers[n - 1][0].type === 1){
+                this.cancel();
+            }
+
             //挂接克隆图层副本到对象
             this.addLayer(newLayer, "正常", 0, 0);
+
             newLayer.act(method, arg1, arg2, arg3, arg4);
 
             return this;
@@ -447,11 +452,11 @@ try{
             var layers = this.layers;
             var n = layers.length;
             if(layers[n - 1] && layers[n - 1][0].type == 1){
-                delete layers[n - 1];
+                layers.pop();
             }
         },
 
-        complileLayers: function(){
+        complileLayers: function(isFast){
            //如果其上无其他挂载图层，加快处理
             if(this.layers.length == 0){
                 this.tempPsLib = {
@@ -490,7 +495,7 @@ try{
                 }
             }
 
-            this.complileLayers();
+            this.complileLayers(isFast);
 
             /*
             //如果其上无其他挂载图层，加快处理

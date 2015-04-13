@@ -12,6 +12,7 @@ module.exports = {
      }
     },
     targets:{
-        dist: "cat min"
+        dist: "cat min",
+        uncom: "cat"
     }
 };

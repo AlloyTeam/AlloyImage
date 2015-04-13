@@ -110,6 +110,15 @@ img.onclick = function(){
 >###download
 功能与使用同saveFile
 
+>###transform
+进行仿射变换<br />
+AIObj transform(Array Matrix); <br /><br />
+{Matrix} 变换矩阵 数组 [a1, a2, b1, b2, dx, dy]<br />
+如水平翻转 [-1, 0, 0, 1, 0, 0]<br />
+示例
+```javascript
+//将图层垂直翻转
+AlloyImage(img).transform([1, 0, 0, -1, 0, 0]).show();
 
 >###scaleTo
 将图层或合成图像缩放到指定宽高<br />
