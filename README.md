@@ -110,6 +110,7 @@ img.onclick = function(){
 >###download
 功能与使用同saveFile
 
+
 >###transform
 进行仿射变换<br />
 AIObj transform(Array Matrix); <br /><br />
@@ -119,6 +120,8 @@ AIObj transform(Array Matrix); <br /><br />
 ```javascript
 //将图层垂直翻转
 AlloyImage(img).transform([1, 0, 0, -1, 0, 0]).show();
+```
+
 
 >###scaleTo
 将图层或合成图像缩放到指定宽高<br />
