@@ -11,7 +11,9 @@ Array.prototype.del = function(arr){
 
     //对数组重新排序
     //Sort array
-    arr.sort();
+    arr.sort(function(a, b){
+        return a - b;
+    });
 
     //复制数组，防止污染
     //Clone array in case of being modified
@@ -933,7 +935,7 @@ try{
             //意味着图层自身所有的变换都不会丢失自己的图像信息 但会原点位置发生变化
             //这样做会节省很大的无图像空间
 
-            //计算原有点变换后的点
+            // 记录原始图像的四顶点坐标
             var originPoint = [
                 new dM.Matrix([0, 0], "1*2"),
                 new dM.Matrix([0, this.canvas.height], "1*2"),
@@ -942,8 +944,10 @@ try{
             ];
 
             var transformedPoint = [];
+            // 构建一个新的2*2矩阵用来盛放变换之后的四顶点坐标
             var transformMatrix = new dM.Matrix(matrix, "2*2");
-
+            
+            //计算原有点变换后的点
             for(var i = 0; i < originPoint.length; i ++){
                 transformedPoint.push(originPoint[i].mutiply(transformMatrix));
             }
