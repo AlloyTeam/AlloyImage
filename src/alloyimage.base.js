@@ -453,7 +453,11 @@ try{
                 //挂接克隆图层副本到对象
                 this.addLayer(newLayer, "正常", 0, 0);
 
-                newLayer.act(method, arg1, arg2, arg3, arg4);
+                if(method === "ps"){
+                    newLayer.ps(arg1, arg2, arg3, arg4);
+                }else{
+                    newLayer.act(method, arg1, arg2, arg3, arg4);
+                }
             }
 
             return this;
