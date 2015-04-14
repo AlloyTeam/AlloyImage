@@ -445,6 +445,15 @@ try{
                 if(! newLayer){
                     //克隆本图层对象
                     newLayer = this.clone();
+
+                    window.newLayer = newLayer;
+                }
+
+
+                if(method === "ps"){
+                    newLayer = newLayer.ps(arg1, arg2, arg3, arg4);
+                }else{
+                    newLayer.act(method, arg1, arg2, arg3, arg4);
                 }
 
                 //标记本图层的种类为预览的已合并的图层
@@ -452,12 +461,6 @@ try{
 
                 //挂接克隆图层副本到对象
                 this.addLayer(newLayer, "正常", 0, 0);
-
-                if(method === "ps"){
-                    newLayer.ps(arg1, arg2, arg3, arg4);
-                }else{
-                    newLayer.act(method, arg1, arg2, arg3, arg4);
-                }
             }
 
             return this;
@@ -761,33 +764,10 @@ try{
                 }
             }
 
-            //如果没有挂接图片 直接返回
-            if(! this.layers.length){
-                this.context.putImageData(this.imgData, 0, 0);
-                return this.canvas.toDataURL(mimeType, comRatio); 
-            }
-
-
-            //创建一个临时的psLib对象，防止因为合并显示对本身imgData影响
-            var tempPsLib = new window[Ps](this.canvas.width, this.canvas.height);
-            tempPsLib.add(this, "正常", 0, 0, isFast);
-            this.tempPsLib = tempPsLib;
-
-            //将挂接到本对象上的图层对象 一起合并到临时的psLib对象上去 用于显示合并的结果，不会影响每个图层，包括本图层
-            for(var i = 0; i < this.layers.length; i ++){
-                var tA = this.layers[i];
-                var layers = tA[0].layers;
-                var currLayer = tA[0];
-
-                if(layers[layers.length - 1] && layers[layers.length - 1][0].type == 1) currLayer = layers[layers.length - 1][0];
-
-                tempPsLib.add(currLayer, tA[1], tA[2], tA[3], isFast);
-            }
-
-            this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
+            this.complileLayers();
 
             //以临时对象data显示
-            this.context.putImageData(tempPsLib.imgData, 0, 0);
+            this.context.putImageData(this.tempPsLib.imgData, 0, 0);
 
             return this.canvas.toDataURL(mimeType, comRatio); 
         },
