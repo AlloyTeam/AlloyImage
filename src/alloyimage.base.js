@@ -1042,6 +1042,15 @@ try{
 
             this.imgData = tempCtx.getImageData(0, 0, width, height);
 
+            // 对预览图层也进行控制
+            for(var i = this.layers.length - 1; i > -1; i --){
+                var layer = this.layers[i];
+
+                if(layer[0].type === 2 || layer[0].type === 1){
+                    layer[0].transform(matrix, x0, y0);
+                }
+            }
+
             return this;
         },
 
