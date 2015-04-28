@@ -11,6 +11,7 @@
 
 <button onclick="noColor()">去色</button>
 <button onclick="setFX()">反相</button>
+<button onclick="setGaussBlur()">高斯模糊</button>
 
 <button onclick="originEf()">原图</button>
 
@@ -64,6 +65,9 @@ var lomo = function(){
     layer.view("ps", "lomo").show();
 };
 
+var setGaussBlur = function(){
+    layer.view("gaussBlur", 10).show();
+};
 
 </script>
 	

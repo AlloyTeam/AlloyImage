@@ -18,7 +18,7 @@
              * @param  {Number} sigma 标准方差, 可选, 默认取值为 radius / 3
              * @return {Array}
              */
-            process: function(imgData,radius, sigma) {
+            process: function(imgData, args) {
                 var pixes = imgData.data;
                 var width = imgData.width;
                 var height = imgData.height;
@@ -27,6 +27,9 @@
                     x, y,
                     r, g, b, a,
                     i, j, k, len;
+
+                var radius = args[0];
+                var sigma = args[1];
 
 
                 radius = Math.floor(radius) || 3;
