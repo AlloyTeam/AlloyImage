@@ -61,6 +61,9 @@ img{
   -webkit-transform: scale(1);
   opacity: 1;
 }
+body{
+  text-align: center;
+}
   
   </style>
 </head>
@@ -76,6 +79,7 @@ img{
   <img src="carnew.jpg" class="pic"  id="pl2"  alt="" />
 </div>
 
+<br />
 <div class="tuzi">
 <img src="tuzi.png" class="loading" id="img3" alt="" />
   <img src="catnew.jpg" class="pic"  id="pl3"  alt="" />
@@ -95,17 +99,18 @@ for(var i = 1; i < 5; i ++){
     var pl = document.getElementById("pl" + i);
     var img = document.getElementById("img" + i);
     var count = 0;
-    img.addEventListener("animationiteration", function(e){
+    var handler = function(e){
         if(++ count > i){
           img.className = "";
           setTimeout(function(){
             img.className = "out";
               pl.className = "pic show";
-            img.addEventListener("transitionend", function(){
-            });
           }, 0);
         }
-    });
+    };
+
+    img.addEventListener("webkitAnimationIteration", handler);
+    img.addEventListener("animationiteration", handler);
   })(i);
 }
 
