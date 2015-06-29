@@ -1,0 +1,114 @@
+<!DOCTYPE HTML>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=no">
+	<title></title>
+  <style type="text/css">
+@-webkit-keyframes tuzi{
+  0%{
+    
+  }
+
+  50%{
+    -webkit-transform: scale(1.8);
+  }
+
+  100%{
+    -webkit-transform: scale(1);
+  }
+}
+.tuzi{
+  width: 100px;
+  background-color: #ECECEC;
+  height: 100px;
+  text-align: center;
+  line-height: 100px;
+  position: relative;
+  overflow: hidden;
+  margin: 4px;
+  display: inline-block;
+  border-radius: 4px;
+}  
+img{
+  width: 17px;
+  vertical-align: middle;
+  opacity: 1;
+
+}
+
+.loading{
+  -webkit-animation: tuzi 1.8s cubic-bezier(0.34, -0.04, 0.27, 0.4) infinite;
+}
+
+.out{
+  -webkit-transition: all 0.4s cubic-bezier(0.18, 0.13, 0.24, 0.74);
+  -webkit-transform: scale(10);
+  opacity: 0;
+}
+
+.pic{
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  -webkit-transform: scale(0.01);
+  opacity: 0;
+  -webkit-transition: all 0.4s cubic-bezier(0.18, 0.13, 0.24, 0.74);
+  margin: -17px 0px;
+}
+.show{
+  -webkit-transform: scale(1);
+  opacity: 1;
+}
+  
+  </style>
+</head>
+<body>
+	
+<div class="tuzi">
+<img src="tuzi.png" class="loading" id="img1" alt="" />
+  <img src="girlnew.jpg" class="pic"  id="pl1"  alt="" />
+</div>
+	
+<div class="tuzi">
+<img src="tuzi.png" class="loading" id="img2" alt="" />
+  <img src="carnew.jpg" class="pic"  id="pl2"  alt="" />
+</div>
+
+<div class="tuzi">
+<img src="tuzi.png" class="loading" id="img3" alt="" />
+  <img src="catnew.jpg" class="pic"  id="pl3"  alt="" />
+</div>
+
+<div class="tuzi">
+<img src="tuzi.png" class="loading" id="img4" alt="" />
+  <img src="dognew.jpg" class="pic"  id="pl4"  alt="" />
+</div>
+
+
+
+
+<script type="text/javascript">
+for(var i = 1; i < 5; i ++){
+  (function(i){
+    var pl = document.getElementById("pl" + i);
+    var img = document.getElementById("img" + i);
+    var count = 0;
+    img.addEventListener("animationiteration", function(e){
+        if(++ count > i){
+          img.className = "";
+          setTimeout(function(){
+            img.className = "out";
+              pl.className = "pic show";
+            img.addEventListener("transitionend", function(){
+            });
+          }, 0);
+        }
+    });
+  })(i);
+}
+
+</script>
+</body>
+</html>
