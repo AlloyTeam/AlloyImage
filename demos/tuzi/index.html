@@ -94,25 +94,27 @@ body{
 
 
 <script type="text/javascript">
-for(var i = 1; i < 5; i ++){
-  (function(i){
-    var pl = document.getElementById("pl" + i);
-    var img = document.getElementById("img" + i);
-    var count = 0;
-    var handler = function(e){
-        if(++ count > i){
-          img.className = "";
-          setTimeout(function(){
-            img.className = "out";
-              pl.className = "pic show";
-          }, 0);
-        }
-    };
+window.onload = function(){
+  for(var i = 1; i < 5; i ++){
+    (function(i){
+      var pl = document.getElementById("pl" + i);
+      var img = document.getElementById("img" + i);
+      var count = 0;
+      var handler = function(e){
+          if(++ count > i){
+            img.className = "";
+            setTimeout(function(){
+              img.className = "out";
+                pl.className = "pic show";
+            }, 0);
+          }
+      };
 
-    img.addEventListener("webkitAnimationIteration", handler);
-    img.addEventListener("animationiteration", handler);
-  })(i);
-}
+      img.addEventListener("webkitAnimationIteration", handler);
+      img.addEventListener("animationiteration", handler);
+    })(i);
+  }
+};
 
 </script>
 </body>
